@@ -1,0 +1,179 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * BESEKI COMPANY LIMITED — design system
+ * Deep red primary, royal blue secondary, white surfaces, charcoal text.
+ * All colours are oklch tokens; never hardcode colours in components.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 4px);
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-blue-foreground: var(--brand-blue-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-sand: var(--sand);
+  --color-whatsapp: var(--whatsapp);
+  --shadow-card: 0 10px 30px oklch(0.2 0.02 260 / 0.055);
+  --shadow-lift: 0 18px 48px oklch(0.2 0.02 260 / 0.1);
+  --shadow-header: 0 4px 16px oklch(0.2 0.02 260 / 0.045);
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.24 0.012 264);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.012 264);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.012 264);
+
+  /* Deep red */
+  --primary: oklch(0.475 0.183 26.5);
+  --primary-foreground: oklch(0.99 0.002 250);
+  --primary-dark: oklch(0.395 0.16 26.5);
+
+  /* Royal blue */
+  --brand-blue: oklch(0.44 0.176 262);
+  --brand-blue-foreground: oklch(0.99 0.002 250);
+
+  --secondary: oklch(0.958 0.006 255);
+  --secondary-foreground: oklch(0.26 0.012 264);
+  --muted: oklch(0.958 0.006 255);
+  --muted-foreground: oklch(0.48 0.014 258);
+  --accent: oklch(0.945 0.009 255);
+  --accent-foreground: oklch(0.26 0.012 264);
+  --destructive: oklch(0.55 0.21 27);
+  --destructive-foreground: oklch(0.99 0.002 250);
+  --success: oklch(0.55 0.13 155);
+  --whatsapp: oklch(0.63 0.16 152);
+  --border: oklch(0.912 0.008 255);
+  --input: oklch(0.9 0.008 255);
+  --ring: oklch(0.475 0.183 26.5);
+
+  /* Editorial dark surface */
+  --ink: oklch(0.205 0.012 264);
+  --ink-foreground: oklch(0.97 0.003 250);
+  --sand: oklch(0.965 0.006 255);
+}
+
+.dark {
+  --background: oklch(0.18 0.01 264);
+  --foreground: oklch(0.97 0.003 250);
+  --card: oklch(0.22 0.012 264);
+  --card-foreground: oklch(0.97 0.003 250);
+  --popover: oklch(0.22 0.012 264);
+  --popover-foreground: oklch(0.97 0.003 250);
+  --secondary: oklch(0.27 0.014 264);
+  --secondary-foreground: oklch(0.97 0.003 250);
+  --muted: oklch(0.27 0.014 264);
+  --muted-foreground: oklch(0.72 0.014 258);
+  --accent: oklch(0.29 0.014 264);
+  --accent-foreground: oklch(0.97 0.003 250);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --sand: oklch(0.24 0.012 264);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04";
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+
+  @media (min-width: 768px) {
+    padding-inline: 2rem;
+  }
+
+  @media (min-width: 1440px) {
+    padding-inline: 1.5rem;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+@utility price-type {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  font-weight: 700;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

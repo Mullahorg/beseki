@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import {
   ArrowRight,
   BadgeCheck,
@@ -72,7 +72,6 @@ type SearchForm = {
 };
 
 function QuickSearch() {
-  const navigate = useNavigate();
   const vehicles = useVehicles();
 
   const makes = makesOf(vehicles);
@@ -92,15 +91,17 @@ function QuickSearch() {
       [
         ...new Set(
           vehicles
-            .filter((vehicle) => !form.make || vehicle.make === form.make)
+            .filter(
+              (vehicle) => !form.make || vehicle.make === form.make,
+            )
             .map((vehicle) => vehicle.model),
         ),
       ].sort(),
     [vehicles, form.make],
   );
 
-  const field =
-    "h-11 w-full appearance-none rounded-md border border-white/15 bg-white/8 px-3.5 text-sm text-white outline-none transition-colors placeholder:text-white/45 focus:border-white/45 focus:ring-2 focus:ring-white/10";
+  const fieldClass =
+    "h-11 w-full appearance-none rounded-md border border-white/15 bg-white/10 px-3.5 text-sm text-white outline-none transition-colors placeholder:text-white/50 focus:border-white/40 focus:ring-2 focus:ring-white/10";
 
   function updateField(key: keyof SearchForm, value: string) {
     setForm((current) => ({
@@ -110,59 +111,70 @@ function QuickSearch() {
     }));
   }
 
+  function submitSearch(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const params = new URLSearchParams();
+
+    Object.entries(form).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      }
+    });
+
+    const query = params.toString();
+
+    window.location.href = query
+      ? `/inventory?${query}`
+      : "/inventory";
+  }
+
+  const fields = [
+    {
+      id: "home-search-make",
+      label: "Make",
+      key: "make" as const,
+      options: makes,
+    },
+    {
+      id: "home-search-model",
+      label: "Model",
+      key: "model" as const,
+      options: models,
+    },
+    {
+      id: "home-search-price",
+      label: "Price",
+      key: "price" as const,
+      options: priceBands.map((band) => band.label),
+    },
+    {
+      id: "home-search-year",
+      label: "Year",
+      key: "year" as const,
+      options: years.map(String),
+    },
+    {
+      id: "home-search-transmission",
+      label: "Transmission",
+      key: "transmission" as const,
+      options: [...transmissions],
+    },
+    {
+      id: "home-search-fuel",
+      label: "Fuel",
+      key: "fuel" as const,
+      options: [...fuels],
+    },
+  ];
+
   return (
     <form
       aria-label="Search BESEKI vehicle inventory"
-      onSubmit={(event) => {
-        event.preventDefault();
-
-        navigate({
-          to: "/inventory",
-          search: Object.fromEntries(
-            Object.entries(form).filter(([, value]) => Boolean(value)),
-          ),
-        });
-      }}
+      onSubmit={submitSearch}
       className="grid gap-3 lg:grid-cols-[1fr_1fr_1.15fr_0.9fr_1fr_1fr_auto]"
     >
-      {[
-        {
-          id: "home-search-make",
-          label: "Make",
-          key: "make" as const,
-          options: makes,
-        },
-        {
-          id: "home-search-model",
-          label: "Model",
-          key: "model" as const,
-          options: models,
-        },
-        {
-          id: "home-search-price",
-          label: "Price",
-          key: "price" as const,
-          options: priceBands.map((band) => band.label),
-        },
-        {
-          id: "home-search-year",
-          label: "Year",
-          key: "year" as const,
-          options: years.map(String),
-        },
-        {
-          id: "home-search-transmission",
-          label: "Transmission",
-          key: "transmission" as const,
-          options: [...transmissions],
-        },
-        {
-          id: "home-search-fuel",
-          label: "Fuel",
-          key: "fuel" as const,
-          options: [...fuels],
-        },
-      ].map((fieldConfig) => (
+      {fields.map((fieldConfig) => (
         <div key={fieldConfig.id} className="min-w-0">
           <label
             htmlFor={fieldConfig.id}
@@ -177,7 +189,7 @@ function QuickSearch() {
             onChange={(event) =>
               updateField(fieldConfig.key, event.target.value)
             }
-            className={field}
+            className={fieldClass}
           >
             <option value="">Any</option>
 
@@ -194,7 +206,7 @@ function QuickSearch() {
         <Button
           type="submit"
           size="lg"
-          className="h-11 w-full bg-primary px-6 lg:w-auto"
+          className="h-11 w-full px-6 lg:w-auto"
         >
           <Search className="size-4" aria-hidden="true" />
           Search
@@ -207,10 +219,12 @@ function QuickSearch() {
 function HomePage() {
   const vehicles = useVehicles();
 
-  const featured = vehicles.filter((vehicle) => vehicle.featured).slice(0, 6);
+  const featured = vehicles
+    .filter((vehicle) => vehicle.featured)
+    .slice(0, 6);
 
   const latest = [...vehicles]
-    .sort((a, b) => b.year - a.year)
+    .sort((a, b) => Number(b.year) - Number(a.year))
     .slice(0, 3);
 
   const posts = blogPosts.slice(0, 3);
@@ -219,14 +233,12 @@ function HomePage() {
 
   return (
     <main>
-      {/* =========================================================
-          HERO
-      ========================================================= */}
+      {/* HERO */}
       <section className="relative isolate overflow-hidden bg-ink text-ink-foreground">
         <div className="absolute inset-0 -z-20">
           <img
             src={heroImage}
-            alt="Vehicle displayed at a car showroom in Mombasa"
+            alt="Vehicle displayed at a BESEKI car showroom in Mombasa"
             width={1920}
             height={1080}
             fetchPriority="high"
@@ -234,30 +246,36 @@ function HomePage() {
           />
         </div>
 
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/90 via-ink/70 to-ink/30" />
+        <div className="absolute inset-0 -z-10 bg-ink/70" />
 
         <div className="container-page relative">
-          <div className="grid min-h-[640px] items-center py-20 lg:grid-cols-[1fr_0.8fr] lg:py-24">
+          <div className="grid min-h-[620px] items-center py-20 lg:grid-cols-[1fr_0.75fr] lg:py-24">
             <div className="max-w-2xl">
               <p className="mb-5 text-[12px] font-semibold uppercase tracking-[0.18em] text-white/70">
                 BESEKI COMPANY LIMITED · MOMBASA
               </p>
 
-              <h1 className="max-w-3xl text-[42px] font-bold leading-[1.02] tracking-[-0.035em] sm:text-[52px] lg:text-[68px]">
+              <h1 className="max-w-3xl text-[42px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[54px] lg:text-[68px]">
                 The right car starts with a{" "}
-                <span className="text-white/65">straight answer.</span>
+                <span className="text-white/65">
+                  straight answer.
+                </span>
               </h1>
 
-              <p className="mt-6 max-w-xl text-[16px] leading-7 text-white/78 sm:text-[17px]">
-                New and locally used motor vehicles, carefully selected and
-                available to view at our showroom along Lumumba Road, Mombasa.
+              <p className="mt-6 max-w-xl text-[16px] leading-7 text-white/80 sm:text-[17px]">
+                New and locally used motor vehicles, carefully selected
+                and available to view at our showroom along Lumumba Road,
+                Mombasa.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button size="lg" asChild>
                   <Link to="/inventory">
                     Browse Inventory
-                    <ArrowRight className="size-4" aria-hidden="true" />
+                    <ArrowRight
+                      className="size-4"
+                      aria-hidden="true"
+                    />
                   </Link>
                 </Button>
 
@@ -265,7 +283,7 @@ function HomePage() {
                   size="lg"
                   variant="outline"
                   asChild
-                  className="border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                  className="border-white/30 bg-white/10 text-white hover:bg-white/15 hover:text-white"
                 >
                   <Link to="/contact" hash="book">
                     Book a Test Drive
@@ -276,7 +294,7 @@ function HomePage() {
                   href={whatsappLink(waMessages.general)}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/20 bg-white/5 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
                 >
                   <WhatsAppIcon className="size-4" />
                   WhatsApp Us
@@ -285,14 +303,15 @@ function HomePage() {
             </div>
           </div>
 
-          {/* Search panel */}
+          {/* SEARCH */}
           <div className="relative -mb-12 md:-mb-14">
-            <div className="border border-white/10 bg-ink/95 p-5 shadow-xl backdrop-blur-sm md:p-6">
-              <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <div className="border border-white/10 bg-ink p-5 shadow-xl md:p-6">
+              <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
                     Search stock
                   </p>
+
                   <h2 className="mt-1 text-[20px] font-bold">
                     What are you looking for?
                   </h2>
@@ -313,9 +332,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* =========================================================
-          INVENTORY INTRO
-      ========================================================= */}
+      {/* CURRENT STOCK */}
       <section className="border-b bg-background pt-24 md:pt-28">
         <div className="container-page">
           <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -328,7 +345,8 @@ function HomePage() {
 
               <p className="mt-4 max-w-xl text-[15px] leading-7 text-muted-foreground">
                 Browse our latest vehicles online, then come to the yard,
-                inspect the car properly and ask every question you need to.
+                inspect the car properly and ask every question you need
+                to.
               </p>
             </div>
 
@@ -364,26 +382,24 @@ function HomePage() {
           ) : (
             <div className="mt-10 border-y py-12">
               <p className="text-sm text-muted-foreground">
-                New vehicles are being added. Browse the full inventory to see
-                the latest stock.
+                New vehicles are being added. Browse the full inventory
+                to see the latest stock.
               </p>
             </div>
           )}
 
-          <div className="mt-8 flex justify-start border-t pt-6">
+          <div className="mt-8 border-t pt-6">
             <Button variant="outline" asChild>
               <Link to="/inventory">
                 View all vehicles
-                <ArrowRight className="size-4" aria-hidden="true" />
+                <ArrowRight className="size-4" />
               </Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* =========================================================
-          TRUST / PROOF
-      ========================================================= */}
+      {/* TRUST */}
       <section className="border-b bg-sand">
         <div className="container-page">
           <div className="grid divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
@@ -419,7 +435,9 @@ function HomePage() {
                 />
 
                 <div>
-                  <h3 className="text-[15px] font-bold">{item.title}</h3>
+                  <h3 className="text-[15px] font-bold">
+                    {item.title}
+                  </h3>
 
                   <p className="mt-1.5 text-[13.5px] leading-6 text-muted-foreground">
                     {item.copy}
@@ -431,9 +449,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* =========================================================
-          WHY BESEKI
-      ========================================================= */}
+      {/* WHY BESEKI */}
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
@@ -445,9 +461,9 @@ function HomePage() {
               </h2>
 
               <p className="mt-5 text-[15px] leading-7 text-muted-foreground">
-                We are a Mombasa dealership, not a call centre. You deal with
-                real people, see the actual vehicle and get space to make a
-                decision properly.
+                We are a Mombasa dealership, not a call centre. You deal
+                with real people, see the actual vehicle and get space
+                to make a decision properly.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -499,7 +515,9 @@ function HomePage() {
                     {item.number}
                   </span>
 
-                  <h3 className="text-[16px] font-bold">{item.title}</h3>
+                  <h3 className="text-[16px] font-bold">
+                    {item.title}
+                  </h3>
 
                   <p className="text-[14px] leading-6 text-muted-foreground">
                     {item.copy}
@@ -511,9 +529,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* =========================================================
-          BROWSE BY BODY TYPE
-      ========================================================= */}
+      {/* BODY TYPES */}
       <section className="border-y bg-sand py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -537,10 +553,9 @@ function HomePage() {
               ).length;
 
               return (
-                <Link
+                <a
                   key={type}
-                  to="/inventory"
-                  search={{ bodyType: type }}
+                  href={`/inventory?bodyType=${encodeURIComponent(type)}`}
                   className="group bg-background p-5 transition-colors hover:bg-card"
                 >
                   <Car
@@ -554,7 +569,8 @@ function HomePage() {
                     </h3>
 
                     <p className="mt-1 text-[12px] text-muted-foreground">
-                      {count} {count === 1 ? "vehicle" : "vehicles"}
+                      {count}{" "}
+                      {count === 1 ? "vehicle" : "vehicles"}
                     </p>
                   </div>
 
@@ -562,16 +578,14 @@ function HomePage() {
                     className="mt-5 size-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary"
                     aria-hidden="true"
                   />
-                </Link>
+                </a>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* =========================================================
-          FINANCE / TRADE-IN
-      ========================================================= */}
+      {/* FINANCING + TRADE IN */}
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="grid overflow-hidden border lg:grid-cols-2">
@@ -585,8 +599,8 @@ function HomePage() {
               </h2>
 
               <p className="mt-4 max-w-md text-[15px] leading-7 text-white/70">
-                Start with an indicative calculation, then talk to our team
-                about available financing options.
+                Start with an indicative calculation, then talk to our
+                team about available financing options.
               </p>
 
               <Button className="mt-7" variant="secondary" asChild>
@@ -622,9 +636,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* =========================================================
-          LATEST ARRIVALS
-      ========================================================= */}
+      {/* LATEST ARRIVALS */}
       <section className="border-y bg-sand py-16 md:py-20">
         <div className="container-page">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -636,32 +648,34 @@ function HomePage() {
               </h2>
 
               <p className="mt-3 max-w-xl text-[15px] leading-7 text-muted-foreground">
-                New stock changes quickly. These are some of the most recently
-                added vehicles in the current inventory.
+                New stock changes quickly. These are some of the most
+                recently added vehicles in the current inventory.
               </p>
             </div>
 
-            <Button variant="outline" asChild>
-              <Link to="/inventory" search={{ sort: "newest" }}>
-                See all arrivals
-                <ArrowRight className="size-4" />
-              </Link>
-            </Button>
+            <a
+              href="/inventory?sort=newest"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-semibold transition-colors hover:bg-muted"
+            >
+              See all arrivals
+              <ArrowRight className="size-4" />
+            </a>
           </div>
 
           {latest.length > 0 && (
             <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {latest.map((vehicle) => (
-                <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                <VehicleCard
+                  key={vehicle.id}
+                  vehicle={vehicle}
+                />
               ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* =========================================================
-          SERVICES
-      ========================================================= */}
+      {/* SERVICES */}
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="grid gap-10 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20">
@@ -673,11 +687,15 @@ function HomePage() {
               </h2>
 
               <p className="mt-4 text-[15px] leading-7 text-muted-foreground">
-                From financing conversations to after-sales support, our goal
-                is to make the ownership journey easier.
+                From financing conversations to after-sales support, our
+                goal is to make the ownership journey easier.
               </p>
 
-              <Button className="mt-6" variant="outline" asChild>
+              <Button
+                className="mt-6"
+                variant="outline"
+                asChild
+              >
                 <Link to="/services">
                   Explore our services
                   <ArrowRight className="size-4" />
@@ -715,9 +733,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* =========================================================
-          TESTIMONIALS
-      ========================================================= */}
+      {/* TESTIMONIALS */}
       <section className="border-y bg-sand py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -729,8 +745,8 @@ function HomePage() {
               </h2>
 
               <p className="mt-3 max-w-xl text-[14px] leading-6 text-muted-foreground">
-                Customer reviews should be published only after they have been
-                verified.
+                Customer reviews should be published only after they have
+                been verified.
               </p>
             </div>
 
@@ -742,20 +758,20 @@ function HomePage() {
             </Button>
           </div>
 
-          <div className="mt-9 grid gap-6 md:grid-cols-3">
-            {testimonials.slice(0, 3).map((testimonial) => (
-              <TestimonialCard
-                key={testimonial.id}
-                testimonial={testimonial}
-              />
-            ))}
-          </div>
+          {testimonials.length > 0 && (
+            <div className="mt-9 grid gap-6 md:grid-cols-3">
+              {testimonials.slice(0, 3).map((testimonial) => (
+                <TestimonialCard
+                  key={testimonial.id}
+                  testimonial={testimonial}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* =========================================================
-          BLOG
-      ========================================================= */}
+      {/* BLOG */}
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -775,17 +791,20 @@ function HomePage() {
             </Button>
           </div>
 
-          <div className="mt-9 grid gap-6 md:grid-cols-3">
-            {posts.map((post) => (
-              <BlogCard key={post.slug} post={post} />
-            ))}
-          </div>
+          {posts.length > 0 && (
+            <div className="mt-9 grid gap-6 md:grid-cols-3">
+              {posts.map((post) => (
+                <BlogCard
+                  key={post.slug}
+                  post={post}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* =========================================================
-          SHOWROOM
-      ========================================================= */}
+      {/* SHOWROOM */}
       <section className="border-t bg-ink text-ink-foreground">
         <div className="container-page grid items-center gap-10 py-16 md:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
@@ -798,8 +817,9 @@ function HomePage() {
             </h2>
 
             <p className="mt-5 max-w-lg text-[15px] leading-7 text-white/70">
-              Our showroom is at {company.addressOneLine}. Come during working
-              hours or message us first so we can have the vehicle ready.
+              Our showroom is at {company.addressOneLine}. Come during
+              working hours or message us first so we can have the vehicle
+              ready.
             </p>
 
             <div className="mt-7 space-y-3 text-sm text-white/75">
@@ -815,7 +835,9 @@ function HomePage() {
 
               <div className="flex gap-3">
                 <Check className="mt-0.5 size-4 shrink-0" />
-                <span>Ask questions before making a decision</span>
+                <span>
+                  Ask questions before making a decision
+                </span>
               </div>
             </div>
 
@@ -830,7 +852,11 @@ function HomePage() {
                 </a>
               </Button>
 
-              <Button size="lg" variant="secondary" asChild>
+              <Button
+                size="lg"
+                variant="secondary"
+                asChild
+              >
                 <Link to="/contact" hash="book">
                   Schedule a Visit
                 </Link>
@@ -840,7 +866,7 @@ function HomePage() {
                 href={whatsappLink(waMessages.general)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/20 bg-white/5 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
               >
                 <WhatsAppIcon className="size-4" />
                 WhatsApp Us
@@ -859,9 +885,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* =========================================================
-          FINAL CTA
-      ========================================================= */}
+      {/* FINAL CTA */}
       <section className="bg-primary text-primary-foreground">
         <div className="container-page flex flex-col gap-7 py-14 md:flex-row md:items-center md:justify-between md:py-16">
           <div>

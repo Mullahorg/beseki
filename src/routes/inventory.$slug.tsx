@@ -7,12 +7,14 @@ import { VehicleSpecs } from "@/components/vehicles/VehicleSpecs";
 import { VehicleCard } from "@/components/vehicles/VehicleCard";
 import { TestDriveForm, OfferForm } from "@/components/forms/Forms";
 import { WhatsAppIcon } from "@/components/layout/Header";
-import { getVehicleBySlug, vehicleName, vehicles } from "@/data/vehicles";
+import { vehicleName } from "@/data/vehicles";
+import { getVehicle } from "@/lib/vehicles.functions";
+import { useVehicles } from "@/lib/vehicles-context";
 import { formatKes, formatKm, waMessages, whatsappLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/inventory/$slug")({
-  loader: ({ params }) => {
-    const vehicle = getVehicleBySlug(params.slug);
+  loader: async ({ params }) => {
+    const vehicle = await getVehicle({ data: { slug: params.slug } });
     if (!vehicle) throw notFound();
     return { vehicle };
   },
@@ -65,6 +67,7 @@ export const Route = createFileRoute("/inventory/$slug")({
 
 function VehicleDetail() {
   const { vehicle } = Route.useLoaderData();
+  const vehicles = useVehicles();
   const name = vehicleName(vehicle);
   const related = vehicles
     .filter((v) => v.id !== vehicle.id && (v.bodyType === vehicle.bodyType || v.make === vehicle.make))

@@ -30,6 +30,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
 import { Route as InventorySlugRouteImport } from './routes/inventory.$slug'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -135,6 +136,11 @@ const InventorySlugRoute = InventorySlugRouteImport.update({
   path: '/inventory/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -152,11 +158,12 @@ export interface FileRoutesByFullPath {
   '/testimonials': typeof TestimonialsRoute
   '/trade-in': typeof TradeInRoute
   '/warranty': typeof WarrantyRoute
-  '/admin': typeof AuthenticatedAdminRouteRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/inventory/$slug': typeof InventorySlugRoute
   '/blog/': typeof BlogIndexRoute
   '/inventory/': typeof InventoryIndexRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -174,11 +181,11 @@ export interface FileRoutesByTo {
   '/testimonials': typeof TestimonialsRoute
   '/trade-in': typeof TradeInRoute
   '/warranty': typeof WarrantyRoute
-  '/admin': typeof AuthenticatedAdminRouteRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/inventory/$slug': typeof InventorySlugRoute
   '/blog': typeof BlogIndexRoute
   '/inventory': typeof InventoryIndexRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -198,11 +205,12 @@ export interface FileRoutesById {
   '/testimonials': typeof TestimonialsRoute
   '/trade-in': typeof TradeInRoute
   '/warranty': typeof WarrantyRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRouteRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/inventory/$slug': typeof InventorySlugRoute
   '/blog/': typeof BlogIndexRoute
   '/inventory/': typeof InventoryIndexRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -227,6 +235,7 @@ export interface FileRouteTypes {
     | '/inventory/$slug'
     | '/blog/'
     | '/inventory/'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -244,11 +253,11 @@ export interface FileRouteTypes {
     | '/testimonials'
     | '/trade-in'
     | '/warranty'
-    | '/admin'
     | '/blog/$slug'
     | '/inventory/$slug'
     | '/blog'
     | '/inventory'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -272,6 +281,7 @@ export interface FileRouteTypes {
     | '/inventory/$slug'
     | '/blog/'
     | '/inventory/'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -446,15 +456,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRoute
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRoute,
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =

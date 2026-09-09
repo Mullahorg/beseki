@@ -14,7 +14,8 @@ import {
   validators,
   type Errors,
 } from "@/components/forms/FormKit";
-import { vehicles, vehicleName } from "@/data/vehicles";
+import { vehicleName } from "@/data/vehicles";
+import { useVehicles } from "@/lib/vehicles-context";
 
 export const Route = createFileRoute("/financing")({
   head: () => ({

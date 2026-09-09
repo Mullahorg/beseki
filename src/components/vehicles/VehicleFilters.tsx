@@ -1,17 +1,18 @@
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useVehicles } from "@/lib/vehicles-context";
 import {
   bodyTypes,
   conditions,
   fuels,
-  makes,
+  makesOf,
   mileageBands,
   priceBands,
   transmissions,
-  vehicles,
-  years,
+  yearsOf,
   type BodyType,
 } from "@/data/vehicles";
+
 
 export interface FilterState {
   q: string;
@@ -83,9 +84,13 @@ export function VehicleFilters({
   onClear: () => void;
   resultCount: number;
 }) {
+  const vehicles = useVehicles();
+  const makes = makesOf(vehicles);
+  const years = yearsOf(vehicles);
   const models = [
     ...new Set(vehicles.filter((v) => !filters.make || v.make === filters.make).map((v) => v.model)),
   ].sort();
+
 
   const active = Object.entries(filters).filter(([, v]) => v);
 

@@ -6,7 +6,8 @@ import { PageHero } from "@/components/common/Section";
 import { EmptyState } from "@/components/common/States";
 import { VehicleCard } from "@/components/vehicles/VehicleCard";
 import { VehicleFilters, emptyFilters, type FilterState } from "@/components/vehicles/VehicleFilters";
-import { mileageBands, priceBands, vehicles } from "@/data/vehicles";
+import { mileageBands, priceBands } from "@/data/vehicles";
+import { useVehicles } from "@/lib/vehicles-context";
 import { cn } from "@/lib/utils";
 
 export interface InventorySearch {
@@ -63,6 +64,7 @@ const PAGE_SIZE = 9;
 
 function InventoryPage() {
   const search = Route.useSearch();
+  const vehicles = useVehicles();
   const navigate = useNavigate({ from: "/inventory/" });
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [filtersOpen, setFiltersOpen] = useState(false);

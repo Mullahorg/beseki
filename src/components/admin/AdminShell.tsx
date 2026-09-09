@@ -46,11 +46,10 @@ export const adminNav: { group: string; items: { label: string; to: string }[] }
     items: [
       { label: "Navigation", to: "/admin/navigation" },
       { label: "Site Settings", to: "/admin/settings" },
-      { label: "SEO", to: "/admin/seo" },
-      { label: "Legal", to: "/admin/legal" },
     ],
   },
 ];
+
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);

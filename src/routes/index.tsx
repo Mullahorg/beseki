@@ -56,10 +56,6 @@ export const Route = createFileRoute("/")({
         property: "og:url",
         content: "/",
       },
-      {
-        name: "robots",
-        content: "index, follow",
-      },
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
@@ -74,10 +70,6 @@ type SearchForm = {
   transmission: string;
   fuel: string;
 };
-
-/* ============================================================
-   QUICK SEARCH
-============================================================ */
 
 function QuickSearch() {
   const navigate = useNavigate();
@@ -95,19 +87,15 @@ function QuickSearch() {
     fuel: "",
   });
 
-  const models = useMemo(
-    () =>
-      [
-        ...new Set(
-          vehicles
-            .filter(
-              (vehicle) => !form.make || vehicle.make === form.make,
-            )
-            .map((vehicle) => vehicle.model),
-        ),
-      ].sort(),
-    [vehicles, form.make],
-  );
+  const models = useMemo(() => {
+    return [
+      ...new Set(
+        vehicles
+          .filter((vehicle) => !form.make || vehicle.make === form.make)
+          .map((vehicle) => vehicle.model),
+      ),
+    ].sort();
+  }, [vehicles, form.make]);
 
   function updateField(key: keyof SearchForm, value: string) {
     setForm((current) => ({
@@ -118,7 +106,46 @@ function QuickSearch() {
   }
 
   const selectClass =
-    "h-12 w-full appearance-none rounded-md border border-white/15 bg-white/10 px-3.5 text-sm text-white outline-none transition-colors focus:border-white/40 focus:ring-2 focus:ring-white/10";
+    "h-11 w-full rounded-md border border-white/15 bg-white px-3 text-sm text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20";
+
+  const fields = [
+    {
+      id: "home-search-make",
+      label: "Make",
+      key: "make" as const,
+      options: makes,
+    },
+    {
+      id: "home-search-model",
+      label: "Model",
+      key: "model" as const,
+      options: models,
+    },
+    {
+      id: "home-search-price",
+      label: "Price",
+      key: "price" as const,
+      options: priceBands.map((band) => band.label),
+    },
+    {
+      id: "home-search-year",
+      label: "Year",
+      key: "year" as const,
+      options: years.map(String),
+    },
+    {
+      id: "home-search-transmission",
+      label: "Transmission",
+      key: "transmission" as const,
+      options: [...transmissions],
+    },
+    {
+      id: "home-search-fuel",
+      label: "Fuel",
+      key: "fuel" as const,
+      options: [...fuels],
+    },
+  ];
 
   return (
     <form
@@ -126,55 +153,16 @@ function QuickSearch() {
       onSubmit={(event) => {
         event.preventDefault();
 
-        const search = Object.fromEntries(
-          Object.entries(form).filter(([, value]) => Boolean(value)),
-        );
-
         navigate({
           to: "/inventory",
-          search,
+          search: Object.fromEntries(
+            Object.entries(form).filter(([, value]) => Boolean(value)),
+          ),
         });
       }}
-      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7"
+      className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
     >
-      {[
-        {
-          id: "home-search-make",
-          label: "Make",
-          key: "make" as const,
-          options: makes,
-        },
-        {
-          id: "home-search-model",
-          label: "Model",
-          key: "model" as const,
-          options: models,
-        },
-        {
-          id: "home-search-price",
-          label: "Price",
-          key: "price" as const,
-          options: priceBands.map((band) => band.label),
-        },
-        {
-          id: "home-search-year",
-          label: "Year",
-          key: "year" as const,
-          options: years.map(String),
-        },
-        {
-          id: "home-search-transmission",
-          label: "Transmission",
-          key: "transmission" as const,
-          options: [...transmissions],
-        },
-        {
-          id: "home-search-fuel",
-          label: "Fuel",
-          key: "fuel" as const,
-          options: [...fuels],
-        },
-      ].map((fieldConfig) => (
+      {fields.map((fieldConfig) => (
         <div key={fieldConfig.id} className="min-w-0">
           <label
             htmlFor={fieldConfig.id}
@@ -183,53 +171,38 @@ function QuickSearch() {
             {fieldConfig.label}
           </label>
 
-          <div className="relative">
-            <select
-              id={fieldConfig.id}
-              value={form[fieldConfig.key]}
-              onChange={(event) =>
-                updateField(fieldConfig.key, event.target.value)
-              }
-              className={selectClass}
-            >
-              <option value="">Any</option>
+          <select
+            id={fieldConfig.id}
+            value={form[fieldConfig.key]}
+            onChange={(event) =>
+              updateField(fieldConfig.key, event.target.value)
+            }
+            className={selectClass}
+          >
+            <option value="">Any</option>
 
-              {fieldConfig.options.map((option) => (
-                <option
-                  key={option}
-                  value={option}
-                  className="bg-ink text-white"
-                >
-                  {option}
-                </option>
-              ))}
-            </select>
-
-            <ChevronRight
-              className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 rotate-90 text-white/50"
-              aria-hidden="true"
-            />
-          </div>
+            {fieldConfig.options.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </div>
       ))}
 
-      <div className="flex items-end">
+      <div className="md:col-span-2 lg:col-span-3 xl:col-span-6">
         <Button
           type="submit"
           size="lg"
-          className="h-12 w-full bg-primary px-6"
+          className="h-11 w-full bg-primary px-7"
         >
           <Search className="size-4" aria-hidden="true" />
-          Search
+          Search Inventory
         </Button>
       </div>
     </form>
   );
 }
-
-/* ============================================================
-   HOME PAGE
-============================================================ */
 
 function HomePage() {
   const vehicles = useVehicles();
@@ -247,12 +220,11 @@ function HomePage() {
   const totalVehicles = vehicles.length;
 
   return (
-    <main className="overflow-hidden">
-      {/* ======================================================
+    <main className="min-w-0 overflow-x-hidden">
+      {/* =========================================================
           HERO
-      ====================================================== */}
-
-      <section className="relative bg-ink text-ink-foreground">
+      ========================================================= */}
+      <section className="relative overflow-hidden bg-ink text-ink-foreground">
         <div className="absolute inset-0">
           <img
             src={heroImage}
@@ -260,41 +232,35 @@ function HomePage() {
             width={1920}
             height={1080}
             fetchPriority="high"
-            className="size-full object-cover object-center"
+            className="h-full w-full object-cover object-center"
           />
         </div>
 
-        {/* Stable overlay — no complex gradients */}
+        {/* Simple overlay - intentionally no complex gradients */}
         <div className="absolute inset-0 bg-black/65" />
 
         <div className="container-page relative">
-          <div className="flex min-h-[560px] items-center py-24 md:min-h-[610px] md:py-28">
+          <div className="grid min-h-[560px] items-center py-20 md:min-h-[600px] lg:min-h-[640px]">
             <div className="max-w-2xl">
-              <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70">
+              <p className="mb-5 text-[12px] font-semibold uppercase tracking-[0.18em] text-white/75">
                 BESEKI COMPANY LIMITED · MOMBASA
               </p>
 
-              <h1 className="max-w-3xl text-[42px] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[52px] lg:text-[66px]">
+              <h1 className="max-w-3xl text-[40px] font-bold leading-[1.05] tracking-[-0.03em] sm:text-[52px] lg:text-[66px]">
                 The right car starts with a{" "}
-                <span className="text-white/65">
-                  straight answer.
-                </span>
+                <span className="text-white/65">straight answer.</span>
               </h1>
 
               <p className="mt-6 max-w-xl text-[16px] leading-7 text-white/80 sm:text-[17px]">
-                New and locally used motor vehicles, carefully selected
-                and available to view at our showroom along Lumumba Road,
-                Mombasa.
+                New and locally used motor vehicles, carefully selected and
+                available to view at our showroom along Lumumba Road, Mombasa.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button size="lg" asChild>
                   <Link to="/inventory">
                     Browse Inventory
-                    <ArrowRight
-                      className="size-4"
-                      aria-hidden="true"
-                    />
+                    <ArrowRight className="size-4" />
                   </Link>
                 </Button>
 
@@ -302,7 +268,7 @@ function HomePage() {
                   size="lg"
                   variant="outline"
                   asChild
-                  className="border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                  className="border-white/35 bg-white/10 text-white hover:bg-white/20 hover:text-white"
                 >
                   <Link to="/contact" hash="book">
                     Book a Test Drive
@@ -313,7 +279,7 @@ function HomePage() {
                   href={whatsappLink(waMessages.general)}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/25 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/20"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/30 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/20"
                 >
                   <WhatsAppIcon className="size-4" />
                   WhatsApp Us
@@ -324,29 +290,27 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           SEARCH
-          IMPORTANT: This is OUTSIDE the hero.
-          No negative margins or absolute positioning.
-      ====================================================== */}
-
-      <section className="relative z-10 -mt-8 md:-mt-10">
+          IMPORTANT: NORMAL FLOW - NO NEGATIVE MARGIN
+      ========================================================= */}
+      <section className="relative z-10 bg-ink py-8 text-ink-foreground md:py-10">
         <div className="container-page">
-          <div className="border border-white/10 bg-ink p-5 text-white shadow-xl md:p-7">
-            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="border border-white/10 bg-[#151820] p-5 md:p-7">
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-white/55">
                   Search stock
                 </p>
 
-                <h2 className="mt-1 text-[21px] font-bold">
+                <h2 className="mt-2 text-[22px] font-bold md:text-[26px]">
                   What are you looking for?
                 </h2>
               </div>
 
               <Link
                 to="/inventory"
-                className="inline-flex items-center text-sm font-semibold text-white/70 transition-colors hover:text-white"
+                className="inline-flex items-center text-sm font-semibold text-white/75 transition-colors hover:text-white"
               >
                 Advanced search
                 <ChevronRight className="ml-1 size-4" />
@@ -358,13 +322,12 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
-          CURRENT STOCK
-      ====================================================== */}
-
-      <section className="border-b bg-background pt-20 md:pt-24">
+      {/* =========================================================
+          INVENTORY
+      ========================================================= */}
+      <section className="border-b bg-background py-16 md:py-20">
         <div className="container-page">
-          <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <div className="max-w-2xl">
               <p className="eyebrow">Current stock</p>
 
@@ -374,16 +337,13 @@ function HomePage() {
 
               <p className="mt-4 max-w-xl text-[15px] leading-7 text-muted-foreground">
                 Browse our latest vehicles online, then come to the yard,
-                inspect the car properly and ask every question you need
-                to.
+                inspect the car properly and ask every question you need to.
               </p>
             </div>
 
             <div className="flex items-center gap-6 border-t pt-4 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
               <div>
-                <p className="text-3xl font-bold">
-                  {totalVehicles}
-                </p>
+                <p className="text-3xl font-bold">{totalVehicles}</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   vehicles listed
                 </p>
@@ -413,13 +373,13 @@ function HomePage() {
           ) : (
             <div className="mt-10 border-y py-12">
               <p className="text-sm text-muted-foreground">
-                New vehicles are being added. Browse the full inventory
-                to see the latest stock.
+                New vehicles are being added. Browse the full inventory to see
+                the latest stock.
               </p>
             </div>
           )}
 
-          <div className="mt-8 flex justify-start border-t pt-6">
+          <div className="mt-8 border-t pt-6">
             <Button variant="outline" asChild>
               <Link to="/inventory">
                 View all vehicles
@@ -430,10 +390,9 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           TRUST
-      ====================================================== */}
-
+      ========================================================= */}
       <section className="border-b bg-sand">
         <div className="container-page">
           <div className="grid divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
@@ -441,26 +400,22 @@ function HomePage() {
               {
                 icon: BadgeCheck,
                 title: "Quality focused",
-                copy:
-                  "We inspect vehicles before putting them forward.",
+                copy: "We inspect vehicles before putting them forward.",
               },
               {
                 icon: HandCoins,
                 title: "Clear pricing",
-                copy:
-                  "We discuss the vehicle and its price openly.",
+                copy: "We discuss the vehicle and its price openly.",
               },
               {
                 icon: MapPin,
                 title: "Visit the yard",
-                copy:
-                  "See the actual car along Lumumba Road.",
+                copy: "See the actual car along Lumumba Road.",
               },
               {
                 icon: Wrench,
                 title: "After the sale",
-                copy:
-                  "Our team remains reachable after handover.",
+                copy: "Our team remains reachable after handover.",
               },
             ].map((item) => (
               <div
@@ -473,9 +428,7 @@ function HomePage() {
                 />
 
                 <div>
-                  <h3 className="text-[15px] font-bold">
-                    {item.title}
-                  </h3>
+                  <h3 className="text-[15px] font-bold">{item.title}</h3>
 
                   <p className="mt-1.5 text-[13.5px] leading-6 text-muted-foreground">
                     {item.copy}
@@ -487,10 +440,9 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           WHY BESEKI
-      ====================================================== */}
-
+      ========================================================= */}
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
@@ -502,9 +454,9 @@ function HomePage() {
               </h2>
 
               <p className="mt-5 text-[15px] leading-7 text-muted-foreground">
-                We are a Mombasa dealership, not a call centre. You deal
-                with real people, see the actual vehicle and get space
-                to make a decision properly.
+                We are a Mombasa dealership, not a call centre. You deal with
+                real people, see the actual vehicle and get space to make a
+                decision properly.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -556,9 +508,7 @@ function HomePage() {
                     {item.number}
                   </span>
 
-                  <h3 className="text-[16px] font-bold">
-                    {item.title}
-                  </h3>
+                  <h3 className="text-[16px] font-bold">{item.title}</h3>
 
                   <p className="text-[14px] leading-6 text-muted-foreground">
                     {item.copy}
@@ -570,10 +520,9 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           BODY TYPES
-      ====================================================== */}
-
+      ========================================================= */}
       <section className="border-y bg-sand py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -614,8 +563,7 @@ function HomePage() {
                     </h3>
 
                     <p className="mt-1 text-[12px] text-muted-foreground">
-                      {count}{" "}
-                      {count === 1 ? "vehicle" : "vehicles"}
+                      {count} {count === 1 ? "vehicle" : "vehicles"}
                     </p>
                   </div>
 
@@ -630,10 +578,9 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
-          FINANCING / TRADE-IN
-      ====================================================== */}
-
+      {/* =========================================================
+          FINANCING / TRADE IN
+      ========================================================= */}
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="grid overflow-hidden border lg:grid-cols-2">
@@ -647,15 +594,11 @@ function HomePage() {
               </h2>
 
               <p className="mt-4 max-w-md text-[15px] leading-7 text-white/70">
-                Start with an indicative calculation, then talk to our
-                team about available financing options.
+                Start with an indicative calculation, then talk to our team
+                about available financing options.
               </p>
 
-              <Button
-                className="mt-7"
-                variant="secondary"
-                asChild
-              >
+              <Button className="mt-7" variant="secondary" asChild>
                 <Link to="/financing">
                   Explore Financing
                   <ArrowRight className="size-4" />
@@ -688,10 +631,9 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           LATEST ARRIVALS
-      ====================================================== */}
-
+      ========================================================= */}
       <section className="border-y bg-sand py-16 md:py-20">
         <div className="container-page">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -703,16 +645,13 @@ function HomePage() {
               </h2>
 
               <p className="mt-3 max-w-xl text-[15px] leading-7 text-muted-foreground">
-                New stock changes quickly. These are some of the most
-                recently added vehicles in the current inventory.
+                New stock changes quickly. These are some of the most recently
+                added vehicles in the current inventory.
               </p>
             </div>
 
             <Button variant="outline" asChild>
-              <Link
-                to="/inventory"
-                search={{ sort: "newest" }}
-              >
+              <Link to="/inventory" search={{ sort: "newest" }}>
                 See all arrivals
                 <ArrowRight className="size-4" />
               </Link>
@@ -722,20 +661,16 @@ function HomePage() {
           {latest.length > 0 && (
             <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {latest.map((vehicle) => (
-                <VehicleCard
-                  key={vehicle.id}
-                  vehicle={vehicle}
-                />
+                <VehicleCard key={vehicle.id} vehicle={vehicle} />
               ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           SERVICES
-      ====================================================== */}
-
+      ========================================================= */}
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="grid gap-10 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20">
@@ -747,15 +682,11 @@ function HomePage() {
               </h2>
 
               <p className="mt-4 text-[15px] leading-7 text-muted-foreground">
-                From financing conversations to after-sales support, our
-                goal is to make the ownership journey easier.
+                From financing conversations to after-sales support, our goal
+                is to make the ownership journey easier.
               </p>
 
-              <Button
-                className="mt-6"
-                variant="outline"
-                asChild
-              >
+              <Button className="mt-6" variant="outline" asChild>
                 <Link to="/services">
                   Explore our services
                   <ArrowRight className="size-4" />
@@ -793,10 +724,9 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           TESTIMONIALS
-      ====================================================== */}
-
+      ========================================================= */}
       <section className="border-y bg-sand py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -808,8 +738,8 @@ function HomePage() {
               </h2>
 
               <p className="mt-3 max-w-xl text-[14px] leading-6 text-muted-foreground">
-                Customer reviews should be published only after they
-                have been verified.
+                Customer reviews should be published only after they have been
+                verified.
               </p>
             </div>
 
@@ -832,10 +762,9 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           BLOG
-      ====================================================== */}
-
+      ========================================================= */}
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -857,19 +786,15 @@ function HomePage() {
 
           <div className="mt-9 grid gap-6 md:grid-cols-3">
             {posts.map((post) => (
-              <BlogCard
-                key={post.slug}
-                post={post}
-              />
+              <BlogCard key={post.slug} post={post} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           SHOWROOM
-      ====================================================== */}
-
+      ========================================================= */}
       <section className="border-t bg-ink text-ink-foreground">
         <div className="container-page grid items-center gap-10 py-16 md:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
@@ -882,9 +807,8 @@ function HomePage() {
             </h2>
 
             <p className="mt-5 max-w-lg text-[15px] leading-7 text-white/70">
-              Our showroom is at {company.addressOneLine}. Come during
-              working hours or message us first so we can have the
-              vehicle ready.
+              Our showroom is at {company.addressOneLine}. Come during working
+              hours or message us first so we can have the vehicle ready.
             </p>
 
             <div className="mt-7 space-y-3 text-sm text-white/75">
@@ -900,9 +824,7 @@ function HomePage() {
 
               <div className="flex gap-3">
                 <Check className="mt-0.5 size-4 shrink-0" />
-                <span>
-                  Ask questions before making a decision
-                </span>
+                <span>Ask questions before making a decision</span>
               </div>
             </div>
 
@@ -917,11 +839,7 @@ function HomePage() {
                 </a>
               </Button>
 
-              <Button
-                size="lg"
-                variant="secondary"
-                asChild
-              >
+              <Button size="lg" variant="secondary" asChild>
                 <Link to="/contact" hash="book">
                   Schedule a Visit
                 </Link>
@@ -950,10 +868,9 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ======================================================
+      {/* =========================================================
           FINAL CTA
-      ====================================================== */}
-
+      ========================================================= */}
       <section className="bg-primary text-primary-foreground">
         <div className="container-page flex flex-col gap-7 py-14 md:flex-row md:items-center md:justify-between md:py-16">
           <div>
@@ -966,8 +883,8 @@ function HomePage() {
             </h2>
 
             <p className="mt-2 max-w-xl text-sm leading-6 text-primary-foreground/75">
-              Ask a question, book a viewing or speak to the BESEKI
-              team directly.
+              Ask a question, book a viewing or speak to the BESEKI team
+              directly.
             </p>
           </div>
 

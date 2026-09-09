@@ -9,6 +9,9 @@ import { AdminEmpty, AdminError, AdminLoading, Saving, StatusPill } from "@/comp
 import { MediaPicker } from "@/components/admin/MediaPicker";
 import { supabase } from "@/integrations/supabase/client";
 
+// Collection specs are data-driven, so queries are built against a loosely typed client.
+const db = supabase as any;
+
 export type FieldType = "text" | "textarea" | "number" | "select" | "status" | "media" | "list" | "date";
 
 export interface FieldSpec {
@@ -70,10 +73,10 @@ export function CollectionAdmin({ spec }: { spec: CollectionSpec }) {
       for (const f of spec.fields) payload[f.name] = row[f.name];
       Object.assign(payload, spec.defaults ? {} : {});
       if (row["id"]) {
-        const { error } = await supabase.from(spec.table).update(payload).eq("id", row["id"]);
+        const { error } = await db.from(spec.table).update(payload).eq("id", row["id"]);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from(spec.table).insert(payload);
+        const { error } = await db.from(spec.table).insert(payload);
         if (error) throw error;
       }
     },
@@ -87,7 +90,7 @@ export function CollectionAdmin({ spec }: { spec: CollectionSpec }) {
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from(spec.table).delete().eq("id", id);
+      const { error } = await db.from(spec.table).delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

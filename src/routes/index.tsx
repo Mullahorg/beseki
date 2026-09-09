@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   ArrowRight,
   BadgeCheck,
@@ -56,6 +56,10 @@ export const Route = createFileRoute("/")({
         property: "og:url",
         content: "/",
       },
+      {
+        name: "robots",
+        content: "index, follow",
+      },
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
@@ -71,7 +75,12 @@ type SearchForm = {
   fuel: string;
 };
 
+/* ============================================================
+   QUICK SEARCH
+============================================================ */
+
 function QuickSearch() {
+  const navigate = useNavigate();
   const vehicles = useVehicles();
 
   const makes = makesOf(vehicles);
@@ -100,9 +109,6 @@ function QuickSearch() {
     [vehicles, form.make],
   );
 
-  const fieldClass =
-    "h-11 w-full appearance-none rounded-md border border-white/15 bg-white/10 px-3.5 text-sm text-white outline-none transition-colors placeholder:text-white/50 focus:border-white/40 focus:ring-2 focus:ring-white/10";
-
   function updateField(key: keyof SearchForm, value: string) {
     setForm((current) => ({
       ...current,
@@ -111,102 +117,107 @@ function QuickSearch() {
     }));
   }
 
-  function submitSearch(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const params = new URLSearchParams();
-
-    Object.entries(form).forEach(([key, value]) => {
-      if (value) {
-        params.set(key, value);
-      }
-    });
-
-    const query = params.toString();
-
-    window.location.href = query
-      ? `/inventory?${query}`
-      : "/inventory";
-  }
-
-  const fields = [
-    {
-      id: "home-search-make",
-      label: "Make",
-      key: "make" as const,
-      options: makes,
-    },
-    {
-      id: "home-search-model",
-      label: "Model",
-      key: "model" as const,
-      options: models,
-    },
-    {
-      id: "home-search-price",
-      label: "Price",
-      key: "price" as const,
-      options: priceBands.map((band) => band.label),
-    },
-    {
-      id: "home-search-year",
-      label: "Year",
-      key: "year" as const,
-      options: years.map(String),
-    },
-    {
-      id: "home-search-transmission",
-      label: "Transmission",
-      key: "transmission" as const,
-      options: [...transmissions],
-    },
-    {
-      id: "home-search-fuel",
-      label: "Fuel",
-      key: "fuel" as const,
-      options: [...fuels],
-    },
-  ];
+  const selectClass =
+    "h-12 w-full appearance-none rounded-md border border-white/15 bg-white/10 px-3.5 text-sm text-white outline-none transition-colors focus:border-white/40 focus:ring-2 focus:ring-white/10";
 
   return (
     <form
       aria-label="Search BESEKI vehicle inventory"
-      onSubmit={submitSearch}
-      className="grid gap-3 lg:grid-cols-[1fr_1fr_1.15fr_0.9fr_1fr_1fr_auto]"
+      onSubmit={(event) => {
+        event.preventDefault();
+
+        const search = Object.fromEntries(
+          Object.entries(form).filter(([, value]) => Boolean(value)),
+        );
+
+        navigate({
+          to: "/inventory",
+          search,
+        });
+      }}
+      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7"
     >
-      {fields.map((fieldConfig) => (
+      {[
+        {
+          id: "home-search-make",
+          label: "Make",
+          key: "make" as const,
+          options: makes,
+        },
+        {
+          id: "home-search-model",
+          label: "Model",
+          key: "model" as const,
+          options: models,
+        },
+        {
+          id: "home-search-price",
+          label: "Price",
+          key: "price" as const,
+          options: priceBands.map((band) => band.label),
+        },
+        {
+          id: "home-search-year",
+          label: "Year",
+          key: "year" as const,
+          options: years.map(String),
+        },
+        {
+          id: "home-search-transmission",
+          label: "Transmission",
+          key: "transmission" as const,
+          options: [...transmissions],
+        },
+        {
+          id: "home-search-fuel",
+          label: "Fuel",
+          key: "fuel" as const,
+          options: [...fuels],
+        },
+      ].map((fieldConfig) => (
         <div key={fieldConfig.id} className="min-w-0">
           <label
             htmlFor={fieldConfig.id}
-            className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60"
+            className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60"
           >
             {fieldConfig.label}
           </label>
 
-          <select
-            id={fieldConfig.id}
-            value={form[fieldConfig.key]}
-            onChange={(event) =>
-              updateField(fieldConfig.key, event.target.value)
-            }
-            className={fieldClass}
-          >
-            <option value="">Any</option>
+          <div className="relative">
+            <select
+              id={fieldConfig.id}
+              value={form[fieldConfig.key]}
+              onChange={(event) =>
+                updateField(fieldConfig.key, event.target.value)
+              }
+              className={selectClass}
+            >
+              <option value="">Any</option>
 
-            {fieldConfig.options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+              {fieldConfig.options.map((option) => (
+                <option
+                  key={option}
+                  value={option}
+                  className="bg-ink text-white"
+                >
+                  {option}
+                </option>
+              ))}
+            </select>
+
+            <ChevronRight
+              className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 rotate-90 text-white/50"
+              aria-hidden="true"
+            />
+          </div>
         </div>
       ))}
 
-      <div className="self-end">
+      <div className="flex items-end">
         <Button
           type="submit"
           size="lg"
-          className="h-11 w-full px-6 lg:w-auto"
+          className="h-12 w-full bg-primary px-6"
         >
           <Search className="size-4" aria-hidden="true" />
           Search
@@ -216,6 +227,10 @@ function QuickSearch() {
   );
 }
 
+/* ============================================================
+   HOME PAGE
+============================================================ */
+
 function HomePage() {
   const vehicles = useVehicles();
 
@@ -224,7 +239,7 @@ function HomePage() {
     .slice(0, 6);
 
   const latest = [...vehicles]
-    .sort((a, b) => Number(b.year) - Number(a.year))
+    .sort((a, b) => b.year - a.year)
     .slice(0, 3);
 
   const posts = blogPosts.slice(0, 3);
@@ -232,13 +247,16 @@ function HomePage() {
   const totalVehicles = vehicles.length;
 
   return (
-    <main>
-      {/* HERO */}
-      <section className="relative isolate overflow-hidden bg-ink text-ink-foreground">
-        <div className="absolute inset-0 -z-20">
+    <main className="overflow-hidden">
+      {/* ======================================================
+          HERO
+      ====================================================== */}
+
+      <section className="relative bg-ink text-ink-foreground">
+        <div className="absolute inset-0">
           <img
             src={heroImage}
-            alt="Vehicle displayed at a BESEKI car showroom in Mombasa"
+            alt="Vehicle displayed at a car showroom in Mombasa"
             width={1920}
             height={1080}
             fetchPriority="high"
@@ -246,16 +264,17 @@ function HomePage() {
           />
         </div>
 
-        <div className="absolute inset-0 -z-10 bg-ink/70" />
+        {/* Stable overlay — no complex gradients */}
+        <div className="absolute inset-0 bg-black/65" />
 
         <div className="container-page relative">
-          <div className="grid min-h-[620px] items-center py-20 lg:grid-cols-[1fr_0.75fr] lg:py-24">
+          <div className="flex min-h-[560px] items-center py-24 md:min-h-[610px] md:py-28">
             <div className="max-w-2xl">
-              <p className="mb-5 text-[12px] font-semibold uppercase tracking-[0.18em] text-white/70">
+              <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70">
                 BESEKI COMPANY LIMITED · MOMBASA
               </p>
 
-              <h1 className="max-w-3xl text-[42px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[54px] lg:text-[68px]">
+              <h1 className="max-w-3xl text-[42px] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[52px] lg:text-[66px]">
                 The right car starts with a{" "}
                 <span className="text-white/65">
                   straight answer.
@@ -283,7 +302,7 @@ function HomePage() {
                   size="lg"
                   variant="outline"
                   asChild
-                  className="border-white/30 bg-white/10 text-white hover:bg-white/15 hover:text-white"
+                  className="border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white"
                 >
                   <Link to="/contact" hash="book">
                     Book a Test Drive
@@ -294,7 +313,7 @@ function HomePage() {
                   href={whatsappLink(waMessages.general)}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/25 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/20"
                 >
                   <WhatsAppIcon className="size-4" />
                   WhatsApp Us
@@ -302,38 +321,48 @@ function HomePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* SEARCH */}
-          <div className="relative -mb-12 md:-mb-14">
-            <div className="border border-white/10 bg-ink p-5 shadow-xl md:p-6">
-              <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
-                    Search stock
-                  </p>
+      {/* ======================================================
+          SEARCH
+          IMPORTANT: This is OUTSIDE the hero.
+          No negative margins or absolute positioning.
+      ====================================================== */}
 
-                  <h2 className="mt-1 text-[20px] font-bold">
-                    What are you looking for?
-                  </h2>
-                </div>
+      <section className="relative z-10 -mt-8 md:-mt-10">
+        <div className="container-page">
+          <div className="border border-white/10 bg-ink p-5 text-white shadow-xl md:p-7">
+            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+                  Search stock
+                </p>
 
-                <Link
-                  to="/inventory"
-                  className="text-sm font-semibold text-white/70 transition-colors hover:text-white"
-                >
-                  Advanced search
-                  <ChevronRight className="ml-1 inline size-4" />
-                </Link>
+                <h2 className="mt-1 text-[21px] font-bold">
+                  What are you looking for?
+                </h2>
               </div>
 
-              <QuickSearch />
+              <Link
+                to="/inventory"
+                className="inline-flex items-center text-sm font-semibold text-white/70 transition-colors hover:text-white"
+              >
+                Advanced search
+                <ChevronRight className="ml-1 size-4" />
+              </Link>
             </div>
+
+            <QuickSearch />
           </div>
         </div>
       </section>
 
-      {/* CURRENT STOCK */}
-      <section className="border-b bg-background pt-24 md:pt-28">
+      {/* ======================================================
+          CURRENT STOCK
+      ====================================================== */}
+
+      <section className="border-b bg-background pt-20 md:pt-24">
         <div className="container-page">
           <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
             <div className="max-w-2xl">
@@ -352,7 +381,9 @@ function HomePage() {
 
             <div className="flex items-center gap-6 border-t pt-4 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
               <div>
-                <p className="text-3xl font-bold">{totalVehicles}</p>
+                <p className="text-3xl font-bold">
+                  {totalVehicles}
+                </p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   vehicles listed
                 </p>
@@ -388,7 +419,7 @@ function HomePage() {
             </div>
           )}
 
-          <div className="mt-8 border-t pt-6">
+          <div className="mt-8 flex justify-start border-t pt-6">
             <Button variant="outline" asChild>
               <Link to="/inventory">
                 View all vehicles
@@ -399,7 +430,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* TRUST */}
+      {/* ======================================================
+          TRUST
+      ====================================================== */}
+
       <section className="border-b bg-sand">
         <div className="container-page">
           <div className="grid divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
@@ -407,22 +441,26 @@ function HomePage() {
               {
                 icon: BadgeCheck,
                 title: "Quality focused",
-                copy: "We inspect vehicles before putting them forward.",
+                copy:
+                  "We inspect vehicles before putting them forward.",
               },
               {
                 icon: HandCoins,
                 title: "Clear pricing",
-                copy: "We discuss the vehicle and its price openly.",
+                copy:
+                  "We discuss the vehicle and its price openly.",
               },
               {
                 icon: MapPin,
                 title: "Visit the yard",
-                copy: "See the actual car along Lumumba Road.",
+                copy:
+                  "See the actual car along Lumumba Road.",
               },
               {
                 icon: Wrench,
                 title: "After the sale",
-                copy: "Our team remains reachable after handover.",
+                copy:
+                  "Our team remains reachable after handover.",
               },
             ].map((item) => (
               <div
@@ -449,7 +487,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* WHY BESEKI */}
+      {/* ======================================================
+          WHY BESEKI
+      ====================================================== */}
+
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
@@ -529,7 +570,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* BODY TYPES */}
+      {/* ======================================================
+          BODY TYPES
+      ====================================================== */}
+
       <section className="border-y bg-sand py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -553,9 +597,10 @@ function HomePage() {
               ).length;
 
               return (
-                <a
+                <Link
                   key={type}
-                  href={`/inventory?bodyType=${encodeURIComponent(type)}`}
+                  to="/inventory"
+                  search={{ bodyType: type }}
                   className="group bg-background p-5 transition-colors hover:bg-card"
                 >
                   <Car
@@ -578,14 +623,17 @@ function HomePage() {
                     className="mt-5 size-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary"
                     aria-hidden="true"
                   />
-                </a>
+                </Link>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* FINANCING + TRADE IN */}
+      {/* ======================================================
+          FINANCING / TRADE-IN
+      ====================================================== */}
+
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="grid overflow-hidden border lg:grid-cols-2">
@@ -603,7 +651,11 @@ function HomePage() {
                 team about available financing options.
               </p>
 
-              <Button className="mt-7" variant="secondary" asChild>
+              <Button
+                className="mt-7"
+                variant="secondary"
+                asChild
+              >
                 <Link to="/financing">
                   Explore Financing
                   <ArrowRight className="size-4" />
@@ -636,7 +688,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* LATEST ARRIVALS */}
+      {/* ======================================================
+          LATEST ARRIVALS
+      ====================================================== */}
+
       <section className="border-y bg-sand py-16 md:py-20">
         <div className="container-page">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -653,13 +708,15 @@ function HomePage() {
               </p>
             </div>
 
-            <a
-              href="/inventory?sort=newest"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-semibold transition-colors hover:bg-muted"
-            >
-              See all arrivals
-              <ArrowRight className="size-4" />
-            </a>
+            <Button variant="outline" asChild>
+              <Link
+                to="/inventory"
+                search={{ sort: "newest" }}
+              >
+                See all arrivals
+                <ArrowRight className="size-4" />
+              </Link>
+            </Button>
           </div>
 
           {latest.length > 0 && (
@@ -675,7 +732,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* SERVICES */}
+      {/* ======================================================
+          SERVICES
+      ====================================================== */}
+
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="grid gap-10 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20">
@@ -733,7 +793,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
+      {/* ======================================================
+          TESTIMONIALS
+      ====================================================== */}
+
       <section className="border-y bg-sand py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -745,8 +808,8 @@ function HomePage() {
               </h2>
 
               <p className="mt-3 max-w-xl text-[14px] leading-6 text-muted-foreground">
-                Customer reviews should be published only after they have
-                been verified.
+                Customer reviews should be published only after they
+                have been verified.
               </p>
             </div>
 
@@ -758,20 +821,21 @@ function HomePage() {
             </Button>
           </div>
 
-          {testimonials.length > 0 && (
-            <div className="mt-9 grid gap-6 md:grid-cols-3">
-              {testimonials.slice(0, 3).map((testimonial) => (
-                <TestimonialCard
-                  key={testimonial.id}
-                  testimonial={testimonial}
-                />
-              ))}
-            </div>
-          )}
+          <div className="mt-9 grid gap-6 md:grid-cols-3">
+            {testimonials.slice(0, 3).map((testimonial) => (
+              <TestimonialCard
+                key={testimonial.id}
+                testimonial={testimonial}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* BLOG */}
+      {/* ======================================================
+          BLOG
+      ====================================================== */}
+
       <section className="py-16 md:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -791,20 +855,21 @@ function HomePage() {
             </Button>
           </div>
 
-          {posts.length > 0 && (
-            <div className="mt-9 grid gap-6 md:grid-cols-3">
-              {posts.map((post) => (
-                <BlogCard
-                  key={post.slug}
-                  post={post}
-                />
-              ))}
-            </div>
-          )}
+          <div className="mt-9 grid gap-6 md:grid-cols-3">
+            {posts.map((post) => (
+              <BlogCard
+                key={post.slug}
+                post={post}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* SHOWROOM */}
+      {/* ======================================================
+          SHOWROOM
+      ====================================================== */}
+
       <section className="border-t bg-ink text-ink-foreground">
         <div className="container-page grid items-center gap-10 py-16 md:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
@@ -818,8 +883,8 @@ function HomePage() {
 
             <p className="mt-5 max-w-lg text-[15px] leading-7 text-white/70">
               Our showroom is at {company.addressOneLine}. Come during
-              working hours or message us first so we can have the vehicle
-              ready.
+              working hours or message us first so we can have the
+              vehicle ready.
             </p>
 
             <div className="mt-7 space-y-3 text-sm text-white/75">
@@ -866,7 +931,7 @@ function HomePage() {
                 href={whatsappLink(waMessages.general)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-white/20 bg-white/5 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
               >
                 <WhatsAppIcon className="size-4" />
                 WhatsApp Us
@@ -885,7 +950,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* FINAL CTA */}
+      {/* ======================================================
+          FINAL CTA
+      ====================================================== */}
+
       <section className="bg-primary text-primary-foreground">
         <div className="container-page flex flex-col gap-7 py-14 md:flex-row md:items-center md:justify-between md:py-16">
           <div>
@@ -898,8 +966,8 @@ function HomePage() {
             </h2>
 
             <p className="mt-2 max-w-xl text-sm leading-6 text-primary-foreground/75">
-              Ask a question, book a viewing or speak to the BESEKI team
-              directly.
+              Ask a question, book a viewing or speak to the BESEKI
+              team directly.
             </p>
           </div>
 

@@ -3,7 +3,8 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { vehicles, vehicleName } from "@/data/vehicles";
+import { vehicleName } from "@/data/vehicles";
+import { useVehicles } from "@/lib/vehicles-context";
 import { formatKes, formatKm } from "@/lib/whatsapp";
 
 export function SearchDialog({
@@ -15,6 +16,7 @@ export function SearchDialog({
 }) {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const vehicles = useVehicles();
 
   useEffect(() => {
     if (!open) setQuery("");
@@ -30,7 +32,7 @@ export function SearchDialog({
           .includes(q),
       )
       .slice(0, 6);
-  }, [query]);
+  }, [query, vehicles]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

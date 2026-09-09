@@ -11,7 +11,8 @@ import {
   validators,
   type Errors,
 } from "@/components/forms/FormKit";
-import { vehicles, vehicleName } from "@/data/vehicles";
+import { vehicleName } from "@/data/vehicles";
+import { useVehicles } from "@/lib/vehicles-context";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -91,6 +92,7 @@ export function ContactForm({ defaultSubject = "" }: { defaultSubject?: string |
 /* ------------------------------- appointment ------------------------------ */
 
 export function AppointmentForm({ defaultVehicle = "" }: { defaultVehicle?: string }) {
+  const vehicles = useVehicles();
   const { state, submit, reset } = useEnquiry("appointment");
   const [errors, setErrors] = useState<Errors>({});
   const [form, setForm] = useState({

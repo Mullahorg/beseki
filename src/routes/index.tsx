@@ -9,7 +9,8 @@ import { WhatsAppIcon } from "@/components/layout/Header";
 import { company } from "@/data/company";
 import { blogPosts } from "@/data/blog";
 import { services, testimonials } from "@/data/site";
-import { bodyTypes, makes, transmissions, fuels, vehicles, years, priceBands } from "@/data/vehicles";
+import { bodyTypes, makesOf, transmissions, fuels, yearsOf, priceBands } from "@/data/vehicles";
+import { useVehicles } from "@/lib/vehicles-context";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import heroImage from "@/assets/hero-alphard.jpg";
 import showroomImage from "@/assets/showroom.jpg";
@@ -38,6 +39,9 @@ export const Route = createFileRoute("/")({
 
 function QuickSearch() {
   const navigate = useNavigate();
+  const vehicles = useVehicles();
+  const makes = makesOf(vehicles);
+  const years = yearsOf(vehicles);
   const [form, setForm] = useState({
     make: "",
     model: "",
@@ -100,6 +104,7 @@ function QuickSearch() {
 }
 
 function HomePage() {
+  const vehicles = useVehicles();
   const featured = vehicles.filter((v) => v.featured).slice(0, 6);
   const latest = [...vehicles].sort((a, b) => b.year - a.year).slice(0, 3);
   const posts = blogPosts.slice(0, 3);

@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/common/Section";
 import { EmptyState } from "@/components/common/States";
 import { useCompare, MAX_COMPARE } from "@/lib/compare-store";
-import { vehicleName, vehicles } from "@/data/vehicles";
+import { vehicleName, type Vehicle } from "@/data/vehicles";
+import { useVehicles } from "@/lib/vehicles-context";
 import { formatKes, formatKm } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 
@@ -28,11 +29,12 @@ export const Route = createFileRoute("/compare")({
 
 function ComparePage() {
   const compare = useCompare();
+  const vehicles = useVehicles();
   const selected = compare.ids
     .map((id) => vehicles.find((v) => v.id === id))
-    .filter((v): v is (typeof vehicles)[number] => Boolean(v));
+    .filter((v): v is Vehicle => Boolean(v));
 
-  const rows: { label: string; get: (v: (typeof vehicles)[number]) => string }[] = [
+  const rows: { label: string; get: (v: Vehicle) => string }[] = [
     { label: "Price", get: (v) => formatKes(v.price) },
     { label: "Make", get: (v) => v.make },
     { label: "Model", get: (v) => v.model },

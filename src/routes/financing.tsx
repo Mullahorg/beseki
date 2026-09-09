@@ -14,7 +14,8 @@ import {
   validators,
   type Errors,
 } from "@/components/forms/FormKit";
-import { vehicles, vehicleName } from "@/data/vehicles";
+import { vehicleName } from "@/data/vehicles";
+import { useVehicles } from "@/lib/vehicles-context";
 
 export const Route = createFileRoute("/financing")({
   head: () => ({
@@ -38,6 +39,7 @@ export const Route = createFileRoute("/financing")({
 });
 
 function FinancingRequestForm() {
+  const vehicles = useVehicles();
   const { state, submit, reset } = useEnquiry("financing");
   const [errors, setErrors] = useState<Errors>({});
   const [form, setForm] = useState({ name: "", phone: "", email: "", vehicle: "", deposit: "", message: "" });

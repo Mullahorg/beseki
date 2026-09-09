@@ -57,7 +57,7 @@ export function CollectionAdmin({ spec }: { spec: CollectionSpec }) {
     queryKey: key,
     queryFn: async () => {
       const order = spec.orderBy ?? { column: "created_at", ascending: false };
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from(spec.table)
         .select("*")
         .order(order.column, { ascending: order.ascending ?? true })

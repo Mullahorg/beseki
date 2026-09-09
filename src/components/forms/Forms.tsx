@@ -92,6 +92,7 @@ export function ContactForm({ defaultSubject = "" }: { defaultSubject?: string |
 /* ------------------------------- appointment ------------------------------ */
 
 export function AppointmentForm({ defaultVehicle = "" }: { defaultVehicle?: string }) {
+  const vehicles = useVehicles();
   const { state, submit, reset } = useEnquiry("appointment");
   const [errors, setErrors] = useState<Errors>({});
   const [form, setForm] = useState({

@@ -39,6 +39,7 @@ export const Route = createFileRoute("/financing")({
 });
 
 function FinancingRequestForm() {
+  const vehicles = useVehicles();
   const { state, submit, reset } = useEnquiry("financing");
   const [errors, setErrors] = useState<Errors>({});
   const [form, setForm] = useState({ name: "", phone: "", email: "", vehicle: "", deposit: "", message: "" });

@@ -52,7 +52,7 @@ function Galleries() {
 
   const patch = useMutation({
     mutationFn: async ({ id, values }: { id: string; values: Record<string, unknown> }) => {
-      const { error } = await supabase.from("galleries").update(values).eq("id", id);
+      const { error } = await (supabase.from("galleries") as any).update(values).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "galleries"] }),

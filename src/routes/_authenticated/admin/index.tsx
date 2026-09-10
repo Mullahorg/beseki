@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_authenticated/admin/")({
 });
 
 async function count(table: string, apply: (q: any) => any = (q) => q) {
-  const { count: c, error } = await apply(supabase.from(table).select("id", { count: "exact", head: true }));
+  const { count: c, error } = await apply((supabase as any).from(table).select("id", { count: "exact", head: true }));
   if (error) throw error;
   return c ?? 0;
 }

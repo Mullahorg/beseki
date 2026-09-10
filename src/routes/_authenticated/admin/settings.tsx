@@ -36,7 +36,7 @@ function Settings() {
     mutationFn: async () => {
       if (!form) return;
       const { id: _id, updated_at: _u, ...rest } = form;
-      const { error } = await supabase.from("site_settings").update(rest).eq("id", true);
+      const { error } = await (supabase.from("site_settings") as any).update(rest).eq("id", true);
       if (error) throw error;
     },
     onSuccess: () => {

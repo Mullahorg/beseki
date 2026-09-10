@@ -2,7 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { Section } from "@/components/common/Section";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/terms")({
+export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
       { title: "Terms & Conditions | BESEKI COMPANY LIMITED" },

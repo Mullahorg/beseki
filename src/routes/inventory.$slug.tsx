@@ -39,7 +39,7 @@ export interface InventorySearch {
 const str = (v: unknown) =>
   typeof v === "string" && v ? v : undefined;
 
-export const Route = createFileRoute("/inventory/")({
+export const Route = createFileRoute("/inventory/$slug")({
   validateSearch: (search: Record<string, unknown>): InventorySearch => ({
     q: str(search["q"]),
     make: str(search["make"]),

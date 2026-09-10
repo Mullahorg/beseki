@@ -40,7 +40,7 @@ function VehiclesAdmin() {
 
   const patch = useMutation({
     mutationFn: async ({ id, values }: { id: string; values: Record<string, unknown> }) => {
-      const { error } = await supabase.from("vehicles").update(values).eq("id", id);
+      const { error } = await (supabase.from("vehicles") as any).update(values).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

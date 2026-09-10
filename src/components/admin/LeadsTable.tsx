@@ -54,7 +54,7 @@ export function LeadsTable({
 
   const update = useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Record<string, unknown> }) => {
-      const { error } = await supabase.from("enquiries").update(patch).eq("id", id);
+      const { error } = await (supabase.from("enquiries") as any).update(patch).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

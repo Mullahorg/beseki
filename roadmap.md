@@ -11,18 +11,18 @@ Keep the existing visual design; extend rather than rebuild.
 - [ ] Indexes for filtering/pagination
 - [ ] Seed existing hard-coded content into the DB (no fake people/reviews)
 
-## Phase 3 — Auth + admin shell
+## Phase 3 (done) — Auth + admin shell
 - [ ] Email/password + Google auth, /auth route
 - [ ] user_roles table + has_role(); roles: super_admin, admin, editor, sales
 - [ ] /admin protected layout with sidebar nav (Dashboard, Vehicles, Leads, Appointments, Financing, Trade-Ins, Media, Pages, Homepage, Blog, Testimonials, FAQs, Services, Team, Navigation, Site Settings, SEO, Legal)
 - [ ] Admin dashboard with real counts
 
-## Phase 4 — Vehicle CMS
+## Phase 4 (done) — Vehicle CMS
 - [ ] CRUD + duplicate, archive/restore, availability & featured toggles
 - [ ] Public inventory: server-side filtering, sorting, pagination, URL params
 - [ ] Vehicle detail renders from record; related vehicles; status-aware CTAs
 
-## Phase 5 — Media/image system
+## Phase 5 (done) — Media/image system
 - [ ] Storage bucket + upload (multi, drag/drop, progress)
 - [ ] media table: alt, caption, size, dimensions, category
 - [ ] Vehicle image manager: reorder, cover, replace, delete
@@ -48,3 +48,8 @@ Keep the existing visual design; extend rather than rebuild.
 ## Phase 10 — QA
 - [ ] Route sweep, mobile 360–1440, galleries, forms, admin CRUD, auth
 - [ ] Performance: pagination, indexes, lazy loading, skeletons
+
+
+## Status note (admin build)
+- Admin shell, dashboard, vehicles CRUD + photo manager, media library, leads/appointments/financing/trade-ins, homepage sections, pages, blog, testimonials, FAQs, services, team, navigation and site settings are live under /admin.
+- Remaining: point the public pages at the CMS tables (Phase 6/8/9) and make the photo bucket public so uploaded images render.

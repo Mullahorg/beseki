@@ -52,7 +52,7 @@ export const Route = createFileRoute("/api/public/media/$")({
         return new Response(upstream.body, {
           status: 200,
           headers: {
-            "Content-Type": upstream.headers.get("content-type") ?? mime || "application/octet-stream",
+            "Content-Type": upstream.headers.get("content-type") ?? (mime || "application/octet-stream"),
             "Cache-Control": "public, max-age=31536000, immutable",
           },
         });

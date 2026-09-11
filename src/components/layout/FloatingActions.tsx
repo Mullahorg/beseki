@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { MessageCircle, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/layout/Header";
-import { company } from "@/data/company";
+import { useSettings } from "@/lib/site-context";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +40,7 @@ export function FloatingActions() {
           href={whatsappLink(waMessages.general)}
           target="_blank"
           rel="noreferrer"
-          aria-label={`Chat with ${company.name} on WhatsApp`}
+          aria-label={`Chat with ${settings.companyName} on WhatsApp`}
           className="flex size-13 items-center justify-center rounded-full bg-whatsapp text-primary-foreground shadow-card transition-colors hover:bg-whatsapp/90"
         >
           <WhatsAppIcon className="size-7" />
@@ -52,6 +52,7 @@ export function FloatingActions() {
 }
 
 function ChatWidget({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const settings = useSettings();
   const navigate = useNavigate();
   const [messages, setMessages] = useState<ChatMessage[]>([
     { from: "agent", text: "Hi 👋 How can we help you today?" },
@@ -70,7 +71,7 @@ function ChatWidget({ open, onClose }: { open: boolean; onClose: () => void }) {
         ...m,
         {
           from: "agent",
-          text: "Thanks — this chat isn't staffed yet. For an immediate reply, message our team on WhatsApp at 0721 886656 and someone will help you directly.",
+          text: `Thanks — this chat isn't staffed yet. For an immediate reply, message our team on WhatsApp at ${settings.phoneDisplay} and someone will help you directly.`,
         },
       ]);
     }, 550);
@@ -112,7 +113,7 @@ function ChatWidget({ open, onClose }: { open: boolean; onClose: () => void }) {
     >
       <div className="flex items-start justify-between gap-3 border-b bg-ink px-4 py-3.5 text-ink-foreground">
         <div>
-          <p className="text-sm font-semibold">{company.shortName} enquiries</p>
+          <p className="text-sm font-semibold">{settings.shortName} enquiries</p>
           <p className="text-xs text-ink-foreground/60">Replies come through WhatsApp</p>
         </div>
         <button type="button" onClick={onClose} aria-label="Close chat" className="p-1">

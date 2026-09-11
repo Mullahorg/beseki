@@ -48,6 +48,7 @@ import { Route as AuthenticatedAdminTestimonialsRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminTradeInsRouteImport } from './routes/_authenticated/admin/trade-ins'
 import { Route as AuthenticatedAdminVehiclesIndexRouteImport } from './routes/_authenticated/admin/vehicles.index'
 import { Route as AuthenticatedAdminVehiclesIdRouteImport } from './routes/_authenticated/admin/vehicles.$id'
+import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -254,6 +255,11 @@ const AuthenticatedAdminVehiclesIdRoute =
     path: '/vehicles/$id',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
+  id: '/api/public/media/$',
+  path: '/api/public/media/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -293,6 +299,7 @@ export interface FileRoutesByFullPath {
   '/admin/trade-ins': typeof AuthenticatedAdminTradeInsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/vehicles/$id': typeof AuthenticatedAdminVehiclesIdRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/vehicles/': typeof AuthenticatedAdminVehiclesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -332,6 +339,7 @@ export interface FileRoutesByTo {
   '/admin/trade-ins': typeof AuthenticatedAdminTradeInsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/vehicles/$id': typeof AuthenticatedAdminVehiclesIdRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/vehicles': typeof AuthenticatedAdminVehiclesIndexRoute
 }
 export interface FileRoutesById {
@@ -374,6 +382,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/trade-ins': typeof AuthenticatedAdminTradeInsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/vehicles/$id': typeof AuthenticatedAdminVehiclesIdRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/_authenticated/admin/vehicles/': typeof AuthenticatedAdminVehiclesIndexRoute
 }
 export interface FileRouteTypes {
@@ -416,6 +425,7 @@ export interface FileRouteTypes {
     | '/admin/trade-ins'
     | '/admin/'
     | '/admin/vehicles/$id'
+    | '/api/public/media/$'
     | '/admin/vehicles/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -455,6 +465,7 @@ export interface FileRouteTypes {
     | '/admin/trade-ins'
     | '/admin'
     | '/admin/vehicles/$id'
+    | '/api/public/media/$'
     | '/admin/vehicles'
   id:
     | '__root__'
@@ -496,6 +507,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/trade-ins'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/vehicles/$id'
+    | '/api/public/media/$'
     | '/_authenticated/admin/vehicles/'
   fileRoutesById: FileRoutesById
 }
@@ -520,6 +532,7 @@ export interface RootRouteChildren {
   InventorySlugRoute: typeof InventorySlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   InventoryIndexRoute: typeof InventoryIndexRoute
+  ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -797,6 +810,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminVehiclesIdRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/api/public/media/$': {
+      id: '/api/public/media/$'
+      path: '/api/public/media/$'
+      fullPath: '/api/public/media/$'
+      preLoaderRoute: typeof ApiPublicMediaSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -880,6 +900,7 @@ const rootRouteChildren: RootRouteChildren = {
   InventorySlugRoute: InventorySlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   InventoryIndexRoute: InventoryIndexRoute,
+  ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

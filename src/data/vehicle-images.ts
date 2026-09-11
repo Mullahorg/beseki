@@ -32,8 +32,22 @@ export const vehicleImages: Record<string, string> = {
   "sedan-2.jpg": sedan2,
 };
 
+/**
+ * Photos stored in our own library are served through the site's image route,
+ * because the storage bucket is private. Older records may still hold a direct
+ * storage link, so those are rewritten here.
+ */
+function normaliseUrl(url: string): string {
+  const match = url.match(/\/storage\/v1\/(?:object|render\/image)\/(?:public|authenticated)\/media\/([^?]+)/);
+  if (!match) return url;
+  const path = match[1] ?? "";
+  const width = url.match(/[?&]width=(\d+)/)?.[1];
+  const base = `/api/public/media/${path}`;
+  return width ? `${base}?w=${width}` : base;
+}
+
 export function resolveImages(keys: string[], urls: string[]): string[] {
   const fromKeys = keys.map((k) => vehicleImages[k]).filter((v): v is string => Boolean(v));
-  const all = [...urls.filter(Boolean), ...fromKeys];
+  const all = [...urls.filter(Boolean).map(normaliseUrl), ...fromKeys];
   return all.length ? all : [sedan1];
 }

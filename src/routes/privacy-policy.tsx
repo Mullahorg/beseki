@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { company } from "@/data/company";
+import { useSettings } from "@/lib/site-context";
 
 export const Route = createFileRoute("/privacy-policy")({
   head: () => ({
@@ -84,6 +84,7 @@ const sections = [
 ];
 
 function PrivacyPolicyPage() {
+  const company = useSettings();
   return (
     <main>
       {/* HERO */}
@@ -280,7 +281,7 @@ function PrivacyPolicyPage() {
                         Company
                       </p>
                       <p className="mt-1 text-sm font-semibold">
-                        {company.name}
+                        {company.companyName}
                       </p>
                     </div>
 
@@ -300,10 +301,10 @@ function PrivacyPolicyPage() {
                         Phone
                       </p>
                       <a
-                        href={`tel:${company.phone}`}
+                        href={`tel:${company.phoneTel}`}
                         className="mt-1 block text-sm font-semibold hover:text-primary"
                       >
-                        {company.phone}
+                        {company.phoneDisplay}
                       </a>
                     </div>
 

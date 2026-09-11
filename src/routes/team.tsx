@@ -3,12 +3,19 @@ import { ArrowRight, Check, MapPin, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TeamMember } from "@/components/content/Cards";
-import { teamProfiles } from "@/data/site";
-import { company } from "@/data/company";
+import { listTeam } from "@/lib/content.functions";
+import { useSettings } from "@/lib/site-context";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "@/components/layout/Header";
 
 export const Route = createFileRoute("/team")({
+  loader: async () => {
+    try {
+      return { team: await listTeam() };
+    } catch {
+      return { team: [] };
+    }
+  },
   head: () => ({
     meta: [
       {
@@ -28,6 +35,8 @@ export const Route = createFileRoute("/team")({
         content:
           "Meet the people behind BESEKI COMPANY LIMITED and the team you will deal with at our Lumumba Road showroom.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:url",
         content: "/team",
@@ -39,6 +48,8 @@ export const Route = createFileRoute("/team")({
 });
 
 function TeamPage() {
+  const { team: teamProfiles } = Route.useLoaderData();
+  const company = useSettings();
   return (
     <main>
       {/* HERO */}

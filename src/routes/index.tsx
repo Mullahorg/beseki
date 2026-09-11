@@ -16,9 +16,6 @@ import { Button } from "@/components/ui/button";
 import { VehicleCard } from "@/components/vehicles/VehicleCard";
 import { TestimonialCard, BlogCard } from "@/components/content/Cards";
 import { WhatsAppIcon } from "@/components/layout/Header";
-import { company } from "@/data/company";
-import { blogPosts } from "@/data/blog";
-import { services, testimonials } from "@/data/site";
 import {
   bodyTypes,
   fuels,
@@ -28,11 +25,26 @@ import {
   yearsOf,
 } from "@/data/vehicles";
 import { useVehicles } from "@/lib/vehicles-context";
+import { useSections, useSettings, sectionText } from "@/lib/site-context";
+import {
+  listBlogPosts,
+  listServices,
+  listTestimonials,
+} from "@/lib/content.functions";
+import { mediaUrl } from "@/lib/media";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import heroImage from "@/assets/hero-alphard.jpg";
 import showroomImage from "@/assets/showroom.jpg";
 
 export const Route = createFileRoute("/")({
+  loader: async () => {
+    const [services, testimonials, posts] = await Promise.all([
+      listServices().catch(() => []),
+      listTestimonials().catch(() => []),
+      listBlogPosts().catch(() => []),
+    ]);
+    return { services, testimonials, posts };
+  },
   head: () => ({
     meta: [
       {
@@ -206,6 +218,13 @@ function QuickSearch() {
 
 function HomePage() {
   const vehicles = useVehicles();
+  const company = useSettings();
+  const sections = useSections();
+  const {
+    services,
+    testimonials,
+    posts: allPosts,
+  } = Route.useLoaderData();
 
   const featured = vehicles
     .filter((vehicle) => vehicle.featured)
@@ -215,7 +234,14 @@ function HomePage() {
     .sort((a, b) => b.year - a.year)
     .slice(0, 3);
 
-  const posts = blogPosts.slice(0, 3);
+  const posts = allPosts.slice(0, 3);
+
+  const hero = sections["hero"];
+  const heroImageSrc = hero?.imagePath ? mediaUrl(hero.imagePath, "large") : heroImage;
+  const showroom = sections["showroom"];
+  const showroomImageSrc = showroom?.imagePath
+    ? mediaUrl(showroom.imagePath, "large")
+    : showroomImage;
 
   const totalVehicles = vehicles.length;
 
@@ -227,8 +253,8 @@ function HomePage() {
       <section className="relative overflow-hidden bg-ink text-ink-foreground">
         <div className="absolute inset-0">
           <img
-            src={heroImage}
-            alt="Vehicle displayed at a car showroom in Mombasa"
+            src={heroImageSrc}
+            alt={hero?.imageAlt || "Vehicle displayed at a car showroom in Mombasa"}
             width={1920}
             height={1080}
             fetchPriority="high"
@@ -243,17 +269,19 @@ function HomePage() {
           <div className="grid min-h-[560px] items-center py-20 md:min-h-[600px] lg:min-h-[640px]">
             <div className="max-w-2xl">
               <p className="mb-5 text-[12px] font-semibold uppercase tracking-[0.18em] text-white/75">
-                BESEKI COMPANY LIMITED · MOMBASA
+                {company.companyName} · {company.address.city.toUpperCase()}
               </p>
 
               <h1 className="max-w-3xl text-[40px] font-bold leading-[1.05] tracking-[-0.03em] sm:text-[52px] lg:text-[66px]">
-                The right car starts with a{" "}
-                <span className="text-white/65">straight answer.</span>
+                {sectionText(hero, "heading", "The right car starts with a straight answer.")}
               </h1>
 
               <p className="mt-6 max-w-xl text-[16px] leading-7 text-white/80 sm:text-[17px]">
-                New and locally used motor vehicles, carefully selected and
-                available to view at our showroom along Lumumba Road, Mombasa.
+                {sectionText(
+                  hero,
+                  "subheading",
+                  "New and locally used motor vehicles, carefully selected and available to view at our showroom along Lumumba Road, Mombasa.",
+                )}
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -678,12 +706,15 @@ function HomePage() {
               <p className="eyebrow">Beyond the sale</p>
 
               <h2 className="mt-2 text-[30px] font-bold leading-tight md:text-[38px]">
-                More than simply handing over the keys.
+                {sectionText(sections["services"], "heading", "More than simply handing over the keys.")}
               </h2>
 
               <p className="mt-4 text-[15px] leading-7 text-muted-foreground">
-                From financing conversations to after-sales support, our goal
-                is to make the ownership journey easier.
+                {sectionText(
+                  sections["services"],
+                  "subheading",
+                  "From financing conversations to after-sales support, our goal is to make the ownership journey easier.",
+                )}
               </p>
 
               <Button className="mt-6" variant="outline" asChild>
@@ -734,12 +765,15 @@ function HomePage() {
               <p className="eyebrow">Customer stories</p>
 
               <h2 className="mt-2 text-[30px] font-bold leading-tight md:text-[38px]">
-                What buyers say.
+                {sectionText(sections["testimonials"], "heading", "What buyers say.")}
               </h2>
 
               <p className="mt-3 max-w-xl text-[14px] leading-6 text-muted-foreground">
-                Customer reviews should be published only after they have been
-                verified.
+                {sectionText(
+                  sections["testimonials"],
+                  "subheading",
+                  "Customer reviews should be published only after they have been verified.",
+                )}
               </p>
             </div>
 
@@ -772,7 +806,7 @@ function HomePage() {
               <p className="eyebrow">From BESEKI</p>
 
               <h2 className="mt-2 text-[30px] font-bold leading-tight md:text-[38px]">
-                Useful reading before you buy.
+                {sectionText(sections["blog"], "heading", "Useful reading before you buy.")}
               </h2>
             </div>
 
@@ -803,12 +837,16 @@ function HomePage() {
             </p>
 
             <h2 className="mt-3 max-w-xl text-[32px] font-bold leading-tight md:text-[42px]">
-              Come see the cars for yourself.
+              {sectionText(showroom, "heading", "Come see the cars for yourself.")}
             </h2>
 
             <p className="mt-5 max-w-lg text-[15px] leading-7 text-white/70">
-              Our showroom is at {company.addressOneLine}. Come during working
-              hours or message us first so we can have the vehicle ready.
+              Our showroom is at {company.addressOneLine}.{" "}
+              {sectionText(
+                showroom,
+                "subheading",
+                "Come during working hours or message us first so we can have the vehicle ready.",
+              )}
             </p>
 
             <div className="mt-7 space-y-3 text-sm text-white/75">
@@ -831,7 +869,7 @@ function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" asChild>
                 <a
-                  href={company.map.directionsUrl}
+                  href={company.mapDirectionsUrl}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -858,8 +896,8 @@ function HomePage() {
           </div>
 
           <img
-            src={showroomImage}
-            alt="Vehicles displayed at the BESEKI yard in Mombasa"
+            src={showroomImageSrc}
+            alt={showroom?.imageAlt || "Vehicles displayed at the BESEKI yard in Mombasa"}
             width={1280}
             height={854}
             loading="lazy"

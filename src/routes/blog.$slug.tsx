@@ -1,27 +1,31 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Clock3 } from "lucide-react";
 import { Section } from "@/components/common/Section";
+import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/content/Cards";
-import { blogPosts } from "@/data/blog";
+import { getBlogPost, listBlogPosts } from "@/lib/content.functions";
+import { mediaUrl, mediaSrcSet } from "@/lib/media";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: ({ params }) => {
-    const post = blogPosts.find((p) => p.slug === params.slug);
+  loader: async ({ params }) => {
+    const post = await getBlogPost({ data: { slug: params.slug } });
+    if (!post) throw notFound();
 
-    if (!post) {
-      throw notFound();
+    let related: Awaited<ReturnType<typeof listBlogPosts>> = [];
+    try {
+      const all = await listBlogPosts();
+      related = all.filter((p) => p.slug !== post.slug && p.category === post.category).slice(0, 3);
+    } catch {
+      related = [];
     }
 
-    return { post };
+    return { post, related };
   },
 
   head: ({ loaderData, params }) => {
     if (!loaderData) {
       return {
-        meta: [
-          { title: "Article unavailable | BESEKI" },
-          { name: "robots", content: "noindex" },
-        ],
+        meta: [{ title: "Article unavailable | BESEKI" }, { name: "robots", content: "noindex" }],
       };
     }
 
@@ -29,37 +33,16 @@ export const Route = createFileRoute("/blog/$slug")({
 
     return {
       meta: [
-        {
-          title: `${post.title} | BESEKI COMPANY LIMITED`,
-        },
-        {
-          name: "description",
-          content: post.excerpt,
-        },
-        {
-          property: "og:title",
-          content: post.title,
-        },
-        {
-          property: "og:description",
-          content: post.excerpt,
-        },
-        {
-          property: "og:type",
-          content: "article",
-        },
-        {
-          property: "og:url",
-          content: `/blog/${params.slug}`,
-        },
+        { title: `${post.seoTitle || post.title} | BESEKI COMPANY LIMITED` },
+        { name: "description", content: post.seoDescription || post.excerpt },
+        { property: "og:title", content: post.seoTitle || post.title },
+        { property: "og:description", content: post.seoDescription || post.excerpt },
+        { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { property: "og:url", content: `/blog/${params.slug}` },
       ],
 
-      links: [
-        {
-          rel: "canonical",
-          href: `/blog/${params.slug}`,
-        },
-      ],
+      links: [{ rel: "canonical", href: `/blog/${params.slug}` }],
 
       scripts: [
         {
@@ -69,20 +52,11 @@ export const Route = createFileRoute("/blog/$slug")({
             "@type": "Article",
             headline: post.title,
             description: post.excerpt,
-            datePublished: post.date,
+            datePublished: post.publishedAt,
             articleSection: post.category,
-            author: {
-              "@type": "Organization",
-              name: "BESEKI COMPANY LIMITED",
-            },
-            publisher: {
-              "@type": "Organization",
-              name: "BESEKI COMPANY LIMITED",
-            },
-            mainEntityOfPage: {
-              "@type": "WebPage",
-              "@id": `/blog/${params.slug}`,
-            },
+            author: { "@type": "Organization", name: "BESEKI COMPANY LIMITED" },
+            publisher: { "@type": "Organization", name: "BESEKI COMPANY LIMITED" },
+            mainEntityOfPage: { "@type": "WebPage", "@id": `/blog/${params.slug}` },
           }),
         },
       ],
@@ -93,30 +67,23 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function BlogPostPage() {
-  const { post } = Route.useLoaderData();
+  const { post, related } = Route.useLoaderData();
 
-  const related = blogPosts
-    .filter(
-      (p) =>
-        p.slug !== post.slug &&
-        p.category === post.category,
-    )
-    .slice(0, 3);
+  const paragraphs = post.body.split(/\n{2,}|\r\n\r\n/).map((p) => p.trim()).filter(Boolean);
+  const words = post.body.split(/\s+/).filter(Boolean).length;
+  const readMinutes = Math.max(1, Math.round(words / 200));
 
-  const date = new Date(post.date).toLocaleDateString(
-    "en-KE",
-    {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    },
-  );
+  const date = post.publishedAt
+    ? new Date(post.publishedAt).toLocaleDateString("en-KE", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
 
   return (
     <>
-      {/* =========================================================
-          ARTICLE HERO
-      ========================================================= */}
+      {/* ARTICLE HERO */}
       <header className="border-b bg-background">
         <div className="container-page py-12 md:py-20">
           <div className="mx-auto max-w-4xl">
@@ -124,10 +91,7 @@ function BlogPostPage() {
               to="/blog"
               className="inline-flex items-center gap-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
-              <ArrowLeft
-                className="size-3.5"
-                aria-hidden="true"
-              />
+              <ArrowLeft className="size-3.5" aria-hidden="true" />
               Back to articles
             </Link>
 
@@ -143,75 +107,69 @@ function BlogPostPage() {
               </p>
 
               <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t pt-5 text-[13px] text-muted-foreground">
-                <span>{date}</span>
+                {date ? <span>{date}</span> : null}
 
-                <span
-                  className="text-border"
-                  aria-hidden="true"
-                >
+                <span className="text-border" aria-hidden="true">
                   •
                 </span>
 
                 <span className="inline-flex items-center gap-1.5">
-                  <Clock3
-                    className="size-3.5"
-                    aria-hidden="true"
-                  />
-                  {post.readMinutes} min read
+                  <Clock3 className="size-3.5" aria-hidden="true" />
+                  {readMinutes} min read
                 </span>
               </div>
             </div>
+
+            {post.imagePath ? (
+              <img
+                src={mediaUrl(post.imagePath, "large")}
+                srcSet={mediaSrcSet(post.imagePath)}
+                sizes="(min-width: 768px) 60vw, 100vw"
+                alt={post.imageAlt || post.title}
+                className="mt-10 aspect-[16/9] w-full object-cover"
+              />
+            ) : null}
           </div>
         </div>
       </header>
 
-      {/* =========================================================
-          ARTICLE CONTENT
-      ========================================================= */}
+      {/* ARTICLE CONTENT */}
       <main>
         <Section>
           <div className="grid gap-12 lg:grid-cols-[180px_minmax(0,700px)] lg:justify-center lg:gap-16">
-            {/* Desktop article information */}
             <aside className="hidden lg:block">
               <div className="sticky top-28 border-t pt-5">
                 <p className="eyebrow">Article</p>
 
                 <div className="mt-4 space-y-4 text-[13px] text-muted-foreground">
                   <div>
-                    <p className="font-medium text-foreground">
-                      Category
-                    </p>
+                    <p className="font-medium text-foreground">Category</p>
                     <p className="mt-1">{post.category}</p>
                   </div>
 
-                  <div>
-                    <p className="font-medium text-foreground">
-                      Published
-                    </p>
-                    <p className="mt-1">{date}</p>
-                  </div>
+                  {date ? (
+                    <div>
+                      <p className="font-medium text-foreground">Published</p>
+                      <p className="mt-1">{date}</p>
+                    </div>
+                  ) : null}
 
                   <div>
-                    <p className="font-medium text-foreground">
-                      Reading time
-                    </p>
-                    <p className="mt-1">
-                      {post.readMinutes} minutes
-                    </p>
+                    <p className="font-medium text-foreground">Reading time</p>
+                    <p className="mt-1">{readMinutes} minutes</p>
                   </div>
                 </div>
               </div>
             </aside>
 
-            {/* Article body */}
             <article className="max-w-3xl">
               <div className="space-y-6 text-[16px] leading-[1.85] text-foreground md:text-[17px]">
-                {post.body.map((paragraph, index) => (
+                {paragraphs.map((paragraph, index) => (
                   <p
                     key={`${post.slug}-${index}`}
                     className={
                       index === 0
-                        ? "first-letter:text-5xl first-letter:font-bold first-letter:leading-[0.8] first-letter:text-brand-red first-letter:float-left first-letter:mr-2"
+                        ? "first-letter:float-left first-letter:mr-2 first-letter:text-5xl first-letter:font-bold first-letter:leading-[0.8] first-letter:text-brand-red"
                         : undefined
                     }
                   >
@@ -220,16 +178,12 @@ function BlogPostPage() {
                 ))}
               </div>
 
-              {/* Article footer */}
               <div className="mt-12 border-t pt-6">
                 <Link
                   to="/blog"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-brand-red"
                 >
-                  <ArrowLeft
-                    className="size-4"
-                    aria-hidden="true"
-                  />
+                  <ArrowLeft className="size-4" aria-hidden="true" />
                   Back to all articles
                 </Link>
               </div>
@@ -237,16 +191,12 @@ function BlogPostPage() {
           </div>
         </Section>
 
-        {/* =======================================================
-            RELATED ARTICLES
-        ======================================================= */}
+        {/* RELATED ARTICLES */}
         {related.length > 0 ? (
           <Section tone="muted">
             <div className="flex flex-col gap-4 border-b pb-7 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="eyebrow">
-                  Keep reading
-                </p>
+                <p className="eyebrow">Keep reading</p>
 
                 <h2 className="mt-2 text-2xl font-bold tracking-tight md:text-3xl">
                   More in {post.category}
@@ -258,27 +208,19 @@ function BlogPostPage() {
                 className="inline-flex items-center gap-2 text-sm font-semibold hover:text-brand-red"
               >
                 View all articles
-                <ArrowRight
-                  className="size-4"
-                  aria-hidden="true"
-                />
+                <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
             </div>
 
             <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {related.map((relatedPost) => (
-                <BlogCard
-                  key={relatedPost.slug}
-                  post={relatedPost}
-                />
+                <BlogCard key={relatedPost.slug} post={relatedPost} />
               ))}
             </div>
           </Section>
         ) : null}
 
-        {/* =======================================================
-            DEALERSHIP CTA
-        ======================================================= */}
+        {/* DEALERSHIP CTA */}
         <section className="border-t bg-brand-red text-white">
           <div className="container-page py-14 md:py-16">
             <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
@@ -292,23 +234,15 @@ function BlogPostPage() {
                 </h2>
 
                 <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-white/80">
-                  Explore our current inventory or speak directly with our
-                  team about a vehicle you are interested in.
+                  Explore our current inventory or speak directly with our team about a vehicle
+                  you are interested in.
                 </p>
               </div>
 
-              <Button
-                size="lg"
-                variant="secondary"
-                asChild
-                className="w-full md:w-auto"
-              >
+              <Button size="lg" variant="secondary" asChild className="w-full md:w-auto">
                 <Link to="/inventory">
                   Browse Inventory
-                  <ArrowRight
-                    className="ml-1 size-4"
-                    aria-hidden="true"
-                  />
+                  <ArrowRight className="ml-1 size-4" aria-hidden="true" />
                 </Link>
               </Button>
             </div>

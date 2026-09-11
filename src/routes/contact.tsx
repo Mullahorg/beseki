@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
 import { ContactForm, AppointmentForm } from "@/components/forms/Forms";
 import { WhatsAppIcon } from "@/components/layout/Header";
-import { company } from "@/data/company";
+import { useSettings } from "@/lib/site-context";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/contact")({
@@ -42,6 +42,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
+  const company = useSettings();
   return (
     <>
       {/* HERO */}
@@ -227,7 +228,7 @@ function ContactPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" variant="secondary" asChild>
                 <a
-                  href={company.map.directionsUrl}
+                  href={company.mapDirectionsUrl}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -285,7 +286,7 @@ function ContactPage() {
             </div>
 
             <a
-              href={company.map.directionsUrl}
+              href={company.mapDirectionsUrl}
               target="_blank"
               rel="noreferrer"
               className="text-sm font-semibold text-primary hover:underline"
@@ -296,8 +297,8 @@ function ContactPage() {
 
           <div className="overflow-hidden rounded-[14px] border bg-background">
             <iframe
-              title={`Map showing ${company.map.query}`}
-              src={company.map.embedSrc}
+              title={`Map showing ${company.mapQuery}`}
+              src={company.mapEmbedSrc}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               className="h-[320px] w-full border-0 md:h-[440px]"

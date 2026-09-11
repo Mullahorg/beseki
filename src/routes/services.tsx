@@ -2,11 +2,18 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
 import { WhatsAppIcon } from "@/components/layout/Header";
-import { services } from "@/data/site";
+import { listServices } from "@/lib/content.functions";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/services")({
+  loader: async () => {
+    try {
+      return { services: await listServices() };
+    } catch {
+      return { services: [] };
+    }
+  },
   head: () => ({
     meta: [
       { title: "Our Services | BESEKI COMPANY LIMITED, Mombasa" },
@@ -24,6 +31,8 @@ export const Route = createFileRoute("/services")({
         content:
           "Inspection, sourcing, importation assistance, maintenance and after-sales support in Mombasa.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: "/services" },
     ],
     links: [{ rel: "canonical", href: "/services" }],
@@ -32,6 +41,7 @@ export const Route = createFileRoute("/services")({
 });
 
 function ServicesPage() {
+  const { services } = Route.useLoaderData();
   return (
     <>
       {/* HERO */}

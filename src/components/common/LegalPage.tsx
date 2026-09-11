@@ -1,5 +1,5 @@
 import { PageHero } from "@/components/common/Section";
-import { company } from "@/data/company";
+import { useSettings } from "@/lib/site-context";
 
 export interface LegalSection {
   heading: string;
@@ -17,6 +17,7 @@ export function LegalPage({
   intro: string;
   sections: LegalSection[];
 }) {
+  const company = useSettings();
   return (
     <>
       <PageHero eyebrow={eyebrow} title={title} subtitle={intro} />
@@ -24,7 +25,7 @@ export function LegalPage({
         <div className="mx-auto max-w-[720px]">
           <p className="rounded-lg border-l-4 border-l-brand-blue bg-muted p-4 text-[14px] leading-relaxed text-muted-foreground">
             This is placeholder wording provided as a starting point. It has not been reviewed by a lawyer and should
-            be replaced with policy text prepared for {company.name} before publishing.
+            be replaced with policy text prepared for {company.companyName} before publishing.
           </p>
           <div className="mt-10 space-y-10">
             {sections.map((s) => (

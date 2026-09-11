@@ -23,7 +23,7 @@ import {
 } from "@/components/forms/FormKit";
 import { vehicleName } from "@/data/vehicles";
 import { useVehicles } from "@/lib/vehicles-context";
-import { whatsappLink } from "@/lib/whatsapp";
+import { waMessages, whatsappLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/financing")({
   head: () => ({
@@ -160,14 +160,14 @@ function FinancingRequestForm() {
           label="Full name"
           htmlFor="fi-name"
           required
-          error={errors.name}
+          error={errors["name"]}
         >
           <TextInput
             id="fi-name"
             value={form.name}
             onChange={set("name")}
             placeholder="e.g. Amina Said"
-            invalid={!!errors.name}
+            invalid={!!errors["name"]}
           />
         </Field>
 
@@ -175,7 +175,7 @@ function FinancingRequestForm() {
           label="Phone number"
           htmlFor="fi-phone"
           required
-          error={errors.phone}
+          error={errors["phone"]}
         >
           <TextInput
             id="fi-phone"
@@ -183,7 +183,7 @@ function FinancingRequestForm() {
             value={form.phone}
             onChange={set("phone")}
             placeholder="0722 000 000"
-            invalid={!!errors.phone}
+            invalid={!!errors["phone"]}
           />
         </Field>
       </div>
@@ -192,7 +192,7 @@ function FinancingRequestForm() {
         <Field
           label="Email address"
           htmlFor="fi-email"
-          error={errors.email}
+          error={errors["email"]}
         >
           <TextInput
             id="fi-email"
@@ -200,7 +200,7 @@ function FinancingRequestForm() {
             value={form.email}
             onChange={set("email")}
             placeholder="you@example.com"
-            invalid={!!errors.email}
+            invalid={!!errors["email"]}
           />
         </Field>
 
@@ -274,7 +274,7 @@ function FinancingRequestForm() {
         </Button>
 
         <a
-          href={whatsappLink}
+          href={whatsappLink(waMessages.general)}
           target="_blank"
           rel="noreferrer"
           className="inline-flex h-11 items-center justify-center gap-2 px-4 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
@@ -594,7 +594,7 @@ function FinancingPage() {
             </div>
 
             <a
-              href={whatsappLink}
+              href={whatsappLink(waMessages.general)}
               target="_blank"
               rel="noreferrer"
               className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
@@ -708,7 +708,7 @@ function FinancingPage() {
               </Link>
 
               <a
-                href={whatsappLink}
+                href={whatsappLink(waMessages.general)}
                 target="_blank"
                 rel="noreferrer"
               >

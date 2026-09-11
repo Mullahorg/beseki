@@ -20,7 +20,7 @@ import {
 import { mileageBands, priceBands } from "@/data/vehicles";
 import { useVehicles } from "@/lib/vehicles-context";
 import { cn } from "@/lib/utils";
-import { whatsappLink } from "@/lib/whatsapp";
+import { waMessages, whatsappLink } from "@/lib/whatsapp";
 
 export interface InventorySearch {
   q?: string | undefined;
@@ -726,7 +726,7 @@ function InventoryPage() {
               </Link>
 
               <a
-                href={whatsappLink}
+                href={whatsappLink(waMessages.general)}
                 target="_blank"
                 rel="noreferrer"
               >

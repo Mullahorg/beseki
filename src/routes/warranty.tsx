@@ -3,7 +3,7 @@ import { Section } from "@/components/common/Section";
 import { ContactForm } from "@/components/forms/Forms";
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/layout/Header";
-import { company } from "@/data/company";
+import { useSettings } from "@/lib/site-context";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/warranty")({
@@ -32,6 +32,7 @@ export const Route = createFileRoute("/warranty")({
 });
 
 function WarrantyPage() {
+  const company = useSettings();
   return (
     <>
       {/* Editorial Hero */}

@@ -196,7 +196,15 @@ export function AppointmentForm({ defaultVehicle = "" }: { defaultVehicle?: stri
 
 /* -------------------------------- test drive ------------------------------ */
 
-export function TestDriveForm({ vehicle }: { vehicle: string }) {
+export function TestDriveForm({
+  vehicle,
+  vehicleId = null,
+  vehicleSlug = null,
+}: {
+  vehicle: string;
+  vehicleId?: string | null;
+  vehicleSlug?: string | null;
+}) {
   const { state, submit, reset } = useEnquiry("test_drive");
   const [errors, setErrors] = useState<Errors>({});
   const [form, setForm] = useState({ name: "", phone: "", email: "", date: "", message: "" });
@@ -232,6 +240,8 @@ export function TestDriveForm({ vehicle }: { vehicle: string }) {
           email: form.email,
           subject: `Test drive — ${vehicle}`,
           message: form.message,
+          vehicleId,
+          vehicleSlug,
           details: { vehicle, date: form.date || null },
         });
       }}
@@ -263,7 +273,17 @@ export function TestDriveForm({ vehicle }: { vehicle: string }) {
 
 /* ---------------------------------- offer --------------------------------- */
 
-export function OfferForm({ vehicle, askingPrice }: { vehicle: string; askingPrice: number }) {
+export function OfferForm({
+  vehicle,
+  askingPrice,
+  vehicleId = null,
+  vehicleSlug = null,
+}: {
+  vehicle: string;
+  askingPrice: number;
+  vehicleId?: string | null;
+  vehicleSlug?: string | null;
+}) {
   const { state, submit, reset } = useEnquiry("offer");
   const [errors, setErrors] = useState<Errors>({});
   const [form, setForm] = useState({ name: "", phone: "", offer: "", message: "" });
@@ -298,6 +318,8 @@ export function OfferForm({ vehicle, askingPrice }: { vehicle: string; askingPri
           phone: form.phone,
           subject: `Offer — ${vehicle}`,
           message: form.message,
+          vehicleId,
+          vehicleSlug,
           details: { vehicle, askingPrice, offer: form.offer },
         });
       }}

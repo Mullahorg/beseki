@@ -18,8 +18,10 @@ import { FloatingActions } from "@/components/layout/FloatingActions";
 import { CompareProvider } from "@/lib/compare-store";
 import { VehiclesProvider } from "@/lib/vehicles-context";
 import { listVehicles } from "@/lib/vehicles.functions";
+import { getSiteContent } from "@/lib/content.functions";
+import { SiteProvider, fallbackSettings } from "@/lib/site-context";
+import { mediaUrl } from "@/lib/media";
 import { Toaster } from "@/components/ui/sonner";
-import { company } from "@/data/company";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -170,12 +172,13 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const { vehicles } = Route.useLoaderData();
+  const { vehicles, content } = Route.useLoaderData();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const bare = pathname.startsWith("/admin") || pathname.startsWith("/auth");
 
   return (
     <QueryClientProvider client={queryClient}>
+      <SiteProvider content={content}>
       <VehiclesProvider vehicles={vehicles}>
       <CompareProvider>
         {bare ? (
@@ -196,6 +199,7 @@ function RootComponent() {
         <Toaster position="top-center" richColors />
       </CompareProvider>
       </VehiclesProvider>
+      </SiteProvider>
     </QueryClientProvider>
   );
 }

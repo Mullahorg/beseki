@@ -2,7 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
-import { company } from "@/data/company";
+import { useSettings } from "@/lib/site-context";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -66,6 +66,7 @@ const reasons = [
 ];
 
 function AboutPage() {
+  const company = useSettings();
   return (
     <>
       {/* HERO */}
@@ -80,7 +81,7 @@ function AboutPage() {
               </h1>
 
               <p className="mt-6 max-w-[590px] text-[17px] leading-relaxed text-muted-foreground md:text-[18px]">
-                {company.name} sells new and locally used motor vehicles from
+                {company.companyName} sells new and locally used motor vehicles from
                 our yard at {company.addressOneLine}. We believe buying a car
                 should feel clear, personal and well informed.
               </p>

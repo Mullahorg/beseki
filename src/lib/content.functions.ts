@@ -67,7 +67,7 @@ export interface SectionRecord {
   enabled: boolean;
   imagePath: string | null;
   imageAlt: string;
-  settings: Record<string, unknown>;
+  settings: Record<string, string | number | boolean | null>;
 }
 
 export interface CtaRecord {
@@ -172,7 +172,7 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
         enabled: r.enabled,
         imagePath: media?.path ?? null,
         imageAlt: media?.alt ?? "",
-        settings: (r.settings as Record<string, unknown> | null) ?? {},
+        settings: (r.settings as Record<string, string | number | boolean | null> | null) ?? {},
       };
     }),
     ctas: (ctasRes.data ?? []).map((c) => ({

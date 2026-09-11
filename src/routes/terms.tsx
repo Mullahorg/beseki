@@ -334,7 +334,7 @@ function TermsPage() {
       <section className="bg-background">
         <div className="container-page flex flex-wrap gap-x-6 gap-y-3 py-8 text-sm">
           <Link
-            to="/privacy"
+            to="/privacy-policy"
             className="font-medium text-muted-foreground hover:text-foreground"
           >
             Privacy Policy

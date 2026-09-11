@@ -1,10 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHero, Section } from "@/components/common/Section";
+import { Section } from "@/components/common/Section";
 import { TestimonialCard } from "@/components/content/Cards";
 import { ReviewForm } from "@/components/forms/Forms";
-import { testimonials } from "@/data/site";
+import { listTestimonials } from "@/lib/content.functions";
+import { mediaUrl } from "@/lib/media";
 
 export const Route = createFileRoute("/testimonials")({
+  loader: async () => {
+    try {
+      return { testimonials: await listTestimonials() };
+    } catch {
+      return { testimonials: [] };
+    }
+  },
   head: () => ({
     meta: [
       { title: "Customer Testimonials | BESEKI COMPANY LIMITED" },
@@ -22,6 +30,8 @@ export const Route = createFileRoute("/testimonials")({
         content:
           "Discover what customers say about their vehicle-buying experience with BESEKI in Mombasa.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: "/testimonials" },
     ],
     links: [{ rel: "canonical", href: "/testimonials" }],
@@ -30,7 +40,8 @@ export const Route = createFileRoute("/testimonials")({
 });
 
 function TestimonialsPage() {
-  const featured = testimonials.find((t) => t.featured) ?? testimonials[0];
+  const { testimonials } = Route.useLoaderData();
+  const featured = testimonials[0];
   const remaining = testimonials.filter((t) => t.id !== featured?.id);
 
   return (
@@ -161,20 +172,20 @@ function TestimonialsPage() {
                 </blockquote>
 
                 <div className="mt-8 flex items-center gap-4 border-t pt-6">
-                  {featured.image ? (
+                  {featured.imagePath ? (
                     <img
-                      src={featured.image}
-                      alt={featured.name}
+                      src={mediaUrl(featured.imagePath, "thumb")}
+                      alt={featured.customerName}
                       className="h-12 w-12 rounded-full object-cover"
                     />
                   ) : (
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-blue/10 text-sm font-bold text-brand-blue">
-                      {featured.name?.charAt(0)}
+                      {featured.customerName?.charAt(0)}
                     </div>
                   )}
 
                   <div>
-                    <p className="font-semibold">{featured.name}</p>
+                    <p className="font-semibold">{featured.customerName}</p>
 
                     {featured.vehicle && (
                       <p className="mt-1 text-sm text-muted-foreground">

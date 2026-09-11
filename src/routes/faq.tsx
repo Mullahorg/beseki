@@ -3,12 +3,34 @@ import { ArrowRight, MessageCircle, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
 import { FAQAccordion } from "@/components/content/Cards";
-import { faqGroups } from "@/data/faq";
+import { listFaqs, type FaqRecord } from "@/lib/content.functions";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "@/components/layout/Header";
 
+/** Questions grouped by their category, in the order the admin set. */
+function groupFaqs(faqs: FaqRecord[]) {
+  const groups: { category: string; items: FaqRecord[] }[] = [];
+  for (const faq of faqs) {
+    const category = faq.category || "General";
+    let group = groups.find((g) => g.category === category);
+    if (!group) {
+      group = { category, items: [] };
+      groups.push(group);
+    }
+    group.items.push(faq);
+  }
+  return groups;
+}
+
 export const Route = createFileRoute("/faq")({
-  head: () => ({
+  loader: async () => {
+    try {
+      return { faqs: await listFaqs() };
+    } catch {
+      return { faqs: [] };
+    }
+  },
+  head: ({ loaderData }) => ({
     meta: [
       {
         title: "Frequently Asked Questions | BESEKI COMPANY LIMITED",
@@ -27,6 +49,8 @@ export const Route = createFileRoute("/faq")({
         content:
           "Common questions about buying a car from BESEKI in Mombasa, answered.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:url",
         content: "/faq",
@@ -39,16 +63,14 @@ export const Route = createFileRoute("/faq")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: faqGroups.flatMap((group) =>
-            group.items.map((item) => ({
-              "@type": "Question",
-              name: item.q,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: item.a,
-              },
-            })),
-          ),
+          mainEntity: (loaderData?.faqs ?? []).map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
         }),
       },
     ],
@@ -61,6 +83,8 @@ function slugify(value: string) {
 }
 
 function FaqPage() {
+  const { faqs } = Route.useLoaderData();
+  const faqGroups = groupFaqs(faqs);
   return (
     <>
       {/* HERO */}

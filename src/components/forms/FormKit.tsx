@@ -123,6 +123,8 @@ export function useEnquiry(type: string) {
     email?: string;
     subject?: string;
     message?: string;
+    vehicleId?: string | null;
+    vehicleSlug?: string | null;
     details?: Record<string, string | number | boolean | null>;
   }) {
     setState("loading");
@@ -133,6 +135,9 @@ export function useEnquiry(type: string) {
       email: payload.email?.trim() || null,
       subject: payload.subject?.trim() || null,
       message: payload.message?.trim() || null,
+      vehicle_id: payload.vehicleId ?? null,
+      vehicle_slug: payload.vehicleSlug ?? null,
+      source: typeof window === "undefined" ? "website" : window.location.pathname,
       details: payload.details ?? {},
     });
 

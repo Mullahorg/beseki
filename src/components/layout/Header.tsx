@@ -3,6 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNav, useSettings } from "@/lib/site-context";
+import { mediaUrl } from "@/lib/media";
 import type { NavItem } from "@/lib/content.functions";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
@@ -73,9 +74,18 @@ export function Header() {
           )}
         >
           <Link to="/" className="flex min-w-0 items-baseline gap-2" aria-label={`${settings.companyName} — home`}>
-            <span className="shrink-0 text-xl font-bold md:text-2xl">
-              BESE<span className="text-primary">KI</span>
-            </span>
+            {settings.logoPath ? (
+              <img
+                src={mediaUrl(settings.logoPath, "thumb")}
+                alt={settings.companyName}
+                className="h-8 w-auto shrink-0 md:h-9"
+              />
+            ) : (
+              <span className="shrink-0 text-xl font-bold md:text-2xl">
+                {settings.shortName.slice(0, 4)}
+                <span className="text-primary">{settings.shortName.slice(4) || ""}</span>
+              </span>
+            )}
             <span className="hidden text-[10px] font-semibold uppercase text-muted-foreground lg:inline">
               Motor Vehicles
             </span>

@@ -18,8 +18,10 @@ import { FloatingActions } from "@/components/layout/FloatingActions";
 import { CompareProvider } from "@/lib/compare-store";
 import { VehiclesProvider } from "@/lib/vehicles-context";
 import { listVehicles } from "@/lib/vehicles.functions";
+import { getSiteContent } from "@/lib/content.functions";
+import { SiteProvider, fallbackSettings } from "@/lib/site-context";
+import { mediaUrl } from "@/lib/media";
 import { Toaster } from "@/components/ui/sonner";
-import { company } from "@/data/company";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -84,24 +86,26 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   loader: async () => {
-    try {
-      return { vehicles: await listVehicles() };
-    } catch {
-      return { vehicles: [] };
-    }
+    const [vehicles, content] = await Promise.all([
+      listVehicles().catch(() => []),
+      getSiteContent().catch(() => null),
+    ]);
+    return { vehicles, content };
   },
-  head: () => ({
+  head: ({ loaderData }) => {
+    const settings = loaderData?.content?.settings ?? fallbackSettings;
+    const title = settings.seoTitle ?? `${settings.companyName} — Cars for Sale in Mombasa`;
+    const description =
+      settings.seoDescription ??
+      `${settings.companyName} sells new and locally used motor vehicles in ${settings.address.city}, along ${settings.address.line2.replace(/^Along /, "")}. Browse our stock, book a test drive or talk to us on WhatsApp.`;
+    return {
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BESEKI COMPANY LIMITED — Cars for Sale in Mombasa" },
-      {
-        name: "description",
-        content:
-          "BESEKI COMPANY LIMITED sells new and locally used motor vehicles in Mombasa, along Lumumba Road. Browse our stock, book a test drive or talk to us on WhatsApp.",
-      },
+      { title },
+      { name: "description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "BESEKI COMPANY LIMITED" },
+      { property: "og:site_name", content: settings.companyName },
       { name: "twitter:card", content: "summary_large_image" }
     ],
     links: [
@@ -109,7 +113,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      {
+        rel: "icon",
+        href: settings.faviconPath ? mediaUrl(settings.faviconPath, "thumb") : "/favicon.ico",
+      },
       {
         rel: "preconnect",
         href: "https://fonts.gstatic.com",
@@ -126,22 +133,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "AutoDealer",
-          name: company.name,
-          description: company.tagline,
-          telephone: company.phoneTel,
-          email: company.email,
+          name: settings.companyName,
+          description: settings.tagline,
+          telephone: settings.phoneTel,
+          email: settings.email,
           address: {
             "@type": "PostalAddress",
-            streetAddress: `${company.address.line1}, ${company.address.line2}`,
-            addressLocality: company.address.city,
+            streetAddress: `${settings.address.line1}, ${settings.address.line2}`,
+            addressLocality: settings.address.city,
             addressCountry: "KE",
-            postOfficeBoxNumber: company.address.postal,
+            postOfficeBoxNumber: settings.address.postal,
           },
-          areaServed: "Mombasa, Kenya",
+          areaServed: `${settings.address.city}, ${settings.address.country}`,
         }),
       },
     ],
-  }),
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -164,12 +172,13 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const { vehicles } = Route.useLoaderData();
+  const { vehicles, content } = Route.useLoaderData();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const bare = pathname.startsWith("/admin") || pathname.startsWith("/auth");
 
   return (
     <QueryClientProvider client={queryClient}>
+      <SiteProvider content={content}>
       <VehiclesProvider vehicles={vehicles}>
       <CompareProvider>
         {bare ? (
@@ -190,6 +199,7 @@ function RootComponent() {
         <Toaster position="top-center" richColors />
       </CompareProvider>
       </VehiclesProvider>
+      </SiteProvider>
     </QueryClientProvider>
   );
 }

@@ -38,8 +38,6 @@ export interface MediaRecord {
   created_at: string;
 }
 
-const SUPABASE_URL = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
-
 /** Sizes used across the site. Cards never request full-resolution files. */
 export const imageSizes = {
   thumb: 160,
@@ -51,16 +49,15 @@ export const imageSizes = {
 export type ImageSize = keyof typeof imageSizes | "original";
 
 /**
- * Public URL for a stored file. Named sizes go through the image
- * transformation endpoint so a card never downloads a 2000px photo.
+ * Website URL for a stored file. The bucket is private, so images are served
+ * through our own passthrough route, which only serves files recorded in the
+ * media library. Named sizes are resized on the fly.
  */
 export function mediaUrl(path: string, size: ImageSize = "card"): string {
   if (!path) return "";
   if (path.startsWith("http")) return path;
-  const base = SUPABASE_URL ?? "";
-  if (size === "original") return `${base}/storage/v1/object/public/${MEDIA_BUCKET}/${path}`;
-  const width = imageSizes[size];
-  return `${base}/storage/v1/render/image/public/${MEDIA_BUCKET}/${path}?width=${width}&resize=contain&quality=78`;
+  const base = `/api/public/media/${path.split("/").map(encodeURIComponent).join("/")}`;
+  return size === "original" ? base : `${base}?w=${imageSizes[size]}`;
 }
 
 /** srcset covering the common breakpoints for a stored photo. */

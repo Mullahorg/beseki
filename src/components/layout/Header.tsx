@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { company, moreNav, primaryNav } from "@/data/company";
+import { useNav, useSettings } from "@/lib/site-context";
+import { mediaUrl } from "@/lib/media";
+import type { NavItem } from "@/lib/content.functions";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 import { SearchDialog } from "@/components/layout/SearchDialog";
@@ -14,6 +16,9 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 );
 
 export function Header() {
+  const settings = useSettings();
+  const primaryNav = useNav("primary");
+  const moreNav = useNav("more");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -43,13 +48,15 @@ export function Header() {
     <>
       <div className="bg-ink text-ink-foreground">
         <div className="container-page grid min-h-9 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-1.5 text-[12px]">
-          <p className="min-w-0 truncate text-ink-foreground/75">{company.announcement}</p>
+          <p className="min-w-0 truncate text-ink-foreground/75">
+            {settings.announcementEnabled ? settings.announcement : ""}
+          </p>
           <a
-            href={`tel:${company.phoneTel}`}
+            href={`tel:${settings.phoneTel}`}
             className="hidden items-center gap-1.5 font-medium hover:underline sm:inline-flex"
           >
             <Phone className="size-3.5" aria-hidden="true" />
-            {company.phoneDisplay}
+            {settings.phoneDisplay}
           </a>
         </div>
       </div>
@@ -66,10 +73,19 @@ export function Header() {
             scrolled ? "h-14 md:h-16" : "h-16 md:h-[76px]",
           )}
         >
-          <Link to="/" className="flex min-w-0 items-baseline gap-2" aria-label={`${company.name} — home`}>
-            <span className="shrink-0 text-xl font-bold md:text-2xl">
-              BESE<span className="text-primary">KI</span>
-            </span>
+          <Link to="/" className="flex min-w-0 items-baseline gap-2" aria-label={`${settings.companyName} — home`}>
+            {settings.logoPath ? (
+              <img
+                src={mediaUrl(settings.logoPath, "thumb")}
+                alt={settings.companyName}
+                className="h-8 w-auto shrink-0 md:h-9"
+              />
+            ) : (
+              <span className="shrink-0 text-xl font-bold md:text-2xl">
+                {settings.shortName.slice(0, 4)}
+                <span className="text-primary">{settings.shortName.slice(4) || ""}</span>
+              </span>
+            )}
             <span className="hidden text-[10px] font-semibold uppercase text-muted-foreground lg:inline">
               Motor Vehicles
             </span>
@@ -78,9 +94,9 @@ export function Header() {
           <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
             {primaryNav.map((item) => (
               <Link
-                key={item.to}
-                to={item.to}
-                activeOptions={{ exact: item.to === "/" }}
+                key={item.id}
+                to={item.href}
+                activeOptions={{ exact: item.href === "/" }}
                 activeProps={{ className: "text-primary" }}
                 className="border-b-2 border-transparent px-3 py-2 text-[14px] font-medium text-foreground/75 transition-colors hover:text-primary aria-[current=page]:border-primary"
               >
@@ -109,9 +125,9 @@ export function Header() {
                 <div className="absolute right-0 top-full w-52 pt-2">
                   <ul className="overflow-hidden rounded-md border bg-popover py-1.5 shadow-lift">
                     {moreNav.map((item) => (
-                      <li key={item.to}>
+                      <li key={item.id}>
                         <Link
-                          to={item.to}
+                          to={item.href}
                           className="block px-4 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-accent hover:text-primary"
                         >
                           {item.label}
@@ -153,20 +169,36 @@ export function Header() {
         </div>
       </header>
 
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MobileMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        items={[...primaryNav, ...moreNav]}
+        phoneDisplay={settings.phoneDisplay}
+        phoneTel={settings.phoneTel}
+      />
       <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </>
   );
 }
 
-function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+function MobileMenu({
+  open,
+  onClose,
+  items,
+  phoneDisplay,
+  phoneTel,
+}: {
+  open: boolean;
+  onClose: () => void;
+  items: NavItem[];
+  phoneDisplay: string;
+  phoneTel: string;
+}) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
-
-  const items = [...primaryNav, ...moreNav];
 
   return (
     <div
@@ -200,10 +232,10 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
         <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-3 py-3">
           <ul>
             {items.map((item) => (
-              <li key={item.to}>
+              <li key={item.id}>
                 <Link
-                  to={item.to}
-                  activeOptions={{ exact: item.to === "/" }}
+                  to={item.href}
+                  activeOptions={{ exact: item.href === "/" }}
                   activeProps={{ className: "text-primary bg-accent" }}
                   onClick={onClose}
                   className="flex min-h-12 items-center border-b border-border/60 px-3 text-[15px] font-medium transition-colors hover:text-primary"
@@ -218,11 +250,11 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
           <Button variant="whatsapp" className="w-full" size="lg" asChild>
             <a href={whatsappLink(waMessages.general)} target="_blank" rel="noreferrer">
               <WhatsAppIcon className="size-[18px]" />
-              WhatsApp {company.phoneDisplay}
+              WhatsApp {phoneDisplay}
             </a>
           </Button>
           <Button variant="outline" className="w-full" asChild>
-            <a href={`tel:${company.phoneTel}`}>Call us</a>
+            <a href={`tel:${phoneTel}`}>Call us</a>
           </Button>
         </div>
       </div>

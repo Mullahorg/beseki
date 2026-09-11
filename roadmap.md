@@ -50,6 +50,14 @@ Keep the existing visual design; extend rather than rebuild.
 - [ ] Performance: pagination, indexes, lazy loading, skeletons
 
 
-## Status note (admin build)
-- Admin shell, dashboard, vehicles CRUD + photo manager, media library, leads/appointments/financing/trade-ins, homepage sections, pages, blog, testimonials, FAQs, services, team, navigation and site settings are live under /admin.
-- Remaining: point the public pages at the CMS tables (Phase 6/8/9) and make the photo bucket public so uploaded images render.
+## Status note (public integration — done)
+- Admin: shell, dashboard, vehicles CRUD + photo manager, media library, leads/appointments/financing/trade-ins, homepage sections, pages, blog, testimonials, FAQs, services, team, navigation, site settings — all load and save.
+- Public pages now read from the database: home (sections + services/testimonials/blog), inventory, vehicle detail, services, FAQ, team, testimonials, blog list + article, header/footer navigation, business details on contact/about/warranty/legal pages.
+- Vehicle detail page was missing (the file duplicated the inventory list) and has been rebuilt: gallery, specs, features, test-drive and offer forms, similar vehicles, structured data.
+- Photos: bucket stays private; public images are served through /api/public/media/... which only serves files recorded in the media library. Old direct storage links on vehicle records are rewritten automatically.
+- Leads: enquiries now store the vehicle and the page they came from.
+
+## Remaining
+- [ ] Replace placeholder team profiles and add real testimonials (none seeded on purpose).
+- [ ] Optional: server-side pagination for inventory once stock grows past a few hundred vehicles.
+- [ ] Role-check helper functions remain callable by signed-in users by design (used inside access rules).

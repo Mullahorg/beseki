@@ -84,24 +84,26 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   loader: async () => {
-    try {
-      return { vehicles: await listVehicles() };
-    } catch {
-      return { vehicles: [] };
-    }
+    const [vehicles, content] = await Promise.all([
+      listVehicles().catch(() => []),
+      getSiteContent().catch(() => null),
+    ]);
+    return { vehicles, content };
   },
-  head: () => ({
+  head: ({ loaderData }) => {
+    const settings = loaderData?.content?.settings ?? fallbackSettings;
+    const title = settings.seoTitle ?? `${settings.companyName} — Cars for Sale in Mombasa`;
+    const description =
+      settings.seoDescription ??
+      `${settings.companyName} sells new and locally used motor vehicles in ${settings.address.city}, along ${settings.address.line2.replace(/^Along /, "")}. Browse our stock, book a test drive or talk to us on WhatsApp.`;
+    return {
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BESEKI COMPANY LIMITED — Cars for Sale in Mombasa" },
-      {
-        name: "description",
-        content:
-          "BESEKI COMPANY LIMITED sells new and locally used motor vehicles in Mombasa, along Lumumba Road. Browse our stock, book a test drive or talk to us on WhatsApp.",
-      },
+      { title },
+      { name: "description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "BESEKI COMPANY LIMITED" },
+      { property: "og:site_name", content: settings.companyName },
       { name: "twitter:card", content: "summary_large_image" }
     ],
     links: [

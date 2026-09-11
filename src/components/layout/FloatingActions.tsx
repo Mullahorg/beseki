@@ -21,6 +21,7 @@ const quickActions = [
 ] as const;
 
 export function FloatingActions() {
+  const settings = useSettings();
   const [chatOpen, setChatOpen] = useState(false);
 
   return (

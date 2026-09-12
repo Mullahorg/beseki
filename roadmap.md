@@ -61,3 +61,5 @@ Keep the existing visual design; extend rather than rebuild.
 - [ ] Replace placeholder team profiles and add real testimonials (none seeded on purpose).
 - [ ] Optional: server-side pagination for inventory once stock grows past a few hundred vehicles.
 - [ ] Role-check helper functions remain callable by signed-in users by design (used inside access rules).
+
+- [ ] Seed realistic vehicle records and replaceable media across public content.

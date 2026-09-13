@@ -48,16 +48,18 @@ export const imageSizes = {
 
 export type ImageSize = keyof typeof imageSizes | "original";
 
-/**
- * Website URL for a stored file. The bucket is private, so images are served
- * through our own passthrough route, which only serves files recorded in the
- * media library. Named sizes are resized on the fly.
- */
+/** Public delivery URL for an approved media-library file. */
 export function mediaUrl(path: string, size: ImageSize = "card"): string {
   if (!path) return "";
   if (path.startsWith("http")) return path;
-  const base = `/api/public/media/${path.split("/").map(encodeURIComponent).join("/")}`;
-  return size === "original" ? base : `${base}?w=${imageSizes[size]}`;
+  const projectUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+  if (!projectUrl) {
+    const fallback = `/api/public/media/${path.split("/").map(encodeURIComponent).join("/")}`;
+    return size === "original" ? fallback : `${fallback}?w=${imageSizes[size]}`;
+  }
+  const encoded = path.split("/").map(encodeURIComponent).join("/");
+  if (size === "original") return `${projectUrl}/storage/v1/object/public/${MEDIA_BUCKET}/${encoded}`;
+  return `${projectUrl}/storage/v1/render/image/public/${MEDIA_BUCKET}/${encoded}?width=${imageSizes[size]}&resize=contain&quality=82`;
 }
 
 /** srcset covering the common breakpoints for a stored photo. */

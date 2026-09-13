@@ -48,9 +48,14 @@ export function Header() {
     <>
       <div className="bg-ink text-ink-foreground">
         <div className="container-page grid min-h-9 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-1.5 text-[12px]">
-          <p className="min-w-0 truncate text-ink-foreground/75">
-            {settings.announcementEnabled ? settings.announcement : ""}
-          </p>
+          <div className="announcement-track min-w-0 overflow-hidden text-ink-foreground/75">
+            {settings.announcementEnabled && settings.announcement ? (
+              <div className="announcement-marquee" aria-label={settings.announcement}>
+                <span>{settings.announcement}</span>
+                <span aria-hidden="true">{settings.announcement}</span>
+              </div>
+            ) : null}
+          </div>
           <a
             href={`tel:${settings.phoneTel}`}
             className="hidden items-center gap-1.5 font-medium hover:underline sm:inline-flex"

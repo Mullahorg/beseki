@@ -45,6 +45,13 @@
   --color-ink-foreground: var(--ink-foreground);
   --color-sand: var(--sand);
   --color-whatsapp: var(--whatsapp);
+  --color-admin-canvas: var(--admin-canvas);
+  --color-admin-surface: var(--admin-surface);
+  --color-admin-panel: var(--admin-panel);
+  --color-admin-foreground: var(--admin-foreground);
+  --color-admin-muted: var(--admin-muted);
+  --color-admin-line: var(--admin-line);
+  --color-admin-focus: var(--admin-focus);
   --shadow-card: 0 10px 30px oklch(0.2 0.02 260 / 0.055);
   --shadow-lift: 0 18px 48px oklch(0.2 0.02 260 / 0.1);
   --shadow-header: 0 4px 16px oklch(0.2 0.02 260 / 0.045);
@@ -86,6 +93,13 @@
   --ink: oklch(0.205 0.012 264);
   --ink-foreground: oklch(0.97 0.003 250);
   --sand: oklch(0.965 0.006 255);
+  --admin-canvas: oklch(0.145 0.008 275);
+  --admin-surface: oklch(0.18 0.008 275);
+  --admin-panel: oklch(0.16 0.008 275);
+  --admin-foreground: oklch(0.97 0.003 255);
+  --admin-muted: oklch(0.69 0.012 255);
+  --admin-line: oklch(1 0 0 / 9%);
+  --admin-focus: oklch(0.62 0.19 255);
 }
 
 .dark {
@@ -176,4 +190,44 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+@keyframes announcement-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 2rem)); }
+}
+
+@keyframes media-shimmer {
+  to { transform: translateX(100%); }
+}
+
+@utility announcement-track {
+  mask-image: linear-gradient(to right, transparent, black 1rem, black calc(100% - 1rem), transparent);
+}
+
+@utility announcement-marquee {
+  display: flex;
+  width: max-content;
+  gap: 4rem;
+  white-space: nowrap;
+  animation: announcement-scroll 24s linear infinite;
+
+  &:hover { animation-play-state: paused; }
+}
+
+@utility media-shimmer {
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, oklch(1 0 0 / 6%), transparent);
+    animation: media-shimmer 1.8s infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-marquee { animation: none; }
+  .announcement-marquee span[aria-hidden="true"] { display: none; }
+  .media-shimmer::after { animation: none; }
 }

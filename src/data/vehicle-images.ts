@@ -1,24 +1,16 @@
 ```ts
 /**
- * Vehicle image resolver
+ * Vehicle photo library.
  *
- * Vehicle records can contain:
- * - Supabase Storage paths
+ * Database vehicle records can contain:
+ * - bundled image keys such as "prado-1.jpg"
+ * - Supabase Storage paths such as "vehicles/prado.jpg"
  * - Supabase public URLs
  * - legacy /api/public/media/... URLs
- * - bundled/local image keys
  *
- * Supabase Storage is the preferred source.
+ * Supabase Storage is preferred for database-managed images.
  */
 
-import { mediaUrl } from "@/lib/media";
-
-/**
- * Legacy bundled vehicle assets.
- *
- * These remain as fallbacks for older/demo vehicle records
- * that still reference these filenames.
- */
 import alphard1 from "@/assets/vehicles/alphard-1.jpg";
 import alphard2 from "@/assets/vehicles/alphard-2.jpg";
 import prado1 from "@/assets/vehicles/prado-1.jpg";
@@ -32,12 +24,8 @@ import hilux2 from "@/assets/vehicles/hilux-2.jpg";
 import sedan1 from "@/assets/vehicles/sedan-1.jpg";
 import sedan2 from "@/assets/vehicles/sedan-2.jpg";
 
-/**
- * Legacy local image map.
- *
- * These are only used when a vehicle record references
- * one of these old bundled filenames.
- */
+import { mediaUrl } from "@/lib/media";
+
 export const vehicleImages: Record<string, string> = {
   "alphard-1.jpg": alphard1,
   "alphard-2.jpg": alphard2,
@@ -59,43 +47,22 @@ export const vehicleImages: Record<string, string> = {
 };
 
 /**
- * Extracts a clean Storage path from any supported
- * vehicle image URL/path.
+ * Converts a legacy media URL into a Storage path.
+ *
+ * Example:
+ * /api/public/media/vehicles/prado.jpg
+ *
+ * becomes:
+ * vehicles/prado.jpg
  */
-function normalisePath(value: string): string {
+function extractStoragePath(value: string): string {
   if (!value) return "";
 
-  let input = value.trim();
+  const input = value.trim();
 
-  /**
-   * Supabase Storage public URL:
-   *
-   * https://project.supabase.co/storage/v1/object/public/media/vehicles/car.jpg
-   */
-  const publicMatch = input.match(
-    /\/storage\/v1\/object\/public\/media\/(.+?)(?:\?.*)?$/i,
-  );
+  if (!input) return "";
 
-  if (publicMatch?.[1]) {
-    return decodeURIComponent(publicMatch[1]);
-  }
-
-  /**
-   * Supabase authenticated/render URL.
-   */
-  const authenticatedMatch = input.match(
-    /\/storage\/v1\/(?:object|render\/image)\/(?:authenticated|public)\/media\/(.+?)(?:\?.*)?$/i,
-  );
-
-  if (authenticatedMatch?.[1]) {
-    return decodeURIComponent(authenticatedMatch[1]);
-  }
-
-  /**
-   * Legacy application URL:
-   *
-   * /api/public/media/vehicles/car.jpg
-   */
+  // Legacy application URL.
   const legacyMatch = input.match(
     /^\/?api\/public\/media\/(.+?)(?:\?.*)?$/i,
   );
@@ -104,11 +71,25 @@ function normalisePath(value: string): string {
     return decodeURIComponent(legacyMatch[1]);
   }
 
-  /**
-   * A normal Storage path:
-   *
-   * vehicles/car.jpg
-   */
+  // Supabase public Storage URL.
+  const publicMatch = input.match(
+    /\/storage\/v1\/object\/public\/media\/(.+?)(?:\?.*)?$/i,
+  );
+
+  if (publicMatch?.[1]) {
+    return decodeURIComponent(publicMatch[1]);
+  }
+
+  // Supabase authenticated/render URL.
+  const renderMatch = input.match(
+    /\/storage\/v1\/(?:object|render\/image)\/(?:public|authenticated)\/media\/(.+?)(?:\?.*)?$/i,
+  );
+
+  if (renderMatch?.[1]) {
+    return decodeURIComponent(renderMatch[1]);
+  }
+
+  // Already a Storage path.
   if (!/^https?:\/\//i.test(input)) {
     return input.replace(/^\/+/, "");
   }
@@ -117,13 +98,7 @@ function normalisePath(value: string): string {
 }
 
 /**
- * Resolves a single vehicle image.
- *
- * Priority:
- *
- * 1. Supabase Storage
- * 2. Legacy bundled local asset
- * 3. Original external URL
+ * Resolve one vehicle image.
  */
 export function resolveVehicleImage(
   value: string | null | undefined,
@@ -135,30 +110,23 @@ export function resolveVehicleImage(
   if (!input) return "";
 
   /**
-   * First check whether this is a legacy bundled filename.
+   * First check bundled assets.
    */
-  const localImage = vehicleImages[input];
-
-  if (localImage) {
-    return localImage;
+  if (vehicleImages[input]) {
+    return vehicleImages[input];
   }
 
   /**
-   * Extract a Storage path from the value.
+   * Handle Storage paths and legacy URLs.
    */
-  const path = normalisePath(input);
+  const storagePath = extractStoragePath(input);
 
-  if (path) {
-    const resolved = mediaUrl(path, "card");
-
-    if (resolved) {
-      return resolved;
-    }
+  if (storagePath) {
+    return mediaUrl(storagePath, "card");
   }
 
   /**
-   * If it is a normal external URL that isn't a Supabase
-   * Storage URL, keep it unchanged.
+   * Keep unrelated external URLs unchanged.
    */
   if (/^https?:\/\//i.test(input)) {
     return input;
@@ -168,79 +136,42 @@ export function resolveVehicleImage(
 }
 
 /**
- * Resolves multiple vehicle image keys/URLs.
+ * Resolve all images associated with a vehicle.
  *
- * Database URLs are preferred over old bundled assets.
+ * URLs are checked first because they represent the current
+ * database-managed vehicle images.
+ *
+ * Bundled image keys are used as a fallback.
  */
 export function resolveImages(
   keys: string[] = [],
   urls: string[] = [],
 ): string[] {
-  const resolved: string[] = [];
+  const images: string[] = [];
 
-  /**
-   * 1. Resolve database URLs/paths first.
-   */
+  // Database / Storage images first.
   for (const url of urls) {
-    const image = resolveVehicleImage(url);
+    const resolved = resolveVehicleImage(url);
 
-    if (image && !resolved.includes(image)) {
-      resolved.push(image);
+    if (resolved && !images.includes(resolved)) {
+      images.push(resolved);
     }
   }
 
-  /**
-   * 2. Resolve image keys.
-   *
-   * This supports older vehicle records such as:
-   *
-   * ["prado-1.jpg", "prado-2.jpg"]
-   */
+  // Legacy bundled images second.
   for (const key of keys) {
-    const image = resolveVehicleImage(key);
+    const resolved = resolveVehicleImage(key);
 
-    if (image && !resolved.includes(image)) {
-      resolved.push(image);
+    if (resolved && !images.includes(resolved)) {
+      images.push(resolved);
     }
   }
 
-  /**
-   * 3. Final fallback.
-   *
-   * Prevents broken image elements when a vehicle has
-   * no usable image.
-   */
-  if (!resolved.length) {
-    resolved.push(sedan1);
+  // Final fallback.
+  if (!images.length) {
+    images.push(sedan1);
   }
 
-  return resolved;
-}
-
-/**
- * Resolve a vehicle's primary image.
- *
- * Useful for vehicle cards and featured vehicles.
- */
-export function resolvePrimaryVehicleImage(
-  keys: string[] = [],
-  urls: string[] = [],
-): string {
-  const images = resolveImages(keys, urls);
-
-  return images[0] ?? sedan1;
-}
-
-/**
- * Resolve an image specifically from a Supabase media path.
- *
- * Useful when vehicle_media.media.path is available directly.
- */
-export function resolveVehicleMediaPath(
-  path: string | null | undefined,
-): string {
-  if (!path) return "";
-
-  return mediaUrl(path, "card");
+  return images;
 }
 ```

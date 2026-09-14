@@ -84,11 +84,23 @@ export function Footer() {
       />
 
       <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_0.8fr_0.8fr_1fr]">
+
+        {/* ============================================================
+            RESPONSIVE FOOTER GRID
+            Mobile/small screens:
+            - Company = full width
+            - Explore + Support = two columns
+            - Contact = full width
+
+            Large screens:
+            - Original 4-column layout
+        ============================================================ */}
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_0.8fr_1fr]">
+
           {/* ============================================================
               COMPANY
           ============================================================ */}
-          <div>
+          <div className="sm:col-span-2 lg:col-span-1">
             <Link
               to="/"
               className="inline-flex items-center rounded-xl transition-opacity hover:opacity-90"
@@ -208,7 +220,7 @@ export function Footer() {
           {/* ============================================================
               CONTACT
           ============================================================ */}
-          <div>
+          <div className="sm:col-span-2 lg:col-span-1">
             <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Contact Us
             </h3>

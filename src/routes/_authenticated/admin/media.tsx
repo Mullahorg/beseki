@@ -88,8 +88,7 @@ function MediaLibrary() {
             <SelectInput value={category} aria-label="Upload category" onChange={(e) => setCategory(e.target.value as MediaCategory)} className="border-admin-line bg-admin-panel text-admin-foreground">
               {mediaCategories.map((c) => <option key={c} value={c}>{c}</option>)}
             </SelectInput>
-          </SelectInput>
-        </div>
+          </div>
         </div>
         <div className="border-b border-admin-line p-4 md:px-6">
           <MediaUploader category={category} onUploaded={(records) => {

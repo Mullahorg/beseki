@@ -23,7 +23,7 @@ function WhatsAppIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-export default function Footer() {
+export function Footer() {
   const settings = useSettings();
 
   const primaryNav = useNav("primary");
@@ -31,9 +31,7 @@ export default function Footer() {
   const legalNav = useNav("legal");
 
   /*
-   * IMPORTANT:
    * settings.address is an object:
-   *
    * {
    *   line1,
    *   line2,
@@ -42,7 +40,7 @@ export default function Footer() {
    *   postal
    * }
    *
-   * Never render settings.address directly in JSX.
+   * Convert it to a string before rendering.
    */
   const formattedAddress = settings.address
     ? [
@@ -52,7 +50,10 @@ export default function Footer() {
         settings.address.country,
         settings.address.postal,
       ]
-        .filter(Boolean)
+        .filter(
+          (value): value is string =>
+            typeof value === "string" && value.trim().length > 0,
+        )
         .join(", ")
     : "";
 
@@ -68,10 +69,10 @@ export default function Footer() {
 
   return (
     <footer className="relative overflow-hidden bg-ink text-white">
-      {/* Premium top accent */}
+      {/* Top brand accent */}
       <div className="h-1 w-full bg-gradient-to-r from-primary via-primary/80 to-blue-600" />
 
-      {/* Decorative background */}
+      {/* Decorative background elements */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-32 top-20 size-72 rounded-full bg-primary/10 blur-3xl"
@@ -84,7 +85,9 @@ export default function Footer() {
 
       <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_0.8fr_0.8fr_1fr]">
-          {/* Company */}
+          {/* ============================================================
+              COMPANY
+          ============================================================ */}
           <div>
             <Link
               to="/"
@@ -138,7 +141,7 @@ export default function Footer() {
                   aria-label="Instagram"
                   className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/65 transition-all hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
                 >
-                  <span className="text-sm font-bold">ig</span>
+                  <span className="text-xs font-bold">ig</span>
                 </a>
               ) : null}
 
@@ -150,13 +153,15 @@ export default function Footer() {
                   aria-label="TikTok"
                   className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/65 transition-all hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
                 >
-                  <span className="text-xs font-bold">♪</span>
+                  <span className="text-sm font-bold">♪</span>
                 </a>
               ) : null}
             </div>
           </div>
 
-          {/* Explore */}
+          {/* ============================================================
+              EXPLORE
+          ============================================================ */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Explore
@@ -170,13 +175,16 @@ export default function Footer() {
                   className="group flex items-center justify-between text-sm text-white/55 transition-colors hover:text-white"
                 >
                   <span>{item.label}</span>
-                  <ArrowUpRight className="size-3.5 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+
+                  <ArrowUpRight className="size-3.5 opacity-0 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
                 </Link>
               ))}
             </nav>
           </div>
 
-          {/* Support / More */}
+          {/* ============================================================
+              SUPPORT
+          ============================================================ */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Support
@@ -190,19 +198,23 @@ export default function Footer() {
                   className="group flex items-center justify-between text-sm text-white/55 transition-colors hover:text-white"
                 >
                   <span>{item.label}</span>
-                  <ArrowUpRight className="size-3.5 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+
+                  <ArrowUpRight className="size-3.5 opacity-0 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
                 </Link>
               ))}
             </nav>
           </div>
 
-          {/* Contact */}
+          {/* ============================================================
+              CONTACT
+          ============================================================ */}
           <div>
             <h3 className="text-sm font-bold uppercase tracking-[0.16em] text-white">
               Contact Us
             </h3>
 
             <div className="mt-5 space-y-4">
+              {/* Phone */}
               {settings.phoneDisplay && phoneHref ? (
                 <a
                   href={phoneHref}
@@ -216,6 +228,7 @@ export default function Footer() {
                     <span className="block text-xs text-white/35">
                       Call us
                     </span>
+
                     <span className="mt-0.5 block text-sm text-white/70 transition-colors group-hover:text-white">
                       {settings.phoneDisplay}
                     </span>
@@ -223,6 +236,7 @@ export default function Footer() {
                 </a>
               ) : null}
 
+              {/* Email */}
               {settings.email ? (
                 <a
                   href={`mailto:${settings.email}`}
@@ -236,6 +250,7 @@ export default function Footer() {
                     <span className="block text-xs text-white/35">
                       Email
                     </span>
+
                     <span className="mt-0.5 block break-all text-sm text-white/70 transition-colors group-hover:text-white">
                       {settings.email}
                     </span>
@@ -243,6 +258,7 @@ export default function Footer() {
                 </a>
               ) : null}
 
+              {/* Address */}
               {formattedAddress ? (
                 <div className="flex items-start gap-3">
                   <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-white/65">
@@ -256,7 +272,7 @@ export default function Footer() {
               ) : null}
             </div>
 
-            {/* WhatsApp CTA */}
+            {/* WhatsApp */}
             {whatsappHref ? (
               <a
                 href={whatsappHref}
@@ -271,7 +287,9 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom */}
+        {/* ================================================================
+            BOTTOM BAR
+        ================================================================ */}
         <div className="mt-12 border-t border-white/10 pt-6">
           <div className="flex flex-col gap-5 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
             <p>

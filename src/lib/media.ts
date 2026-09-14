@@ -52,7 +52,7 @@ export type ImageSize = keyof typeof imageSizes | "original";
 export function mediaUrl(path: string, size: ImageSize = "card"): string {
   if (!path) return "";
   if (path.startsWith("http")) return path;
-  const projectUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+  const projectUrl = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
   if (!projectUrl) {
     const fallback = `/api/public/media/${path.split("/").map(encodeURIComponent).join("/")}`;
     return size === "original" ? fallback : `${fallback}?w=${imageSizes[size]}`;

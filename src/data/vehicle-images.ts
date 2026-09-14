@@ -1,14 +1,11 @@
-```ts
 /**
- * Vehicle photo library.
+ * Vehicle image resolver.
  *
- * Database vehicle records can contain:
- * - bundled image keys such as "prado-1.jpg"
- * - Supabase Storage paths such as "vehicles/prado.jpg"
+ * Supports:
+ * - bundled fallback vehicle photos
+ * - Supabase Storage paths
  * - Supabase public URLs
  * - legacy /api/public/media/... URLs
- *
- * Supabase Storage is preferred for database-managed images.
  */
 
 import alphard1 from "@/assets/vehicles/alphard-1.jpg";
@@ -29,68 +26,51 @@ import { mediaUrl } from "@/lib/media";
 export const vehicleImages: Record<string, string> = {
   "alphard-1.jpg": alphard1,
   "alphard-2.jpg": alphard2,
-
   "prado-1.jpg": prado1,
   "prado-2.jpg": prado2,
-
   "cx5-1.jpg": cx51,
   "cx5-2.jpg": cx52,
-
   "note-1.jpg": note1,
   "note-2.jpg": note2,
-
   "hilux-1.jpg": hilux1,
   "hilux-2.jpg": hilux2,
-
   "sedan-1.jpg": sedan1,
   "sedan-2.jpg": sedan2,
 };
 
-/**
- * Converts a legacy media URL into a Storage path.
- *
- * Example:
- * /api/public/media/vehicles/prado.jpg
- *
- * becomes:
- * vehicles/prado.jpg
- */
 function extractStoragePath(value: string): string {
-  if (!value) return "";
-
   const input = value.trim();
 
   if (!input) return "";
 
-  // Legacy application URL.
-  const legacyMatch = input.match(
-    /^\/?api\/public\/media\/(.+?)(?:\?.*)?$/i,
-  );
-
-  if (legacyMatch?.[1]) {
-    return decodeURIComponent(legacyMatch[1]);
+  // Legacy site image route
+  if (input.startsWith("/api/public/media/")) {
+    return input
+      .replace("/api/public/media/", "")
+      .split("?")[0];
   }
 
-  // Supabase public Storage URL.
-  const publicMatch = input.match(
-    /\/storage\/v1\/object\/public\/media\/(.+?)(?:\?.*)?$/i,
-  );
+  // Supabase public Storage URL
+  const publicMarker = "/storage/v1/object/public/media/";
 
-  if (publicMatch?.[1]) {
-    return decodeURIComponent(publicMatch[1]);
+  if (input.includes(publicMarker)) {
+    const path = input.split(publicMarker)[1];
+
+    return path ? path.split("?")[0] : "";
   }
 
-  // Supabase authenticated/render URL.
-  const renderMatch = input.match(
-    /\/storage\/v1\/(?:object|render\/image)\/(?:public|authenticated)\/media\/(.+?)(?:\?.*)?$/i,
-  );
+  // Supabase render-image URL
+  const renderMarker = "/storage/v1/render/image/public/media/";
 
-  if (renderMatch?.[1]) {
-    return decodeURIComponent(renderMatch[1]);
+  if (input.includes(renderMarker)) {
+    const path = input.split(renderMarker)[1];
+
+    return path ? path.split("?")[0] : "";
   }
 
-  // Already a Storage path.
-  if (!/^https?:\/\//i.test(input)) {
+  // Plain Storage path such as:
+  // vehicles/toyota-prado-2018-front.jpg
+  if (!input.startsWith("http://") && !input.startsWith("https://")) {
     return input.replace(/^\/+/, "");
   }
 
@@ -98,7 +78,7 @@ function extractStoragePath(value: string): string {
 }
 
 /**
- * Resolve one vehicle image.
+ * Resolve one vehicle image value into a usable browser URL.
  */
 export function resolveVehicleImage(
   value: string | null | undefined,
@@ -109,26 +89,24 @@ export function resolveVehicleImage(
 
   if (!input) return "";
 
-  /**
-   * First check bundled assets.
-   */
+  // Existing bundled vehicle photo
   if (vehicleImages[input]) {
     return vehicleImages[input];
   }
 
-  /**
-   * Handle Storage paths and legacy URLs.
-   */
+  // Convert Storage path / old API URL / Supabase URL
+  // into the site's canonical media URL.
   const storagePath = extractStoragePath(input);
 
   if (storagePath) {
     return mediaUrl(storagePath, "card");
   }
 
-  /**
-   * Keep unrelated external URLs unchanged.
-   */
-  if (/^https?:\/\//i.test(input)) {
+  // Leave unrelated external URLs unchanged.
+  if (
+    input.startsWith("https://") ||
+    input.startsWith("http://")
+  ) {
     return input;
   }
 
@@ -136,12 +114,10 @@ export function resolveVehicleImage(
 }
 
 /**
- * Resolve all images associated with a vehicle.
+ * IMPORTANT:
+ * vehicles.functions.ts imports this function directly.
  *
- * URLs are checked first because they represent the current
- * database-managed vehicle images.
- *
- * Bundled image keys are used as a fallback.
+ * Do not remove or rename this export.
  */
 export function resolveImages(
   keys: string[] = [],
@@ -149,7 +125,7 @@ export function resolveImages(
 ): string[] {
   const images: string[] = [];
 
-  // Database / Storage images first.
+  // Prefer DB / Storage URLs first.
   for (const url of urls) {
     const resolved = resolveVehicleImage(url);
 
@@ -158,7 +134,7 @@ export function resolveImages(
     }
   }
 
-  // Legacy bundled images second.
+  // Then bundled keys / fallback image names.
   for (const key of keys) {
     const resolved = resolveVehicleImage(key);
 
@@ -167,11 +143,10 @@ export function resolveImages(
     }
   }
 
-  // Final fallback.
-  if (!images.length) {
+  // Final fallback so vehicle cards never have an empty image array.
+  if (images.length === 0) {
     images.push(sedan1);
   }
 
   return images;
 }
-```

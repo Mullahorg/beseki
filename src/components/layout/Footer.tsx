@@ -4,18 +4,16 @@ import {
   Mail,
   MapPin,
   Phone,
+  ChevronRight,
 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { useNav, useSettings } from "@/lib/site-context";
 import { mediaUrl } from "@/lib/media";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 
-const WhatsAppIcon = ({
-  className,
-}: {
-  className?: string;
-}) => (
+const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
     fill="currentColor"
@@ -26,327 +24,317 @@ const WhatsAppIcon = ({
   </svg>
 );
 
+function FooterSocialLink({
+  href,
+  label,
+  children,
+}: {
+  href?: string | null;
+  label: string;
+  children: React.ReactNode;
+}) {
+  if (!href) return null;
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+      className={cn(
+        "flex size-10 items-center justify-center rounded-full",
+        "border border-white/10 bg-white/[0.05]",
+        "text-white/65 transition-all duration-200",
+        "hover:-translate-y-0.5 hover:border-white/20",
+        "hover:bg-white/10 hover:text-white",
+      )}
+    >
+      {children}
+    </a>
+  );
+}
+
 export function Footer() {
   const settings = useSettings();
+
   const primaryNav = useNav("primary");
   const moreNav = useNav("more");
   const legalNav = useNav("legal");
-
-  const currentYear = new Date().getFullYear();
 
   const logoSrc = settings.logoPath
     ? mediaUrl(settings.logoPath, "medium")
     : null;
 
+  const year = new Date().getFullYear();
+
   return (
     <footer className="relative overflow-hidden bg-ink text-ink-foreground">
-      {/* Premium brand accent */}
+      {/* Brand accent */}
       <div
-        className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary via-primary/70 to-blue-700"
         aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-primary/70 to-secondary"
       />
 
-      {/* Decorative background elements */}
+      {/* Decorative background */}
       <div
-        className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-primary/10 blur-3xl"
         aria-hidden="true"
+        className="pointer-events-none absolute -left-32 top-20 size-72 rounded-full bg-primary/10 blur-3xl"
       />
 
       <div
-        className="pointer-events-none absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-blue-700/10 blur-3xl"
         aria-hidden="true"
+        className="pointer-events-none absolute -right-32 bottom-10 size-80 rounded-full bg-secondary/10 blur-3xl"
       />
 
-      <div className="container-page relative pb-8 pt-14 sm:pb-10 sm:pt-16">
-        {/* Main footer grid */}
-        <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1.35fr_0.8fr_0.8fr_1.2fr] lg:gap-10">
-          {/* =========================================================
-              COMPANY
-          ========================================================== */}
-          <div className="min-w-0">
+      <div className="container-page relative">
+        {/* Main footer */}
+        <div className="grid gap-12 py-14 sm:py-16 lg:grid-cols-[1.45fr_0.8fr_0.8fr_1.15fr] lg:gap-10 lg:py-20">
+          {/* Company */}
+          <div className="max-w-md">
             <Link
               to="/"
               aria-label={`${settings.companyName} — home`}
-              className="inline-flex items-center transition-opacity duration-200 hover:opacity-90"
+              className="group inline-flex items-center"
             >
               {logoSrc ? (
                 <img
                   src={logoSrc}
                   alt={settings.companyName}
-                  className="h-14 w-auto max-w-[250px] object-contain object-left sm:h-16 md:h-[68px]"
+                  className="h-14 w-auto max-w-[250px] object-contain object-left transition-opacity duration-200 group-hover:opacity-90 sm:h-16 md:h-[68px]"
                   loading="lazy"
                   onError={(event) => {
                     event.currentTarget.style.display = "none";
                   }}
                 />
               ) : (
-                <span className="text-2xl font-black tracking-tight sm:text-3xl">
+                <span className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                   {settings.shortName.slice(0, 4)}
                   <span className="text-primary">
-                    {settings.shortName.slice(4)}
+                    {settings.shortName.slice(4) || ""}
                   </span>
                 </span>
               )}
             </Link>
 
-            <p className="mt-5 max-w-sm text-sm leading-6 text-ink-foreground/65">
+            <p className="mt-6 max-w-sm text-sm leading-7 text-white/60">
               {settings.tagline ||
-                "Trusted new and locally used motor vehicles in Mombasa."}
+                "Your trusted partner for quality vehicles in Mombasa."}
             </p>
 
+            {/* Trust statement */}
+            <div className="mt-6 flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.035] p-4">
+              <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <span className="text-sm font-bold">✓</span>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  Straight answers. Quality vehicles.
+                </p>
+                <p className="mt-1 text-xs leading-5 text-white/50">
+                  A dealership experience built around transparency and trust.
+                </p>
+              </div>
+            </div>
+
             {/* Social links */}
-            <div className="mt-6 flex flex-wrap gap-2">
-              {settings.facebookUrl ? (
-                <a
-                  href={settings.facebookUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Facebook"
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-xs font-bold text-white/65 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 hover:text-white"
-                >
-                  f
-                </a>
-              ) : null}
+            <div className="mt-6 flex items-center gap-2">
+              <FooterSocialLink
+                href={settings.facebookUrl}
+                label="Facebook"
+              >
+                <span className="text-sm font-bold">f</span>
+              </FooterSocialLink>
 
-              {settings.instagramUrl ? (
-                <a
-                  href={settings.instagramUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Instagram"
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[10px] font-bold uppercase text-white/65 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 hover:text-white"
-                >
-                  ig
-                </a>
-              ) : null}
+              <FooterSocialLink
+                href={settings.instagramUrl}
+                label="Instagram"
+              >
+                <span className="text-sm font-semibold">◎</span>
+              </FooterSocialLink>
 
-              {settings.tiktokUrl ? (
-                <a
-                  href={settings.tiktokUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="TikTok"
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[10px] font-bold uppercase text-white/65 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 hover:text-white"
-                >
-                  tk
-                </a>
-              ) : null}
+              <FooterSocialLink
+                href={settings.tiktokUrl}
+                label="TikTok"
+              >
+                <span className="text-sm font-bold">♪</span>
+              </FooterSocialLink>
             </div>
           </div>
 
-          {/* =========================================================
-              MOBILE: TWO COLUMNS
-          ========================================================== */}
-          <div className="grid grid-cols-2 gap-8 lg:contents">
-            {/* Explore */}
-            <div>
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/40">
-                Explore
-              </h3>
-
-              <nav
-                aria-label="Explore"
-                className="mt-5 space-y-3"
-              >
-                {primaryNav.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    activeOptions={{
-                      exact: item.href === "/",
-                    }}
-                    activeProps={{
-                      className: "text-primary",
-                    }}
-                    className="group flex items-center gap-1.5 text-sm text-white/65 transition-colors duration-200 hover:text-white"
-                  >
-                    <span>{item.label}</span>
-
-                    <ArrowUpRight
-                      className="size-3.5 opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-70"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                ))}
-              </nav>
-            </div>
-
-            {/* Support */}
-            <div>
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/40">
-                Support
-              </h3>
-
-              <nav
-                aria-label="Support"
-                className="mt-5 space-y-3"
-              >
-                {moreNav.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    className="group flex items-center gap-1.5 text-sm text-white/65 transition-colors duration-200 hover:text-white"
-                  >
-                    <span>{item.label}</span>
-
-                    <ArrowUpRight
-                      className="size-3.5 opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-70"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          </div>
-
-          {/* =========================================================
-              CONTACT
-          ========================================================== */}
+          {/* Explore */}
           <div>
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/40">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-white">
+              Explore
+            </h3>
+
+            <ul className="mt-5 space-y-1">
+              {primaryNav.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    to={item.href}
+                    className="group flex items-center py-2 text-sm text-white/55 transition-colors hover:text-white"
+                  >
+                    <ChevronRight className="mr-1 size-3.5 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100" />
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-white">
+              Support
+            </h3>
+
+            <ul className="mt-5 space-y-1">
+              {moreNav.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    to={item.href}
+                    className="group flex items-center py-2 text-sm text-white/55 transition-colors hover:text-white"
+                  >
+                    <ChevronRight className="mr-1 size-3.5 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100" />
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-white">
               Contact Us
             </h3>
 
             <div className="mt-5 space-y-4">
+              {/* Address */}
+              {settings.address ? (
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-white/65">
+                    <MapPin className="size-4" />
+                  </div>
+
+                  <p className="text-sm leading-6 text-white/55">
+                    {settings.address}
+                  </p>
+                </div>
+              ) : null}
+
               {/* Phone */}
-              <a
-                href={`tel:${settings.phoneTel}`}
-                className="group flex items-start gap-3 text-sm text-white/65 transition-colors hover:text-white"
-              >
-                <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-white/55 transition-colors group-hover:bg-primary/15 group-hover:text-primary">
-                  <Phone className="size-4" aria-hidden="true" />
-                </span>
+              {settings.phoneTel ? (
+                <a
+                  href={`tel:${settings.phoneTel}`}
+                  className="group flex items-center gap-3"
+                >
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-white/65 transition-colors group-hover:bg-primary/15 group-hover:text-primary">
+                    <Phone className="size-4" />
+                  </div>
 
-                <span className="min-w-0">
-                  <span className="block text-[10px] font-semibold uppercase tracking-[0.15em] text-white/35">
-                    Call / WhatsApp
-                  </span>
-
-                  <span className="mt-1 block font-medium">
+                  <span className="text-sm text-white/60 transition-colors group-hover:text-white">
                     {settings.phoneDisplay}
                   </span>
-                </span>
-              </a>
+                </a>
+              ) : null}
 
               {/* Email */}
-              <a
-                href={`mailto:${settings.email}`}
-                className="group flex items-start gap-3 text-sm text-white/65 transition-colors hover:text-white"
-              >
-                <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-white/55 transition-colors group-hover:bg-primary/15 group-hover:text-primary">
-                  <Mail className="size-4" aria-hidden="true" />
-                </span>
+              {settings.email ? (
+                <a
+                  href={`mailto:${settings.email}`}
+                  className="group flex items-center gap-3"
+                >
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-white/65 transition-colors group-hover:bg-primary/15 group-hover:text-primary">
+                    <Mail className="size-4" />
+                  </div>
 
-                <span className="min-w-0">
-                  <span className="block text-[10px] font-semibold uppercase tracking-[0.15em] text-white/35">
-                    Email
-                  </span>
-
-                  <span className="mt-1 block break-all font-medium">
+                  <span className="break-all text-sm text-white/60 transition-colors group-hover:text-white">
                     {settings.email}
                   </span>
-                </span>
-              </a>
-
-              {/* Location */}
-              <div className="flex items-start gap-3 text-sm text-white/65">
-                <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-white/55">
-                  <MapPin className="size-4" aria-hidden="true" />
-                </span>
-
-                <span className="min-w-0">
-                  <span className="block text-[10px] font-semibold uppercase tracking-[0.15em] text-white/35">
-                    Showroom
-                  </span>
-
-                  <span className="mt-1 block leading-5">
-                    {settings.address}
-                  </span>
-                </span>
-              </div>
+                </a>
+              ) : null}
             </div>
-          </div>
-        </div>
 
-        {/* =========================================================
-            WHATSAPP CTA
-        ========================================================== */}
-        <div className="mt-12 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045]">
-          <div className="relative p-5 sm:p-6">
-            {/* Small decorative accent */}
-            <div
-              className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-primary/[0.06] to-transparent"
-              aria-hidden="true"
-            />
-
-            <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-              <div className="min-w-0">
-                <p className="text-base font-bold text-white sm:text-lg">
-                  Looking for your next vehicle?
-                </p>
-
-                <p className="mt-1 text-sm leading-5 text-white/50">
-                  Talk to our team and let us help you find the right car.
-                </p>
-              </div>
-
-              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            {/* Contact CTA */}
+            <div className="mt-7 flex flex-col gap-2.5 sm:flex-row lg:flex-col">
+              <Button
+                variant="whatsapp"
+                size="sm"
+                className="rounded-full shadow-sm"
+                asChild
+              >
                 <a
                   href={whatsappLink(waMessages.general)}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 text-sm font-bold text-white shadow-lg shadow-black/10 transition-all duration-200 hover:-translate-y-0.5 hover:brightness-105"
                 >
-                  <WhatsAppIcon className="size-5" />
-                  Chat on WhatsApp
+                  <WhatsAppIcon className="size-4" />
+                  WhatsApp Us
                 </a>
+              </Button>
 
-                <a
-                  href={`tel:${settings.phoneTel}`}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/10"
+              {settings.phoneTel ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                  asChild
                 >
-                  <Phone className="size-4" />
-                  Call Us
-                </a>
-              </div>
+                  <a href={`tel:${settings.phoneTel}`}>
+                    <Phone className="size-4" />
+                    Call Us
+                  </a>
+                </Button>
+              ) : null}
             </div>
           </div>
         </div>
 
-        {/* =========================================================
-            BOTTOM BAR
-        ========================================================== */}
-        <div className="mt-9 border-t border-white/10 pt-6 sm:mt-10 sm:pt-7">
-          <div className="flex flex-col gap-4 text-xs text-white/40 md:flex-row md:items-center md:justify-between">
-            <p>
-              © {currentYear}{" "}
-              <span className="font-medium text-white/55">
-                {settings.companyName}
-              </span>
-              . All rights reserved.
-            </p>
+        {/* Bottom divider */}
+        <div className="border-t border-white/10" />
 
-            {legalNav.length > 0 ? (
-              <nav
-                aria-label="Legal"
-                className="flex flex-wrap items-center gap-x-5 gap-y-2"
-              >
+        {/* Bottom bar */}
+        <div className="flex flex-col gap-5 py-6 text-xs sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-white/40">
+            © {year} {settings.companyName}. All rights reserved.
+          </p>
+
+          {legalNav.length > 0 ? (
+            <nav aria-label="Legal">
+              <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
                 {legalNav.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    className={cn(
-                      "transition-colors duration-200 hover:text-white",
-                    )}
-                  >
-                    {item.label}
-                  </Link>
+                  <li key={item.id}>
+                    <Link
+                      to={item.href}
+                      className="text-white/40 transition-colors hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
                 ))}
-              </nav>
-            ) : null}
-          </div>
+              </ul>
+            </nav>
+          ) : null}
         </div>
       </div>
+
+      {/* Floating back-to-top */}
+      <a
+        href="#top"
+        aria-label="Back to top"
+        className={cn(
+          "absolute bottom-6 right-4 hidden size-10 items-center justify-center rounded-full",
+          "border border-white/10 bg-white/[0.05] text-white/50",
+          "transition-all duration-200 hover:-translate-y-1",
+          "hover:bg-white/10 hover:text-white sm:flex",
+        )}
+      >
+        <ArrowUpRight className="size-4 -rotate-45" />
+      </a>
     </footer>
   );
 }
+
+export { WhatsAppIcon };

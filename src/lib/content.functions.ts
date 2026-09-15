@@ -45,6 +45,7 @@ export interface SiteSettings {
   seoTitle: string | null;
   seoDescription: string | null;
   ogImagePath: string | null;
+  fontTheme: string;
 }
 
 export interface NavItem {
@@ -96,7 +97,7 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
     db
       .from("site_settings")
       .select(
-        "company_name,short_name,tagline,phone_display,phone_tel,whatsapp_number,email,address_line1,address_line2,city,country,postal,map_query,announcement,announcement_enabled,hours,socials,whatsapp_templates,default_seo_title,default_seo_description,logo_media_id,favicon_media_id,og_media_id",
+        "company_name,short_name,tagline,phone_display,phone_tel,whatsapp_number,email,address_line1,address_line2,city,country,postal,map_query,announcement,announcement_enabled,hours,socials,whatsapp_templates,default_seo_title,default_seo_description,logo_media_id,favicon_media_id,og_media_id,font_theme",
       )
       .maybeSingle(),
     db.from("nav_items").select("id,menu,label,href,position,visible,external,is_cta").eq("visible", true).order("position"),
@@ -150,6 +151,7 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
       seoTitle: s.default_seo_title,
       seoDescription: s.default_seo_description,
       ogImagePath: s.og_media_id ? brandPaths.get(s.og_media_id) ?? null : null,
+      fontTheme: ((s as { font_theme?: string | null }).font_theme ?? "signature") as string,
     },
     nav: (navRes.data ?? []).map((n) => ({
       id: n.id,

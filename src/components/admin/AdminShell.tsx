@@ -80,9 +80,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
     navigate({ to: "/auth", replace: true });
   }
 
+  const visibleNav = adminNav
+    .map((group) => ({ ...group, items: group.items.filter((i) => canOpen(role, i.to)) }))
+    .filter((group) => group.items.length > 0);
+
   const nav = (
     <nav className="space-y-6 p-4">
-      {adminNav.map((group) => (
+      {visibleNav.map((group) => (
         <div key={group.group}>
           <p className="px-3 text-[11px] font-semibold uppercase text-admin-muted">
             {group.group}

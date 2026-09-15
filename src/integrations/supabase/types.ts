@@ -32,6 +32,42 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_events: {
+        Row: {
+          created_at: string
+          device: string | null
+          event_type: string
+          id: string
+          label: string | null
+          meta: Json
+          path: string
+          referrer: string | null
+          session_id: string
+        }
+        Insert: {
+          created_at?: string
+          device?: string | null
+          event_type: string
+          id?: string
+          label?: string | null
+          meta?: Json
+          path?: string
+          referrer?: string | null
+          session_id: string
+        }
+        Update: {
+          created_at?: string
+          device?: string | null
+          event_type?: string
+          id?: string
+          label?: string | null
+          meta?: Json
+          path?: string
+          referrer?: string | null
+          session_id?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           body: string
@@ -758,6 +794,7 @@ export type Database = {
           default_seo_title: string | null
           email: string
           favicon_media_id: string | null
+          font_theme: string
           hours: Json
           id: boolean
           logo_dark_media_id: string | null
@@ -789,6 +826,7 @@ export type Database = {
           default_seo_title?: string | null
           email?: string
           favicon_media_id?: string | null
+          font_theme?: string
           hours?: Json
           id?: boolean
           logo_dark_media_id?: string | null
@@ -820,6 +858,7 @@ export type Database = {
           default_seo_title?: string | null
           email?: string
           favicon_media_id?: string | null
+          font_theme?: string
           hours?: Json
           id?: boolean
           logo_dark_media_id?: string | null
@@ -876,6 +915,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      staff_activity: {
+        Row: {
+          action: string
+          created_at: string
+          detail: string | null
+          email: string | null
+          entity: string | null
+          entity_id: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          detail?: string | null
+          email?: string | null
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          detail?: string | null
+          email?: string | null
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       team_members: {
         Row: {
@@ -1156,10 +1228,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_staff_member: {
+        Args: {
+          target_email: string
+          target_role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: undefined
+      }
       can_manage_content: { Args: { _user_id: string }; Returns: boolean }
       get_my_staff_role: {
         Args: never
         Returns: Database["public"]["Enums"]["app_role"]
+      }
+      get_pending_staff: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          full_name: string
+        }[]
+      }
+      get_staff_members: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          role: Database["public"]["Enums"]["app_role"]
+        }[]
       }
       has_role: {
         Args: {
@@ -1169,6 +1264,26 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      log_staff_activity: {
+        Args: {
+          p_action: string
+          p_detail?: string
+          p_entity?: string
+          p_entity_id?: string
+        }
+        Returns: undefined
+      }
+      remove_staff_access: {
+        Args: { target_email: string }
+        Returns: undefined
+      }
+      update_staff_role: {
+        Args: {
+          new_role: Database["public"]["Enums"]["app_role"]
+          target_email: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "super_admin" | "admin" | "editor" | "sales"

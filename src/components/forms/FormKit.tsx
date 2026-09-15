@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { trackConversion } from "@/lib/analytics";
 
 /* ---------------------------------- fields --------------------------------- */
 

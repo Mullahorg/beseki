@@ -22,6 +22,8 @@ import { getSiteContent } from "@/lib/content.functions";
 import { SiteProvider, fallbackSettings } from "@/lib/site-context";
 import { mediaUrl } from "@/lib/media";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@/components/common/Analytics";
+import { fontThemeClass } from "@/lib/fonts";
 import { PublicMotion } from "@/components/common/PublicMotion";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -183,10 +185,13 @@ function RootComponent() {
       <VehiclesProvider vehicles={vehicles}>
       <CompareProvider>
         <PublicMotion />
+        <Analytics />
         {bare ? (
-          <Outlet />
+          <div className={fontThemeClass(content?.settings.fontTheme)}>
+            <Outlet />
+          </div>
         ) : (
-          <>
+          <div className={fontThemeClass(content?.settings.fontTheme)}>
             <div className="flex min-h-screen flex-col">
               <Header />
               <main className="flex-1">
@@ -196,7 +201,7 @@ function RootComponent() {
               <Footer />
             </div>
             <FloatingActions />
-          </>
+          </div>
         )}
         <Toaster position="top-center" richColors />
       </CompareProvider>

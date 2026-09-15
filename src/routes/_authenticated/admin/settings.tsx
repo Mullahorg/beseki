@@ -117,6 +117,48 @@ function Settings() {
           </div>
         </AdminCard>
 
+        <AdminCard className="lg:col-span-2">
+          <h2 className="mb-1 text-base font-bold">Website fonts</h2>
+          <p className="mb-4 text-sm text-admin-muted">
+            Choose the typography used across the public website. Save to apply.
+          </p>
+          <div
+            role="radiogroup"
+            aria-label="Website fonts"
+            className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+          >
+            {FONT_THEMES.map((theme) => {
+              const active = (form["font_theme"] ?? "signature") === theme.value;
+              return (
+                <button
+                  key={theme.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => set("font_theme", theme.value)}
+                  className={`rounded-lg border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transform-none ${
+                    active
+                      ? "border-primary bg-primary/10"
+                      : "border-admin-line bg-admin-surface hover:border-admin-muted/40"
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold">{theme.label}</span>
+                    {active ? <span className="text-xs font-semibold text-primary">Selected</span> : null}
+                  </div>
+                  <p className="mt-1 text-xs text-admin-muted">{theme.description}</p>
+                  <div className={`${fontThemeClass(theme.value)} mt-4 rounded-md bg-admin-panel p-3`}>
+                    <p className="font-display text-lg leading-tight">BESEKI Motors</p>
+                    <p className="mt-1 text-sm text-admin-muted">
+                      Quality cars, honest advice.
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </AdminCard>
+
         <AdminCard>
           <h2 className="mb-4 text-base font-bold">Announcement bar</h2>
           <div className="grid gap-5">

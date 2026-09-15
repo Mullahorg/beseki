@@ -67,6 +67,11 @@ export function Footer() {
     : undefined;
 
   const whatsappHref = whatsappLink(waMessages.general);
+  const socialUrl = (label: string) =>
+    settings.socials.find((social) => social.label.toLowerCase() === label)?.url;
+  const facebookUrl = socialUrl("facebook");
+  const instagramUrl = socialUrl("instagram");
+  const tiktokUrl = socialUrl("tiktok");
 
   return (
     <footer className="relative overflow-hidden bg-ink text-white">
@@ -134,9 +139,9 @@ export function Footer() {
 
             {/* Social links */}
             <div className="mt-7 flex flex-wrap gap-2">
-              {settings.facebookUrl ? (
+              {facebookUrl ? (
                 <a
-                  href={settings.facebookUrl}
+                  href={facebookUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
@@ -146,9 +151,9 @@ export function Footer() {
                 </a>
               ) : null}
 
-              {settings.instagramUrl ? (
+              {instagramUrl ? (
                 <a
-                  href={settings.instagramUrl}
+                  href={instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
@@ -158,9 +163,9 @@ export function Footer() {
                 </a>
               ) : null}
 
-              {settings.tiktokUrl ? (
+              {tiktokUrl ? (
                 <a
-                  href={settings.tiktokUrl}
+                  href={tiktokUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="TikTok"

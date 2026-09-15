@@ -22,6 +22,7 @@ import { getSiteContent } from "@/lib/content.functions";
 import { SiteProvider, fallbackSettings } from "@/lib/site-context";
 import { mediaUrl } from "@/lib/media";
 import { Toaster } from "@/components/ui/sonner";
+import { PublicMotion } from "@/components/common/PublicMotion";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -181,6 +182,7 @@ function RootComponent() {
       <SiteProvider content={content}>
       <VehiclesProvider vehicles={vehicles}>
       <CompareProvider>
+        <PublicMotion />
         {bare ? (
           <Outlet />
         ) : (

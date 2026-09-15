@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,
+  KeyRound,
   Mail,
   MapPin,
   Phone,
@@ -309,8 +310,9 @@ export function Footer() {
               reserved.
             </p>
 
-            {legalNav.length > 0 ? (
-              <nav className="flex flex-wrap gap-x-5 gap-y-2">
+            <nav className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              {legalNav.length > 0 ? (
+                <>
                 {legalNav.map((item) => (
                   <Link
                     key={item.href}
@@ -320,8 +322,17 @@ export function Footer() {
                     {item.label}
                   </Link>
                 ))}
-              </nav>
-            ) : null}
+                </>
+              ) : null}
+              <Link
+                to="/auth"
+                aria-label="Staff sign in"
+                className="inline-flex items-center gap-1.5 text-white/25 transition-colors hover:text-white/60"
+              >
+                <KeyRound className="size-3" aria-hidden="true" />
+                Staff access
+              </Link>
+            </nav>
           </div>
         </div>
       </div>

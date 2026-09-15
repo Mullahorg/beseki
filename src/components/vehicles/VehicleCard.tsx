@@ -13,7 +13,7 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
   const name = vehicleName(vehicle);
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-lg border bg-card transition-[border-color,box-shadow] duration-200 hover:border-foreground/20 hover:shadow-card">
+    <article className="group flex h-full flex-col overflow-hidden rounded-lg border bg-card transition-[border-color,box-shadow,transform] duration-300 ease-out hover:-translate-y-1 hover:border-foreground/20 hover:shadow-lift motion-reduce:transform-none">
       <Link
         to="/inventory/$slug"
         params={{ slug: vehicle.slug }}
@@ -27,7 +27,7 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
           loading={priority ? "eager" : "lazy"}
           width={1280}
           height={854}
-          className="size-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.025] motion-reduce:transition-none"
+          className="size-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.045] motion-reduce:transition-none"
         />
         <span className="absolute left-3 top-3 rounded-sm bg-background/95 px-2.5 py-1 text-[10px] font-semibold uppercase text-foreground">
           {vehicle.condition}

@@ -9,32 +9,44 @@ export function PublicMotion() {
 
   useEffect(() => {
     if (pathname.startsWith("/admin") || pathname.startsWith("/auth")) return;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const elements = Array.from(document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));
+    let observer: IntersectionObserver | undefined;
+    let secondFrame = 0;
+    const firstFrame = window.requestAnimationFrame(() => {
+      // Wait until the complete route tree has hydrated before decorating its DOM.
+      secondFrame = window.requestAnimationFrame(() => {
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const elements = Array.from(document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));
 
-    if (reduceMotion) {
-      elements.forEach((element) => element.classList.add("is-revealed"));
-      return;
-    }
+        elements.forEach((element, index) => {
+          element.classList.add("section-reveal");
+          element.style.setProperty("--reveal-delay", `${(index % 4) * 55}ms`);
+        });
 
-    elements.forEach((element, index) => {
-      element.classList.add("section-reveal");
-      element.style.setProperty("--reveal-delay", `${(index % 4) * 55}ms`);
+        if (reduceMotion) {
+          elements.forEach((element) => element.classList.add("is-revealed"));
+          return;
+        }
+
+        observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              (entry.target as HTMLElement).classList.add("is-revealed");
+              observer?.unobserve(entry.target);
+            });
+          },
+          { rootMargin: "0px 0px -8%", threshold: 0.08 },
+        );
+
+        elements.forEach((element) => observer?.observe(element));
+      });
     });
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          (entry.target as HTMLElement).classList.add("is-revealed");
-          observer.unobserve(entry.target);
-        });
-      },
-      { rootMargin: "0px 0px -8%", threshold: 0.08 },
-    );
-
-    elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+      observer?.disconnect();
+    };
   }, [pathname]);
 
   return null;

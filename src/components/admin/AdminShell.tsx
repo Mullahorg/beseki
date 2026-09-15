@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { company } from "@/data/company";
 import { cn } from "@/lib/utils";
+import { canOpen, ROLE_LABELS, useStaffRole } from "@/lib/roles";
 
 export const adminNav: { group: string; items: { label: string; to: string }[] }[] = [
   {
@@ -72,6 +73,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { role } = useStaffRole();
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -133,6 +135,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
           {company.shortName} <span className="font-medium text-admin-muted">workspace</span>
         </Link>
         <div className="ml-auto flex items-center gap-2">
+          {role ? (
+            <span className="hidden rounded-full border border-admin-line bg-admin-surface px-3 py-1 text-xs font-medium text-admin-muted md:inline">
+              {ROLE_LABELS[role]}
+            </span>
+          ) : null}
           <a
             href="/"
             target="_blank"

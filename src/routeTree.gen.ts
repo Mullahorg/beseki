@@ -51,6 +51,7 @@ import { Route as AuthenticatedAdminTradeInsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminToolsFinancingRouteImport } from './routes/_authenticated/admin/tools.financing'
 import { Route as AuthenticatedAdminVehiclesIndexRouteImport } from './routes/_authenticated/admin/vehicles.index'
 import { Route as AuthenticatedAdminVehiclesIdRouteImport } from './routes/_authenticated/admin/vehicles.$id'
+import { Route as AuthenticatedAdminWorkspaceSalesRouteImport } from './routes/_authenticated/admin/workspace.sales'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -275,6 +276,12 @@ const AuthenticatedAdminVehiclesIdRoute =
     path: '/vehicles/$id',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminWorkspaceSalesRoute =
+  AuthenticatedAdminWorkspaceSalesRouteImport.update({
+    id: '/workspace/sales',
+    path: '/workspace/sales',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
   id: '/api/public/media/$',
   path: '/api/public/media/$',
@@ -322,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/tools/financing': typeof AuthenticatedAdminToolsFinancingRoute
   '/admin/vehicles/$id': typeof AuthenticatedAdminVehiclesIdRoute
+  '/admin/workspace/sales': typeof AuthenticatedAdminWorkspaceSalesRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/vehicles/': typeof AuthenticatedAdminVehiclesIndexRoute
 }
@@ -365,6 +373,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/tools/financing': typeof AuthenticatedAdminToolsFinancingRoute
   '/admin/vehicles/$id': typeof AuthenticatedAdminVehiclesIdRoute
+  '/admin/workspace/sales': typeof AuthenticatedAdminWorkspaceSalesRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/vehicles': typeof AuthenticatedAdminVehiclesIndexRoute
 }
@@ -411,6 +420,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/tools/financing': typeof AuthenticatedAdminToolsFinancingRoute
   '/_authenticated/admin/vehicles/$id': typeof AuthenticatedAdminVehiclesIdRoute
+  '/_authenticated/admin/workspace/sales': typeof AuthenticatedAdminWorkspaceSalesRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/_authenticated/admin/vehicles/': typeof AuthenticatedAdminVehiclesIndexRoute
 }
@@ -457,6 +467,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/tools/financing'
     | '/admin/vehicles/$id'
+    | '/admin/workspace/sales'
     | '/api/public/media/$'
     | '/admin/vehicles/'
   fileRoutesByTo: FileRoutesByTo
@@ -500,6 +511,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/tools/financing'
     | '/admin/vehicles/$id'
+    | '/admin/workspace/sales'
     | '/api/public/media/$'
     | '/admin/vehicles'
   id:
@@ -545,6 +557,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/admin/tools/financing'
     | '/_authenticated/admin/vehicles/$id'
+    | '/_authenticated/admin/workspace/sales'
     | '/api/public/media/$'
     | '/_authenticated/admin/vehicles/'
   fileRoutesById: FileRoutesById
@@ -869,6 +882,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminVehiclesIdRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/workspace/sales': {
+      id: '/_authenticated/admin/workspace/sales'
+      path: '/workspace/sales'
+      fullPath: '/admin/workspace/sales'
+      preLoaderRoute: typeof AuthenticatedAdminWorkspaceSalesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/api/public/media/$': {
       id: '/api/public/media/$'
       path: '/api/public/media/$'
@@ -900,6 +920,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminToolsFinancingRoute: typeof AuthenticatedAdminToolsFinancingRoute
   AuthenticatedAdminVehiclesIdRoute: typeof AuthenticatedAdminVehiclesIdRoute
+  AuthenticatedAdminWorkspaceSalesRoute: typeof AuthenticatedAdminWorkspaceSalesRoute
   AuthenticatedAdminVehiclesIndexRoute: typeof AuthenticatedAdminVehiclesIndexRoute
 }
 
@@ -926,6 +947,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminToolsFinancingRoute:
       AuthenticatedAdminToolsFinancingRoute,
     AuthenticatedAdminVehiclesIdRoute: AuthenticatedAdminVehiclesIdRoute,
+    AuthenticatedAdminWorkspaceSalesRoute:
+      AuthenticatedAdminWorkspaceSalesRoute,
     AuthenticatedAdminVehiclesIndexRoute: AuthenticatedAdminVehiclesIndexRoute,
   }
 

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { company } from "@/data/company";
 import { cn } from "@/lib/utils";
+import { canOpen, ROLE_LABELS, useStaffRole } from "@/lib/roles";
 
 export const adminNav: { group: string; items: { label: string; to: string }[] }[] = [
   {
@@ -42,8 +43,19 @@ export const adminNav: { group: string; items: { label: string; to: string }[] }
     ],
   },
   {
+    group: "My tools",
+    items: [
+      { label: "Sales desk", to: "/admin/workspace/sales" },
+      { label: "Marketing desk", to: "/admin/workspace/marketing" },
+      { label: "Financing calculator", to: "/admin/tools/financing" },
+    ],
+  },
+  {
     group: "Insights",
-    items: [{ label: "Analytics", to: "/admin/analytics" }],
+    items: [
+      { label: "Analytics", to: "/admin/analytics" },
+      { label: "Staff activity", to: "/admin/activity" },
+    ],
   },
   {
     group: "Setup",
@@ -61,6 +73,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { role } = useStaffRole();
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -69,9 +82,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
     navigate({ to: "/auth", replace: true });
   }
 
+  const visibleNav = adminNav
+    .map((group) => ({ ...group, items: group.items.filter((i) => canOpen(role, i.to)) }))
+    .filter((group) => group.items.length > 0);
+
   const nav = (
     <nav className="space-y-6 p-4">
-      {adminNav.map((group) => (
+      {visibleNav.map((group) => (
         <div key={group.group}>
           <p className="px-3 text-[11px] font-semibold uppercase text-admin-muted">
             {group.group}
@@ -118,6 +135,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
           {company.shortName} <span className="font-medium text-admin-muted">workspace</span>
         </Link>
         <div className="ml-auto flex items-center gap-2">
+          {role ? (
+            <span className="hidden rounded-full border border-admin-line bg-admin-surface px-3 py-1 text-xs font-medium text-admin-muted md:inline">
+              {ROLE_LABELS[role]}
+            </span>
+          ) : null}
           <a
             href="/"
             target="_blank"

@@ -721,6 +721,36 @@ export type Database = {
         }
         Relationships: []
       }
+      role_permissions: {
+        Row: {
+          area: string
+          created_at: string
+          id: string
+          level: string
+          position: number
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+        }
+        Insert: {
+          area: string
+          created_at?: string
+          id?: string
+          level?: string
+          position?: number
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Update: {
+          area?: string
+          created_at?: string
+          id?: string
+          level?: string
+          position?: number
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           created_at: string
@@ -1248,6 +1278,18 @@ export type Database = {
           full_name: string
         }[]
       }
+      get_staff_activity_summary: {
+        Args: { days?: number }
+        Returns: {
+          actions: number
+          active_days: number
+          email: string
+          first_seen: string
+          last_seen: string
+          role: Database["public"]["Enums"]["app_role"]
+          sign_ins: number
+        }[]
+      }
       get_staff_members: {
         Args: never
         Returns: {
@@ -1275,6 +1317,14 @@ export type Database = {
       }
       remove_staff_access: {
         Args: { target_email: string }
+        Returns: undefined
+      }
+      set_role_permission: {
+        Args: {
+          new_level: string
+          target_area: string
+          target_role: Database["public"]["Enums"]["app_role"]
+        }
         Returns: undefined
       }
       update_staff_role: {

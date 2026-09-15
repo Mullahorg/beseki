@@ -117,9 +117,9 @@ function VehiclesAdmin() {
       ) : null}
 
       {list.data && list.data.length > 0 ? (
-        <div className="overflow-x-auto rounded-xl border bg-card">
+        <div className="overflow-x-auto rounded-lg border border-admin-line bg-admin-panel text-admin-foreground shadow-card">
           <table className="w-full min-w-[820px] text-sm">
-            <thead className="border-b bg-muted/50 text-left">
+            <thead className="border-b border-admin-line bg-admin-surface text-left text-admin-muted">
               <tr>
                 <th className="px-4 py-3 font-semibold">Vehicle</th>
                 <th className="px-4 py-3 font-semibold">Price</th>
@@ -131,7 +131,7 @@ function VehiclesAdmin() {
             </thead>
             <tbody>
               {list.data.map((v) => (
-                <tr key={v.id} className="border-b last:border-0">
+                <tr key={v.id} className="border-b border-admin-line transition-colors hover:bg-admin-surface last:border-0">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {v.image_urls?.[0] ? (

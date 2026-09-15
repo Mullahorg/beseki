@@ -79,12 +79,12 @@ function Dashboard() {
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {tiles.map((t) => (
-          <Link key={t.label} to={t.to ?? "/admin"} className="rounded-xl border bg-card p-4 shadow-sm hover:bg-accent">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t.label}</p>
+          <Link key={t.label} to={t.to ?? "/admin"} className="group rounded-lg border border-admin-line bg-admin-panel p-4 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-admin-focus/45 hover:shadow-lift motion-reduce:transform-none">
+            <p className="text-xs font-medium uppercase text-admin-muted transition-colors group-hover:text-admin-foreground">{t.label}</p>
             {stats.isLoading ? (
               <Skeleton className="mt-2 h-8 w-12" />
             ) : (
-              <p className="mt-1 text-3xl font-bold tabular-nums">{t.value ?? 0}</p>
+              <p className="mt-1 text-3xl font-bold tabular-nums text-admin-foreground">{t.value ?? 0}</p>
             )}
           </Link>
         ))}

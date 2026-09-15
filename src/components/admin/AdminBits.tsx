@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export function AdminLoading({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 rounded-lg border border-admin-line bg-admin-panel p-4">
       {Array.from({ length: rows }).map((_, i) => (
         <Skeleton key={i} className="h-14 w-full" />
       ))}
@@ -15,9 +15,9 @@ export function AdminLoading({ rows = 5 }: { rows?: number }) {
 
 export function AdminEmpty({ title, message, action }: { title: string; message: string; action?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center rounded-xl border border-dashed bg-card px-6 py-14 text-center">
+    <div className="flex flex-col items-center rounded-lg border border-dashed border-admin-line bg-admin-panel px-6 py-14 text-center text-admin-foreground">
       <h3 className="text-base font-semibold">{title}</h3>
-      <p className="mt-1.5 max-w-sm text-sm text-muted-foreground">{message}</p>
+      <p className="mt-1.5 max-w-sm text-sm text-admin-muted">{message}</p>
       {action ? <div className="mt-5">{action}</div> : null}
     </div>
   );

@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Menu, X, LogOut, ExternalLink } from "lucide-react";
+import { Menu, X, LogOut, ExternalLink, Gauge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { company } from "@/data/company";
@@ -68,7 +68,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <nav className="space-y-6 p-4">
       {adminNav.map((group) => (
         <div key={group.group}>
-          <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <p className="px-3 text-[11px] font-semibold uppercase text-admin-muted">
             {group.group}
           </p>
           <ul className="mt-2 space-y-0.5">
@@ -80,8 +80,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
                     to={item.to}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                      active ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-accent",
+                      "block rounded-md border border-transparent px-3 py-2 text-sm font-medium transition-[background-color,color,border-color,transform] duration-200 hover:translate-x-0.5 motion-reduce:transform-none",
+                      active
+                        ? "border-admin-line bg-primary text-primary-foreground shadow-sm"
+                        : "text-admin-muted hover:border-admin-line hover:bg-admin-surface hover:text-admin-foreground",
                     )}
                   >
                     {item.label}
@@ -96,25 +98,26 @@ export function AdminShell({ children }: { children: ReactNode }) {
   );
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b bg-card px-4">
+    <div className="min-h-screen bg-admin-canvas text-admin-foreground">
+      <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-admin-line bg-admin-panel/95 px-4 shadow-header backdrop-blur md:px-6">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
-          className="rounded-md p-2 hover:bg-accent lg:hidden"
+          className="rounded-md p-2 transition-colors hover:bg-admin-surface lg:hidden"
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
-        <Link to="/admin" className="font-bold tracking-tight">
-          {company.shortName} <span className="text-muted-foreground">admin</span>
+        <Link to="/admin" className="flex items-center gap-2 font-bold">
+          <span className="grid size-8 place-items-center rounded-md bg-primary text-primary-foreground"><Gauge className="size-4" /></span>
+          {company.shortName} <span className="font-medium text-admin-muted">workspace</span>
         </Link>
         <div className="ml-auto flex items-center gap-2">
           <a
             href="/"
             target="_blank"
             rel="noreferrer"
-            className="hidden items-center gap-1.5 rounded-md px-3 py-2 text-sm hover:bg-accent sm:flex"
+            className="hidden items-center gap-1.5 rounded-md px-3 py-2 text-sm text-admin-muted transition-colors hover:bg-admin-surface hover:text-admin-foreground sm:flex"
           >
             View site <ExternalLink className="size-3.5" aria-hidden="true" />
           </a>
@@ -127,13 +130,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <div className="flex">
         <aside
           className={cn(
-            "fixed inset-x-0 top-14 z-30 max-h-[calc(100vh-3.5rem)] overflow-y-auto border-b bg-card lg:sticky lg:block lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r",
+            "fixed inset-x-0 top-16 z-30 max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-admin-line bg-admin-panel lg:sticky lg:block lg:h-[calc(100vh-4rem)] lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r",
             open ? "block" : "hidden lg:block",
           )}
         >
           {nav}
         </aside>
-        <main className="min-w-0 flex-1 p-4 md:p-8">{children}</main>
+        <main className="min-w-0 flex-1 bg-admin-canvas p-4 text-admin-foreground md:p-8 lg:p-10">{children}</main>
       </div>
     </div>
   );
@@ -149,10 +152,10 @@ export function AdminHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-7 flex flex-wrap items-end justify-between gap-4 border-b border-admin-line pb-5">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-        {description ? <p className="mt-1 text-sm text-muted-foreground">{description}</p> : null}
+        <h1 className="text-2xl font-bold md:text-3xl">{title}</h1>
+        {description ? <p className="mt-1.5 text-sm text-admin-muted">{description}</p> : null}
       </div>
       {action}
     </div>
@@ -160,5 +163,5 @@ export function AdminHeader({
 }
 
 export function AdminCard({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("rounded-xl border bg-card p-5 shadow-sm", className)}>{children}</div>;
+  return <div className={cn("rounded-lg border border-admin-line bg-admin-panel p-5 text-admin-foreground shadow-card transition-[border-color,box-shadow,transform] duration-200 hover:border-admin-muted/25 hover:shadow-lift", className)}>{children}</div>;
 }

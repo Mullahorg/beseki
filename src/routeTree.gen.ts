@@ -48,6 +48,7 @@ import { Route as AuthenticatedAdminStaffRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminTeamRouteImport } from './routes/_authenticated/admin/team'
 import { Route as AuthenticatedAdminTestimonialsRouteImport } from './routes/_authenticated/admin/testimonials'
 import { Route as AuthenticatedAdminTradeInsRouteImport } from './routes/_authenticated/admin/trade-ins'
+import { Route as AuthenticatedAdminToolsFinancingRouteImport } from './routes/_authenticated/admin/tools.financing'
 import { Route as AuthenticatedAdminVehiclesIndexRouteImport } from './routes/_authenticated/admin/vehicles.index'
 import { Route as AuthenticatedAdminVehiclesIdRouteImport } from './routes/_authenticated/admin/vehicles.$id'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
@@ -256,6 +257,12 @@ const AuthenticatedAdminTradeInsRoute =
     path: '/trade-ins',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminToolsFinancingRoute =
+  AuthenticatedAdminToolsFinancingRouteImport.update({
+    id: '/tools/financing',
+    path: '/tools/financing',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminVehiclesIndexRoute =
   AuthenticatedAdminVehiclesIndexRouteImport.update({
     id: '/vehicles/',
@@ -313,6 +320,7 @@ export interface FileRoutesByFullPath {
   '/admin/testimonials': typeof AuthenticatedAdminTestimonialsRoute
   '/admin/trade-ins': typeof AuthenticatedAdminTradeInsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/tools/financing': typeof AuthenticatedAdminToolsFinancingRoute
   '/admin/vehicles/$id': typeof AuthenticatedAdminVehiclesIdRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/vehicles/': typeof AuthenticatedAdminVehiclesIndexRoute
@@ -355,6 +363,7 @@ export interface FileRoutesByTo {
   '/admin/testimonials': typeof AuthenticatedAdminTestimonialsRoute
   '/admin/trade-ins': typeof AuthenticatedAdminTradeInsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/tools/financing': typeof AuthenticatedAdminToolsFinancingRoute
   '/admin/vehicles/$id': typeof AuthenticatedAdminVehiclesIdRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/vehicles': typeof AuthenticatedAdminVehiclesIndexRoute
@@ -400,6 +409,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/testimonials': typeof AuthenticatedAdminTestimonialsRoute
   '/_authenticated/admin/trade-ins': typeof AuthenticatedAdminTradeInsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/tools/financing': typeof AuthenticatedAdminToolsFinancingRoute
   '/_authenticated/admin/vehicles/$id': typeof AuthenticatedAdminVehiclesIdRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/_authenticated/admin/vehicles/': typeof AuthenticatedAdminVehiclesIndexRoute
@@ -445,6 +455,7 @@ export interface FileRouteTypes {
     | '/admin/testimonials'
     | '/admin/trade-ins'
     | '/admin/'
+    | '/admin/tools/financing'
     | '/admin/vehicles/$id'
     | '/api/public/media/$'
     | '/admin/vehicles/'
@@ -487,6 +498,7 @@ export interface FileRouteTypes {
     | '/admin/testimonials'
     | '/admin/trade-ins'
     | '/admin'
+    | '/admin/tools/financing'
     | '/admin/vehicles/$id'
     | '/api/public/media/$'
     | '/admin/vehicles'
@@ -531,6 +543,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/testimonials'
     | '/_authenticated/admin/trade-ins'
     | '/_authenticated/admin/'
+    | '/_authenticated/admin/tools/financing'
     | '/_authenticated/admin/vehicles/$id'
     | '/api/public/media/$'
     | '/_authenticated/admin/vehicles/'
@@ -835,6 +848,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminTradeInsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/tools/financing': {
+      id: '/_authenticated/admin/tools/financing'
+      path: '/tools/financing'
+      fullPath: '/admin/tools/financing'
+      preLoaderRoute: typeof AuthenticatedAdminToolsFinancingRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/vehicles/': {
       id: '/_authenticated/admin/vehicles/'
       path: '/vehicles'
@@ -878,6 +898,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminTestimonialsRoute: typeof AuthenticatedAdminTestimonialsRoute
   AuthenticatedAdminTradeInsRoute: typeof AuthenticatedAdminTradeInsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminToolsFinancingRoute: typeof AuthenticatedAdminToolsFinancingRoute
   AuthenticatedAdminVehiclesIdRoute: typeof AuthenticatedAdminVehiclesIdRoute
   AuthenticatedAdminVehiclesIndexRoute: typeof AuthenticatedAdminVehiclesIndexRoute
 }
@@ -902,6 +923,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminTestimonialsRoute: AuthenticatedAdminTestimonialsRoute,
     AuthenticatedAdminTradeInsRoute: AuthenticatedAdminTradeInsRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+    AuthenticatedAdminToolsFinancingRoute:
+      AuthenticatedAdminToolsFinancingRoute,
     AuthenticatedAdminVehiclesIdRoute: AuthenticatedAdminVehiclesIdRoute,
     AuthenticatedAdminVehiclesIndexRoute: AuthenticatedAdminVehiclesIndexRoute,
   }

@@ -201,6 +201,11 @@
   to { transform: translateX(100%); }
 }
 
+@keyframes page-arrive {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @utility announcement-track {
   mask-image: linear-gradient(to right, transparent, black 1rem, black calc(100% - 1rem), transparent);
 }
@@ -226,8 +231,61 @@
   }
 }
 
+@utility interactive-link {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    right: 0;
+    bottom: -0.2rem;
+    left: 0;
+    height: 1px;
+    content: "";
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 220ms ease-out;
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+.section-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.section-reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+main {
+  animation: page-arrive 320ms ease-out both;
+}
+
+@media (hover: hover) {
+  main img {
+    backface-visibility: hidden;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .announcement-marquee { animation: none; }
   .announcement-marquee span[aria-hidden="true"] { display: none; }
   .media-shimmer::after { animation: none; }
+  .section-reveal,
+  .section-reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  main { animation: none; }
 }

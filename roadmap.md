@@ -58,7 +58,7 @@ Keep the existing visual design; extend rather than rebuild.
 - Leads: enquiries now store the vehicle and the page they came from.
 
 ## Remaining
-- [ ] Add restrained public interaction motion and richer hover/focus feedback without changing the BESEKI design.
+- [ ] Add restrained motion and richer hover/focus feedback to existing sections only; do not rebuild or rearrange them.
 - [ ] Add a discreet staff sign-in entry and visually unify the admin workspace.
 - [ ] Ensure hosted pages refresh database content without requiring a new Lovable publish.
 - [ ] Replace placeholder team profiles and add real testimonials (none seeded on purpose).

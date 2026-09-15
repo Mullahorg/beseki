@@ -8,6 +8,7 @@ import { MediaPicker } from "@/components/admin/MediaPicker";
 import { Field, TextInput, TextArea } from "@/components/forms/FormKit";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { FONT_THEMES, fontThemeClass } from "@/lib/fonts";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
   component: Settings,

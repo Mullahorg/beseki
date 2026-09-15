@@ -1,3 +1,4 @@
+```tsx
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
@@ -6,6 +7,7 @@ import {
   Check,
   Loader2,
   ShieldCheck,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -14,6 +16,22 @@ import { Field, TextInput } from "@/components/forms/FormKit";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { company } from "@/data/company";
+
+type StaffRole = "super_admin" | "admin" | "editor" | "sales";
+
+const STAFF_ROLES: readonly StaffRole[] = [
+  "super_admin",
+  "admin",
+  "editor",
+  "sales",
+];
+
+function isStaffRole(value: unknown): value is StaffRole {
+  return (
+    typeof value === "string" &&
+    STAFF_ROLES.includes(value as StaffRole)
+  );
+}
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -51,29 +69,146 @@ function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [busy, setBusy] = useState(false);
+  const [checkingAccess, setCheckingAccess] = useState(true);
   const [sent, setSent] = useState(false);
 
+  const [accessDenied, setAccessDenied] = useState(false);
+  const [accessError, setAccessError] = useState("");
+
+  /**
+   * Check whether the currently authenticated user has
+   * a valid BESEKI staff role.
+   */
+  async function checkStaffAccess(): Promise<boolean> {
+    setCheckingAccess(true);
+    setAccessError("");
+
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        throw userError;
+      }
+
+      if (!user) {
+        setAccessDenied(false);
+        return false;
+      }
+
+      const { data: role, error: roleError } =
+        await supabase.rpc("get_my_staff_role");
+
+      if (roleError) {
+        console.error(
+          "BESEKI staff role check failed:",
+          roleError,
+        );
+
+        setAccessError(
+          "We could not verify your staff permissions. Please try again.",
+        );
+
+        setAccessDenied(false);
+
+        return false;
+      }
+
+      console.log("BESEKI staff role:", role);
+
+      if (!isStaffRole(role)) {
+        setAccessDenied(true);
+        return false;
+      }
+
+      setAccessDenied(false);
+
+      await navigate({
+        to: "/admin",
+        replace: true,
+      });
+
+      return true;
+    } catch (error) {
+      console.error(
+        "BESEKI authentication/access check failed:",
+        error,
+      );
+
+      setAccessError(
+        error instanceof Error
+          ? error.message
+          : "Unable to verify staff access.",
+      );
+
+      return false;
+    } finally {
+      setCheckingAccess(false);
+    }
+  }
+
+  /**
+   * Check existing session when the page loads.
+   */
   useEffect(() => {
     let mounted = true;
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (mounted && data.session) {
-        navigate({
-          to: "/admin",
-          replace: true,
-        });
+    async function checkExistingSession() {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!mounted) {
+          return;
+        }
+
+        if (session) {
+          await checkStaffAccess();
+        } else {
+          setCheckingAccess(false);
+        }
+      } catch (error) {
+        console.error(
+          "Session check failed:",
+          error,
+        );
+
+        if (mounted) {
+          setCheckingAccess(false);
+        }
       }
-    });
+    }
+
+    void checkExistingSession();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN") {
-        navigate({
-          to: "/admin",
-          replace: true,
-        });
+      if (
+        event === "SIGNED_IN" ||
+        event === "TOKEN_REFRESHED"
+      ) {
+        /*
+         * Delay the authorization check until after the
+         * Supabase auth event has completed.
+         */
+        window.setTimeout(() => {
+          if (mounted) {
+            void checkStaffAccess();
+          }
+        }, 0);
+      }
+
+      if (event === "SIGNED_OUT") {
+        if (mounted) {
+          setAccessDenied(false);
+          setCheckingAccess(false);
+        }
       }
     });
 
@@ -81,7 +216,7 @@ function AuthPage() {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, []);
 
   async function onSubmit(
     event: React.FormEvent<HTMLFormElement>,
@@ -105,12 +240,14 @@ function AuthPage() {
     }
 
     setBusy(true);
+    setAccessDenied(false);
+    setAccessError("");
 
     try {
       if (mode === "signup") {
         const { data, error } =
           await supabase.auth.signUp({
-            email: email.trim(),
+            email: email.trim().toLowerCase(),
             password,
             options: {
               emailRedirectTo:
@@ -122,22 +259,48 @@ function AuthPage() {
           throw error;
         }
 
+        /*
+         * Supabase may require email confirmation before
+         * creating a session.
+         */
         if (!data.session) {
           setSent(true);
           return;
         }
+
+        /*
+         * If the account was immediately signed in,
+         * verify staff access before continuing.
+         */
+        const hasAccess = await checkStaffAccess();
+
+        if (!hasAccess && !accessError) {
+          setAccessDenied(true);
+        }
       } else {
         const { error } =
           await supabase.auth.signInWithPassword({
-            email: email.trim(),
+            email: email.trim().toLowerCase(),
             password,
           });
 
         if (error) {
           throw error;
         }
+
+        /*
+         * Authentication succeeded.
+         * Now check BESEKI staff authorization.
+         */
+        const hasAccess = await checkStaffAccess();
+
+        if (!hasAccess && !accessError) {
+          setAccessDenied(true);
+        }
       }
     } catch (err) {
+      console.error("Sign in error:", err);
+
       toast.error(
         mode === "signin"
           ? "Sign in failed"
@@ -160,6 +323,8 @@ function AuthPage() {
     }
 
     setBusy(true);
+    setAccessDenied(false);
+    setAccessError("");
 
     try {
       const result =
@@ -183,10 +348,222 @@ function AuthPage() {
     }
   }
 
+  async function signOut() {
+    await supabase.auth.signOut();
+
+    setAccessDenied(false);
+    setAccessError("");
+    setEmail("");
+    setPassword("");
+  }
+
   function switchMode() {
     setSent(false);
+    setAccessDenied(false);
+    setAccessError("");
+
     setMode((current) =>
       current === "signin" ? "signup" : "signin",
+    );
+  }
+
+  /*
+   * While checking an existing Supabase session,
+   * show a clean loading state.
+   */
+  if (checkingAccess) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-background px-5">
+        <div className="flex flex-col items-center text-center">
+          <div className="flex size-12 items-center justify-center border border-border bg-muted/30">
+            <Loader2
+              className="size-5 animate-spin text-primary"
+              aria-hidden="true"
+            />
+          </div>
+
+          <h1 className="mt-5 text-lg font-semibold">
+            Checking staff access
+          </h1>
+
+          <p className="mt-2 text-sm text-muted-foreground">
+            Please wait while we verify your BESEKI account.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  /*
+   * Account is authenticated but does not have a valid
+   * staff role.
+   */
+  if (accessDenied) {
+    return (
+      <main className="min-h-screen bg-background">
+        <div className="flex min-h-screen items-center justify-center px-5 py-10">
+          <div className="w-full max-w-md">
+            <div className="mb-10 flex justify-center">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-3"
+              >
+                <span className="flex size-11 items-center justify-center bg-primary text-sm font-black tracking-tight text-primary-foreground">
+                  B
+                </span>
+
+                <div className="text-left">
+                  <p className="text-sm font-bold tracking-tight">
+                    {company.shortName}
+                  </p>
+
+                  <p className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                    Company Limited
+                  </p>
+                </div>
+              </Link>
+            </div>
+
+            <div className="border border-border bg-card p-7 shadow-sm sm:p-9">
+              <div className="flex size-12 items-center justify-center bg-primary/10 text-primary">
+                <ShieldCheck
+                  className="size-6"
+                  aria-hidden="true"
+                />
+              </div>
+
+              <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
+                Staff access
+              </p>
+
+              <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">
+                No access yet
+              </h1>
+
+              <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                You are signed in as{" "}
+                <strong className="font-semibold text-foreground">
+                  {email || "your account"}
+                </strong>
+                , but this account has not been given staff
+                access.
+              </p>
+
+              <div className="mt-6 flex items-start gap-3 border border-border bg-muted/20 p-4">
+                <AlertCircle
+                  className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+                  aria-hidden="true"
+                />
+
+                <p className="text-xs leading-5 text-muted-foreground">
+                  Ask a BESEKI administrator to add your email
+                  address to the staff access list and assign
+                  you an appropriate role.
+                </p>
+              </div>
+
+              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={signOut}
+                >
+                  Sign out
+                </Button>
+
+                <Button asChild>
+                  <Link to="/">
+                    Back to website
+                    <ArrowRight
+                      className="size-4"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            <p className="mt-6 text-center text-[11px] leading-5 text-muted-foreground">
+              {company.name} · Mombasa, Kenya
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  /*
+   * RPC/database error while checking authorization.
+   */
+  if (accessError) {
+    return (
+      <main className="min-h-screen bg-background">
+        <div className="flex min-h-screen items-center justify-center px-5 py-10">
+          <div className="w-full max-w-md">
+            <div className="mb-10 flex justify-center">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-3"
+              >
+                <span className="flex size-11 items-center justify-center bg-primary text-sm font-black text-primary-foreground">
+                  B
+                </span>
+
+                <div className="text-left">
+                  <p className="text-sm font-bold">
+                    {company.shortName}
+                  </p>
+
+                  <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                    Company Limited
+                  </p>
+                </div>
+              </Link>
+            </div>
+
+            <div className="border border-border bg-card p-7 shadow-sm sm:p-9">
+              <div className="flex size-12 items-center justify-center bg-destructive/10 text-destructive">
+                <AlertCircle
+                  className="size-6"
+                  aria-hidden="true"
+                />
+              </div>
+
+              <h1 className="mt-6 text-2xl font-semibold tracking-[-0.03em]">
+                Access check failed
+              </h1>
+
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                Your sign-in was successful, but BESEKI could not
+                verify your staff permissions.
+              </p>
+
+              <p className="mt-4 rounded-md bg-muted/40 p-3 text-xs leading-5 text-muted-foreground">
+                {accessError}
+              </p>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setAccessError("");
+                    void checkStaffAccess();
+                  }}
+                >
+                  Try again
+                </Button>
+
+                <Button asChild>
+                  <Link to="/">
+                    Back to website
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     );
   }
 
@@ -281,13 +658,8 @@ function AuthPage() {
             </div>
 
             <div className="flex items-center justify-between border-t border-white/10 pt-6 text-xs text-white/40">
-              <span>
-                {company.name}
-              </span>
-
-              <span>
-                Mombasa, Kenya
-              </span>
+              <span>{company.name}</span>
+              <span>Mombasa, Kenya</span>
             </div>
           </div>
         </section>
@@ -460,6 +832,8 @@ function AuthPage() {
                       <p className="text-xs leading-5 text-muted-foreground">
                         You'll need to confirm your email address
                         before accessing the management area.
+                        Your account must also be approved by a
+                        BESEKI administrator.
                       </p>
                     </div>
                   )}
@@ -479,7 +853,7 @@ function AuthPage() {
 
                     {busy
                       ? mode === "signin"
-                        ? "Signing in…"
+                        ? "Checking access…"
                         : "Creating account…"
                       : mode === "signin"
                         ? "Sign in to staff portal"
@@ -550,9 +924,9 @@ function AuthPage() {
               />
 
               <p className="text-[11px] leading-5 text-muted-foreground">
-                This is a restricted staff area. Customer accounts
-                are not required to browse vehicles, make enquiries
-                or contact BESEKI.
+                This is a restricted staff area. Customer
+                accounts are not required to browse vehicles,
+                make enquiries or contact BESEKI.
               </p>
             </div>
           </div>
@@ -607,3 +981,4 @@ function ChevronRightIcon() {
     </svg>
   );
 }
+```

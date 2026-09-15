@@ -150,6 +150,7 @@ export function useEnquiry(type: string) {
     }
 
     setState("success");
+    trackConversion(type);
     toast.success("Message sent", { description: "Our team will get back to you shortly." });
     return true;
   }

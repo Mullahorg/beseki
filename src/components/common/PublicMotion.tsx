@@ -10,10 +10,8 @@ export function PublicMotion() {
   useEffect(() => {
     if (pathname.startsWith("/admin") || pathname.startsWith("/auth")) return;
     let observer: IntersectionObserver | undefined;
-    let secondFrame = 0;
-    const firstFrame = window.requestAnimationFrame(() => {
-      // Wait until the complete route tree has hydrated before decorating its DOM.
-      secondFrame = window.requestAnimationFrame(() => {
+    // Let the complete route tree hydrate before decorating its DOM.
+    const hydrationTimer = window.setTimeout(() => {
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const elements = Array.from(document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));
 
@@ -39,12 +37,10 @@ export function PublicMotion() {
         );
 
         elements.forEach((element) => observer?.observe(element));
-      });
-    });
+    }, 350);
 
     return () => {
-      window.cancelAnimationFrame(firstFrame);
-      window.cancelAnimationFrame(secondFrame);
+      window.clearTimeout(hydrationTimer);
       observer?.disconnect();
     };
   }, [pathname]);

@@ -42,8 +42,19 @@ export const adminNav: { group: string; items: { label: string; to: string }[] }
     ],
   },
   {
+    group: "My tools",
+    items: [
+      { label: "Sales desk", to: "/admin/workspace/sales" },
+      { label: "Marketing desk", to: "/admin/workspace/marketing" },
+      { label: "Financing calculator", to: "/admin/tools/financing" },
+    ],
+  },
+  {
     group: "Insights",
-    items: [{ label: "Analytics", to: "/admin/analytics" }],
+    items: [
+      { label: "Analytics", to: "/admin/analytics" },
+      { label: "Staff activity", to: "/admin/activity" },
+    ],
   },
   {
     group: "Setup",

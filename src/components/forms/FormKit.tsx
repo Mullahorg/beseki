@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { trackConversion } from "@/lib/analytics";
 
 /* ---------------------------------- fields --------------------------------- */
 
@@ -150,6 +151,7 @@ export function useEnquiry(type: string) {
     }
 
     setState("success");
+    trackConversion(type);
     toast.success("Message sent", { description: "Our team will get back to you shortly." });
     return true;
   }

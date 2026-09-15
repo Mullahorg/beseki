@@ -24,6 +24,7 @@ export const fallbackSettings: SiteSettings = {
   whatsappTemplates: {},
   logoPath: null,
   faviconPath: null,
+  fontTheme: "signature",
   seoTitle: null,
   seoDescription: null,
   ogImagePath: null,

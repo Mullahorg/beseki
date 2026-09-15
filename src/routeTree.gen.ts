@@ -31,6 +31,7 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
 import { Route as InventorySlugRouteImport } from './routes/inventory.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin/analytics'
 import { Route as AuthenticatedAdminAppointmentsRouteImport } from './routes/_authenticated/admin/appointments'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin/blog'
 import { Route as AuthenticatedAdminFaqsRouteImport } from './routes/_authenticated/admin/faqs'
@@ -43,6 +44,7 @@ import { Route as AuthenticatedAdminNavigationRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminPagesRouteImport } from './routes/_authenticated/admin/pages'
 import { Route as AuthenticatedAdminServicesRouteImport } from './routes/_authenticated/admin/services'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
+import { Route as AuthenticatedAdminStaffRouteImport } from './routes/_authenticated/admin/staff'
 import { Route as AuthenticatedAdminTeamRouteImport } from './routes/_authenticated/admin/team'
 import { Route as AuthenticatedAdminTestimonialsRouteImport } from './routes/_authenticated/admin/testimonials'
 import { Route as AuthenticatedAdminTradeInsRouteImport } from './routes/_authenticated/admin/trade-ins'
@@ -159,6 +161,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminAnalyticsRoute =
+  AuthenticatedAdminAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminAppointmentsRoute =
   AuthenticatedAdminAppointmentsRouteImport.update({
     id: '/appointments',
@@ -226,6 +234,11 @@ const AuthenticatedAdminSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminStaffRoute = AuthenticatedAdminStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const AuthenticatedAdminTeamRoute = AuthenticatedAdminTeamRouteImport.update({
   id: '/team',
   path: '/team',
@@ -282,6 +295,7 @@ export interface FileRoutesByFullPath {
   '/inventory/$slug': typeof InventorySlugRoute
   '/blog/': typeof BlogIndexRoute
   '/inventory/': typeof InventoryIndexRoute
+  '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/appointments': typeof AuthenticatedAdminAppointmentsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/faqs': typeof AuthenticatedAdminFaqsRoute
@@ -294,6 +308,7 @@ export interface FileRoutesByFullPath {
   '/admin/pages': typeof AuthenticatedAdminPagesRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/staff': typeof AuthenticatedAdminStaffRoute
   '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin/testimonials': typeof AuthenticatedAdminTestimonialsRoute
   '/admin/trade-ins': typeof AuthenticatedAdminTradeInsRoute
@@ -322,6 +337,7 @@ export interface FileRoutesByTo {
   '/inventory/$slug': typeof InventorySlugRoute
   '/blog': typeof BlogIndexRoute
   '/inventory': typeof InventoryIndexRoute
+  '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/appointments': typeof AuthenticatedAdminAppointmentsRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/faqs': typeof AuthenticatedAdminFaqsRoute
@@ -334,6 +350,7 @@ export interface FileRoutesByTo {
   '/admin/pages': typeof AuthenticatedAdminPagesRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/staff': typeof AuthenticatedAdminStaffRoute
   '/admin/team': typeof AuthenticatedAdminTeamRoute
   '/admin/testimonials': typeof AuthenticatedAdminTestimonialsRoute
   '/admin/trade-ins': typeof AuthenticatedAdminTradeInsRoute
@@ -365,6 +382,7 @@ export interface FileRoutesById {
   '/inventory/$slug': typeof InventorySlugRoute
   '/blog/': typeof BlogIndexRoute
   '/inventory/': typeof InventoryIndexRoute
+  '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/appointments': typeof AuthenticatedAdminAppointmentsRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/faqs': typeof AuthenticatedAdminFaqsRoute
@@ -377,6 +395,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/pages': typeof AuthenticatedAdminPagesRoute
   '/_authenticated/admin/services': typeof AuthenticatedAdminServicesRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/staff': typeof AuthenticatedAdminStaffRoute
   '/_authenticated/admin/team': typeof AuthenticatedAdminTeamRoute
   '/_authenticated/admin/testimonials': typeof AuthenticatedAdminTestimonialsRoute
   '/_authenticated/admin/trade-ins': typeof AuthenticatedAdminTradeInsRoute
@@ -408,6 +427,7 @@ export interface FileRouteTypes {
     | '/inventory/$slug'
     | '/blog/'
     | '/inventory/'
+    | '/admin/analytics'
     | '/admin/appointments'
     | '/admin/blog'
     | '/admin/faqs'
@@ -420,6 +440,7 @@ export interface FileRouteTypes {
     | '/admin/pages'
     | '/admin/services'
     | '/admin/settings'
+    | '/admin/staff'
     | '/admin/team'
     | '/admin/testimonials'
     | '/admin/trade-ins'
@@ -448,6 +469,7 @@ export interface FileRouteTypes {
     | '/inventory/$slug'
     | '/blog'
     | '/inventory'
+    | '/admin/analytics'
     | '/admin/appointments'
     | '/admin/blog'
     | '/admin/faqs'
@@ -460,6 +482,7 @@ export interface FileRouteTypes {
     | '/admin/pages'
     | '/admin/services'
     | '/admin/settings'
+    | '/admin/staff'
     | '/admin/team'
     | '/admin/testimonials'
     | '/admin/trade-ins'
@@ -490,6 +513,7 @@ export interface FileRouteTypes {
     | '/inventory/$slug'
     | '/blog/'
     | '/inventory/'
+    | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/appointments'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/faqs'
@@ -502,6 +526,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/pages'
     | '/_authenticated/admin/services'
     | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/staff'
     | '/_authenticated/admin/team'
     | '/_authenticated/admin/testimonials'
     | '/_authenticated/admin/trade-ins'
@@ -691,6 +716,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/analytics': {
+      id: '/_authenticated/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AuthenticatedAdminAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/appointments': {
       id: '/_authenticated/admin/appointments'
       path: '/appointments'
@@ -775,6 +807,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/staff': {
+      id: '/_authenticated/admin/staff'
+      path: '/staff'
+      fullPath: '/admin/staff'
+      preLoaderRoute: typeof AuthenticatedAdminStaffRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/team': {
       id: '/_authenticated/admin/team'
       path: '/team'
@@ -821,6 +860,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminAnalyticsRoute: typeof AuthenticatedAdminAnalyticsRoute
   AuthenticatedAdminAppointmentsRoute: typeof AuthenticatedAdminAppointmentsRoute
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
   AuthenticatedAdminFaqsRoute: typeof AuthenticatedAdminFaqsRoute
@@ -833,6 +873,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminPagesRoute: typeof AuthenticatedAdminPagesRoute
   AuthenticatedAdminServicesRoute: typeof AuthenticatedAdminServicesRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminStaffRoute: typeof AuthenticatedAdminStaffRoute
   AuthenticatedAdminTeamRoute: typeof AuthenticatedAdminTeamRoute
   AuthenticatedAdminTestimonialsRoute: typeof AuthenticatedAdminTestimonialsRoute
   AuthenticatedAdminTradeInsRoute: typeof AuthenticatedAdminTradeInsRoute
@@ -843,6 +884,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminAnalyticsRoute: AuthenticatedAdminAnalyticsRoute,
     AuthenticatedAdminAppointmentsRoute: AuthenticatedAdminAppointmentsRoute,
     AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
     AuthenticatedAdminFaqsRoute: AuthenticatedAdminFaqsRoute,
@@ -855,6 +897,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminPagesRoute: AuthenticatedAdminPagesRoute,
     AuthenticatedAdminServicesRoute: AuthenticatedAdminServicesRoute,
     AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+    AuthenticatedAdminStaffRoute: AuthenticatedAdminStaffRoute,
     AuthenticatedAdminTeamRoute: AuthenticatedAdminTeamRoute,
     AuthenticatedAdminTestimonialsRoute: AuthenticatedAdminTestimonialsRoute,
     AuthenticatedAdminTradeInsRoute: AuthenticatedAdminTradeInsRoute,

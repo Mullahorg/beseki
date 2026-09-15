@@ -42,10 +42,15 @@ export const adminNav: { group: string; items: { label: string; to: string }[] }
     ],
   },
   {
+    group: "Insights",
+    items: [{ label: "Analytics", to: "/admin/analytics" }],
+  },
+  {
     group: "Setup",
     items: [
       { label: "Navigation", to: "/admin/navigation" },
       { label: "Site Settings", to: "/admin/settings" },
+      { label: "Staff & Roles", to: "/admin/staff" },
     ],
   },
 ];
@@ -98,7 +103,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   );
 
   return (
-    <div className="min-h-screen bg-admin-canvas text-admin-foreground">
+    <div className="admin-theme min-h-screen bg-admin-canvas text-admin-foreground">
       <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-admin-line bg-admin-panel/95 px-4 shadow-header backdrop-blur md:px-6">
         <button
           type="button"

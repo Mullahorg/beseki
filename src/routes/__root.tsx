@@ -22,6 +22,8 @@ import { getSiteContent } from "@/lib/content.functions";
 import { SiteProvider, fallbackSettings } from "@/lib/site-context";
 import { mediaUrl } from "@/lib/media";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@/components/common/Analytics";
+import { fontThemeClass } from "@/lib/fonts";
 import { PublicMotion } from "@/components/common/PublicMotion";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -125,7 +127,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Instrument+Serif&family=Source+Sans+3:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Barlow:wght@400;500;600;700&family=Bebas+Neue&family=Figtree:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap",
       },
     ],
     scripts: [
@@ -183,10 +185,13 @@ function RootComponent() {
       <VehiclesProvider vehicles={vehicles}>
       <CompareProvider>
         <PublicMotion />
+        <Analytics />
         {bare ? (
-          <Outlet />
+          <div className={fontThemeClass(content?.settings.fontTheme)}>
+            <Outlet />
+          </div>
         ) : (
-          <>
+          <div className={fontThemeClass(content?.settings.fontTheme)}>
             <div className="flex min-h-screen flex-col">
               <Header />
               <main className="flex-1">
@@ -196,7 +201,7 @@ function RootComponent() {
               <Footer />
             </div>
             <FloatingActions />
-          </>
+          </div>
         )}
         <Toaster position="top-center" richColors />
       </CompareProvider>

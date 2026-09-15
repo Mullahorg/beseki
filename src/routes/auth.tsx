@@ -1,4 +1,3 @@
-```tsx
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
@@ -8,6 +7,8 @@ import {
   Loader2,
   ShieldCheck,
   AlertCircle,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -69,6 +70,7 @@ function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [busy, setBusy] = useState(false);
   const [checkingAccess, setCheckingAccess] = useState(true);
@@ -804,22 +806,42 @@ function AuthPage() {
                     htmlFor="a-pass"
                     required
                   >
-                    <TextInput
-                      id="a-pass"
-                      type="password"
-                      autoComplete={
-                        mode === "signup"
-                          ? "new-password"
-                          : "current-password"
-                      }
-                      value={password}
-                      required
-                      minLength={8}
-                      placeholder="At least 8 characters"
-                      onChange={(event) =>
-                        setPassword(event.target.value)
-                      }
-                    />
+                    <div className="relative">
+                      <TextInput
+                        id="a-pass"
+                        type={showPassword ? "text" : "password"}
+                        autoComplete={
+                          mode === "signup"
+                            ? "new-password"
+                            : "current-password"
+                        }
+                        value={password}
+                        required
+                        minLength={8}
+                        placeholder="At least 8 characters"
+                        className="pr-12"
+                        onChange={(event) =>
+                          setPassword(event.target.value)
+                        }
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        aria-label={
+                          showPassword
+                            ? "Hide password"
+                            : "Show password"
+                        }
+                        aria-pressed={showPassword}
+                        className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="size-4.5" aria-hidden="true" />
+                        ) : (
+                          <Eye className="size-4.5" aria-hidden="true" />
+                        )}
+                      </button>
+                    </div>
                   </Field>
 
                   {mode === "signup" && (
@@ -981,4 +1003,3 @@ function ChevronRightIcon() {
     </svg>
   );
 }
-```

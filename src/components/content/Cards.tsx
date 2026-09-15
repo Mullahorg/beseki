@@ -28,7 +28,7 @@ export function Rating({ value }: { value: number }) {
 
 export function TestimonialCard({ testimonial }: { testimonial: TestimonialRecord }) {
   return (
-    <figure className="flex h-full flex-col border-t-2 border-primary bg-card py-6 md:px-1">
+    <figure className="group flex h-full flex-col border-t-2 border-primary bg-card py-6 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-card motion-reduce:transform-none md:px-1">
       <Rating value={testimonial.rating} />
       <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-foreground">
         &ldquo;{testimonial.review}&rdquo;
@@ -46,7 +46,7 @@ export function BlogCard({ post }: { post: BlogRecord }) {
   const readMinutes = Math.max(1, Math.round(words / 200));
 
   return (
-    <article className="flex h-full flex-col border-t bg-card py-6 md:px-1">
+    <article className="group flex h-full flex-col border-t bg-card py-6 transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/35 hover:shadow-card motion-reduce:transform-none md:px-1">
       {post.imagePath ? (
         <img
           src={mediaUrl(post.imagePath, "card")}
@@ -54,7 +54,7 @@ export function BlogCard({ post }: { post: BlogRecord }) {
           sizes="(min-width: 768px) 33vw, 100vw"
           alt={post.imageAlt || post.title}
           loading="lazy"
-          className="mb-5 aspect-[16/9] w-full object-cover"
+          className="mb-5 aspect-[16/9] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02] motion-reduce:transition-none"
         />
       ) : null}
       <p className="eyebrow">{post.category}</p>
@@ -84,7 +84,7 @@ export function TeamMember({ member }: { member: TeamRecord }) {
   const email = member.email || settings.email;
 
   return (
-    <article className="flex h-full flex-col rounded-lg border bg-card p-6">
+    <article className="group flex h-full flex-col rounded-lg border bg-card p-6 transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/25 hover:shadow-card motion-reduce:transform-none">
       {member.imagePath ? (
         <img
           src={mediaUrl(member.imagePath, "thumb")}

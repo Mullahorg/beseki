@@ -45,9 +45,9 @@ function extractStoragePath(value: string): string {
 
   // Legacy site image route
   if (input.startsWith("/api/public/media/")) {
-    return input
+    return (input
       .replace("/api/public/media/", "")
-      .split("?")[0];
+      .split("?")[0]) ?? "";
   }
 
   // Supabase public Storage URL
@@ -56,7 +56,7 @@ function extractStoragePath(value: string): string {
   if (input.includes(publicMarker)) {
     const path = input.split(publicMarker)[1];
 
-    return path ? path.split("?")[0] : "";
+    return path ? (path.split("?")[0] ?? "") : "";
   }
 
   // Supabase render-image URL
@@ -65,7 +65,7 @@ function extractStoragePath(value: string): string {
   if (input.includes(renderMarker)) {
     const path = input.split(renderMarker)[1];
 
-    return path ? path.split("?")[0] : "";
+    return path ? (path.split("?")[0] ?? "") : "";
   }
 
   // Plain Storage path such as:

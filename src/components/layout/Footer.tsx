@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,
+  KeyRound,
   Mail,
   MapPin,
   Phone,
@@ -66,6 +67,11 @@ export function Footer() {
     : undefined;
 
   const whatsappHref = whatsappLink(waMessages.general);
+  const socialUrl = (label: string) =>
+    settings.socials.find((social) => social.label.toLowerCase() === label)?.url;
+  const facebookUrl = socialUrl("facebook");
+  const instagramUrl = socialUrl("instagram");
+  const tiktokUrl = socialUrl("tiktok");
 
   return (
     <footer className="relative overflow-hidden bg-ink text-white">
@@ -133,9 +139,9 @@ export function Footer() {
 
             {/* Social links */}
             <div className="mt-7 flex flex-wrap gap-2">
-              {settings.facebookUrl ? (
+              {facebookUrl ? (
                 <a
-                  href={settings.facebookUrl}
+                  href={facebookUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
@@ -145,9 +151,9 @@ export function Footer() {
                 </a>
               ) : null}
 
-              {settings.instagramUrl ? (
+              {instagramUrl ? (
                 <a
-                  href={settings.instagramUrl}
+                  href={instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
@@ -157,9 +163,9 @@ export function Footer() {
                 </a>
               ) : null}
 
-              {settings.tiktokUrl ? (
+              {tiktokUrl ? (
                 <a
-                  href={settings.tiktokUrl}
+                  href={tiktokUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="TikTok"
@@ -309,8 +315,9 @@ export function Footer() {
               reserved.
             </p>
 
-            {legalNav.length > 0 ? (
-              <nav className="flex flex-wrap gap-x-5 gap-y-2">
+            <nav className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              {legalNav.length > 0 ? (
+                <>
                 {legalNav.map((item) => (
                   <Link
                     key={item.href}
@@ -320,8 +327,17 @@ export function Footer() {
                     {item.label}
                   </Link>
                 ))}
-              </nav>
-            ) : null}
+                </>
+              ) : null}
+              <Link
+                to="/auth"
+                aria-label="Staff sign in"
+                className="inline-flex items-center gap-1.5 text-white/25 transition-colors hover:text-white/60"
+              >
+                <KeyRound className="size-3" aria-hidden="true" />
+                Staff access
+              </Link>
+            </nav>
           </div>
         </div>
       </div>

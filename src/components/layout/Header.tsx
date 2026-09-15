@@ -88,7 +88,7 @@ export function Header() {
       {/* Main header */}
       <header
         className={cn(
-          "sticky top-0 z-50 border-b bg-background/95 backdrop-blur-xl transition-all duration-300",
+          "sticky top-0 z-50 border-b bg-background/95 backdrop-blur-xl transition-[box-shadow,border-color,background-color] duration-300 ease-out",
           scrolled
             ? "border-border/80 shadow-header"
             : "border-border/40 shadow-none",
@@ -96,7 +96,7 @@ export function Header() {
       >
         <div
           className={cn(
-            "container-page flex items-center justify-between gap-4 transition-all duration-300",
+            "container-page flex items-center justify-between gap-4 transition-[height] duration-300 ease-out",
             scrolled
               ? "h-16 md:h-[72px]"
               : "h-[76px] md:h-[88px]",

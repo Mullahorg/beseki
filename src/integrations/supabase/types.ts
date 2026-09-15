@@ -1157,6 +1157,10 @@ export type Database = {
     }
     Functions: {
       can_manage_content: { Args: { _user_id: string }; Returns: boolean }
+      get_my_staff_role: {
+        Args: never
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

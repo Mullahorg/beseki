@@ -289,3 +289,91 @@ main {
   }
   main { animation: none; }
 }
+
+/* ---------------------------------------------------------------
+ * Selectable typography themes (chosen by admins in Site settings)
+ * ------------------------------------------------------------- */
+.font-theme-signature {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+.font-theme-modern {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Plus Jakarta Sans", ui-sans-serif, sans-serif;
+}
+.font-theme-editorial {
+  --font-sans: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+}
+.font-theme-classic {
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Libre Baskerville", Georgia, serif;
+}
+.font-theme-bold {
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bebas Neue", "Barlow", ui-sans-serif, sans-serif;
+}
+.font-theme-neutral {
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", "Figtree", ui-sans-serif, sans-serif;
+}
+
+[class*="font-theme-"] {
+  font-family: var(--font-sans);
+}
+
+[class*="font-theme-"] h1,
+[class*="font-theme-"] h2,
+[class*="font-theme-"] h3,
+[class*="font-theme-"] h4 {
+  font-family: var(--font-display);
+}
+
+/* ---------------------------------------------------------------
+ * Admin workspace: remap the shared surface tokens to the dark
+ * workspace palette so every shadcn control stays legible.
+ * ------------------------------------------------------------- */
+.admin-theme {
+  --background: var(--admin-canvas);
+  --foreground: var(--admin-foreground);
+  --card: var(--admin-panel);
+  --card-foreground: var(--admin-foreground);
+  --popover: var(--admin-panel);
+  --popover-foreground: var(--admin-foreground);
+  --secondary: var(--admin-surface);
+  --secondary-foreground: var(--admin-foreground);
+  --muted: var(--admin-surface);
+  --muted-foreground: var(--admin-muted);
+  --accent: var(--admin-surface);
+  --accent-foreground: var(--admin-foreground);
+  --border: var(--admin-line);
+  --input: oklch(1 0 0 / 18%);
+  --ring: var(--admin-focus);
+  --sand: var(--admin-surface);
+  color: var(--admin-foreground);
+}
+
+.admin-theme input,
+.admin-theme textarea,
+.admin-theme select {
+  color: var(--admin-foreground);
+  background-color: var(--admin-surface);
+}
+
+.admin-theme select option {
+  color: #111;
+  background-color: #fff;
+}
+
+.admin-theme ::placeholder {
+  color: var(--admin-muted);
+}
+
+.admin-theme a:not([class*="text-"]) {
+  color: var(--admin-foreground);
+}
+
+.admin-theme .prose,
+.admin-theme label {
+  color: var(--admin-foreground);
+}

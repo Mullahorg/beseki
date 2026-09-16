@@ -7,6 +7,7 @@ import { AdminCard, AdminHeader } from "@/components/admin/AdminShell";
 import { AdminEmpty, AdminError, AdminLoading } from "@/components/admin/AdminBits";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useStaffRole } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/admin/analytics")({
   component: AnalyticsPage,
@@ -79,6 +80,7 @@ function Stat({
 }
 
 function AnalyticsPage() {
+  const { isBoss } = useStaffRole();
   const [days, setDays] = useState<number>(30);
 
   const eventsQuery = useQuery({
@@ -96,6 +98,7 @@ function AnalyticsPage() {
   });
 
   const activityQuery = useQuery({
+    enabled: isBoss,
     queryKey: ["admin", "staff-activity", days],
     queryFn: async (): Promise<ActivityRow[]> => {
       const { data, error } = await supabase
@@ -257,6 +260,7 @@ function AnalyticsPage() {
         </>
       )}
 
+      {isBoss ? (
       <AdminCard className="mt-6">
         <h2 className="text-base font-semibold text-admin-foreground">Staff activity</h2>
         <p className="mt-1 text-sm text-admin-muted">
@@ -310,6 +314,7 @@ function AnalyticsPage() {
           </div>
         )}
       </AdminCard>
+      ) : null}
     </>
   );
 }

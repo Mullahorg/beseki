@@ -105,6 +105,19 @@ function AuthPage() {
       const { data: role, error: roleError } =
         await supabase.rpc("get_my_staff_role");
 
+      if (!roleError && role) {
+        // Record the sign-in so administrators can monitor access patterns.
+        void (supabase.rpc as unknown as (
+          n: string,
+          a?: Record<string, unknown>,
+        ) => Promise<unknown>)("log_staff_activity", {
+          p_action: "auth.signin",
+          p_entity: "session",
+          p_entity_id: user.email ?? null,
+          p_detail: null,
+        });
+      }
+
       if (roleError) {
         console.error(
           "BESEKI staff role check failed:",

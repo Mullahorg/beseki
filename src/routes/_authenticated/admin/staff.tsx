@@ -18,76 +18,20 @@ import { Field, TextInput, SelectInput } from "@/components/forms/FormKit";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
-type StaffRole = "super_admin" | "admin" | "editor" | "sales";
+import {
+  MAX_SUPER_ADMINS,
+  PERMISSION_LEVELS,
+  ROLE_LABELS,
+  ROLE_ORDER,
+  type StaffRole,
+} from "@/lib/roles";
 
 type StaffMember = { email: string; role: StaffRole; created_at: string };
 type PendingPerson = { email: string; full_name: string | null; created_at: string };
 
-const ROLE_LABELS: Record<StaffRole, string> = {
-  super_admin: "Super Admin",
-  admin: "Admin",
-  editor: "Editor",
-  sales: "Sales",
-};
+const ROLE_OPTIONS: StaffRole[] = ROLE_ORDER;
 
-const ROLE_OPTIONS: StaffRole[] = ["super_admin", "admin", "editor", "sales"];
-
-const PERMISSIONS: { area: string; roles: Record<StaffRole, string> }[] = [
-  {
-    area: "Vehicles & media",
-    roles: {
-      super_admin: "Full control",
-      admin: "Full control",
-      editor: "Create & edit",
-      sales: "View only",
-    },
-  },
-  {
-    area: "Website content (pages, blog, FAQs)",
-    roles: {
-      super_admin: "Full control",
-      admin: "Full control",
-      editor: "Create & edit",
-      sales: "View only",
-    },
-  },
-  {
-    area: "Leads, appointments, financing",
-    roles: {
-      super_admin: "Full control",
-      admin: "Full control",
-      editor: "View only",
-      sales: "Full control",
-    },
-  },
-  {
-    area: "Site settings & branding",
-    roles: {
-      super_admin: "Full control",
-      admin: "Full control",
-      editor: "No access",
-      sales: "No access",
-    },
-  },
-  {
-    area: "Analytics",
-    roles: {
-      super_admin: "Full access",
-      admin: "Full access",
-      editor: "Full access",
-      sales: "Full access",
-    },
-  },
-  {
-    area: "Staff approvals & roles",
-    roles: {
-      super_admin: "Full control",
-      admin: "Editors & sales only",
-      editor: "No access",
-      sales: "No access",
-    },
-  },
-];
+type PermissionRow = { role: StaffRole; area: string; level: string; position: number };
 
 function roleBadgeClass(role: StaffRole) {
   switch (role) {
@@ -142,6 +86,24 @@ function StaffManagement() {
       mounted = false;
     };
   }, []);
+
+  const permissionsQuery = useQuery({
+    queryKey: ["admin", "role-permissions"],
+    queryFn: async (): Promise<PermissionRow[]> => {
+      const { data, error } = await (supabase.from("role_permissions") as never as {
+        select: (c: string) => {
+          order: (c: string, o: { ascending: boolean }) => Promise<{
+            data: PermissionRow[] | null;
+            error: { message: string } | null;
+          }>;
+        };
+      })
+        .select("role,area,level,position")
+        .order("position", { ascending: true });
+      if (error) throw new Error(error.message);
+      return data ?? [];
+    },
+  });
 
   const staffQuery = useQuery({
     queryKey: ["admin", "staff"],
@@ -249,12 +211,50 @@ function StaffManagement() {
     }
   }
 
+  const areas = useMemo(() => {
+    const seen: string[] = [];
+    for (const row of permissionsQuery.data ?? []) if (!seen.includes(row.area)) seen.push(row.area);
+    return seen;
+  }, [permissionsQuery.data]);
+
+  const levelFor = (role: StaffRole, area: string) =>
+    (permissionsQuery.data ?? []).find((r) => r.role === role && r.area === area)?.level ?? "No access";
+
+  const superAdminCount = (staffQuery.data ?? []).filter((m) => m.role === "super_admin").length;
+
+  async function savePermission(role: StaffRole, area: string, level: string) {
+    try {
+      const { error } = await rpc("set_role_permission", {
+        target_role: role,
+        target_area: area,
+        new_level: level,
+      });
+      if (error) throw new Error(error.message);
+      toast.success("Permission updated", { description: `${ROLE_LABELS[role]} · ${area}: ${level}` });
+      await qc.invalidateQueries({ queryKey: ["admin", "role-permissions"] });
+    } catch (err) {
+      toast.error("Could not update permission", {
+        description: err instanceof Error ? err.message : "Please try again.",
+      });
+    }
+  }
+
   return (
     <>
       <AdminHeader
         title="Staff & roles"
         description="Approve people who have signed up, set what each role can do, and remove access."
       />
+
+      <AdminCard className="mt-2">
+        <p className="text-sm text-admin-muted">
+          <span className="font-semibold text-admin-foreground">
+            Super Admins: {superAdminCount} of {MAX_SUPER_ADMINS}
+          </span>{" "}
+          — the business can have at most {MAX_SUPER_ADMINS}. Super Admins have full access and can
+          set what every role below them may do, but no one can change or remove another Super Admin.
+        </p>
+      </AdminCard>
 
       {!canManageStaff ? (
         <AdminCard>
@@ -463,35 +463,74 @@ function StaffManagement() {
       {/* What each role can do */}
       <AdminCard className="mt-6">
         <h2 className="text-base font-semibold text-admin-foreground">What each role can do</h2>
-        <div className="mt-5 overflow-x-auto">
-          <table className="w-full min-w-[640px] border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-admin-line text-left text-xs uppercase tracking-wide text-admin-muted">
-                <th scope="col" className="py-3 pr-4 font-semibold">Area</th>
-                {ROLE_OPTIONS.map((role) => (
-                  <th key={role} scope="col" className="py-3 pr-4 font-semibold">
-                    {ROLE_LABELS[role]}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {PERMISSIONS.map((row) => (
-                <tr key={row.area} className="border-b border-admin-line/70 last:border-0">
-                  <th scope="row" className="py-3 pr-4 text-left font-medium text-admin-foreground">
-                    {row.area}
-                  </th>
+        <p className="mt-1 text-sm text-admin-muted">
+          {isSuperAdmin
+            ? "You can change what Admins, Editors and Sales staff are allowed to do. Super Admin access is always full and cannot be reduced."
+            : "Only a Super Admin can change these rules."}
+        </p>
+
+        {permissionsQuery.isLoading ? (
+          <div className="mt-5">
+            <AdminLoading rows={4} />
+          </div>
+        ) : permissionsQuery.isError ? (
+          <div className="mt-5">
+            <AdminError message="We could not load the permission rules." />
+          </div>
+        ) : (
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full min-w-[760px] border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-admin-line text-left text-xs uppercase tracking-wide text-admin-muted">
+                  <th scope="col" className="py-3 pr-4 font-semibold">Area</th>
                   {ROLE_OPTIONS.map((role) => (
-                    <td key={role} className="py-3 pr-4 text-admin-muted">
-                      {row.roles[role]}
-                    </td>
+                    <th key={role} scope="col" className="py-3 pr-4 font-semibold">
+                      {ROLE_LABELS[role]}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {areas.map((area) => (
+                  <tr key={area} className="border-b border-admin-line/70 last:border-0">
+                    <th scope="row" className="py-3 pr-4 text-left font-medium text-admin-foreground">
+                      {area}
+                    </th>
+                    {ROLE_OPTIONS.map((role) => (
+                      <td key={role} className="py-3 pr-4 text-admin-muted">
+                        {role === "super_admin" ? (
+                          <span className="text-admin-foreground">Full control</span>
+                        ) : isSuperAdmin ? (
+                          <>
+                            <label className="sr-only" htmlFor={`perm-${role}-${area}`}>
+                              {ROLE_LABELS[role]} access to {area}
+                            </label>
+                            <SelectInput
+                              id={`perm-${role}-${area}`}
+                              className="min-h-10 w-40 py-2"
+                              value={levelFor(role, area)}
+                              onChange={(e) => void savePermission(role, area, e.target.value)}
+                            >
+                              {[...new Set([levelFor(role, area), ...PERMISSION_LEVELS])].map((lvl) => (
+                                <option key={lvl} value={lvl}>
+                                  {lvl}
+                                </option>
+                              ))}
+                            </SelectInput>
+                          </>
+                        ) : (
+                          levelFor(role, area)
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </AdminCard>
+
     </>
   );
 }

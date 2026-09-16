@@ -80,6 +80,7 @@ function Stat({
 }
 
 function AnalyticsPage() {
+  const { isBoss } = useStaffRole();
   const [days, setDays] = useState<number>(30);
 
   const eventsQuery = useQuery({
@@ -97,6 +98,7 @@ function AnalyticsPage() {
   });
 
   const activityQuery = useQuery({
+    enabled: isBoss,
     queryKey: ["admin", "staff-activity", days],
     queryFn: async (): Promise<ActivityRow[]> => {
       const { data, error } = await supabase

@@ -7,6 +7,7 @@ import { AdminCard, AdminHeader } from "@/components/admin/AdminShell";
 import { AdminEmpty, AdminError, AdminLoading } from "@/components/admin/AdminBits";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useStaffRole } from "@/lib/roles";
 
 export const Route = createFileRoute("/_authenticated/admin/analytics")({
   component: AnalyticsPage,
@@ -257,6 +258,7 @@ function AnalyticsPage() {
         </>
       )}
 
+      {isBoss ? (
       <AdminCard className="mt-6">
         <h2 className="text-base font-semibold text-admin-foreground">Staff activity</h2>
         <p className="mt-1 text-sm text-admin-muted">
@@ -310,6 +312,7 @@ function AnalyticsPage() {
           </div>
         )}
       </AdminCard>
+      ) : null}
     </>
   );
 }

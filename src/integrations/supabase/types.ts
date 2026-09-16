@@ -510,6 +510,84 @@ export type Database = {
           },
         ]
       }
+      notification_log: {
+        Row: {
+          channel: string
+          created_at: string
+          detail: string | null
+          id: string
+          kind: string
+          status: string
+          target: string | null
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind: string
+          status: string
+          target?: string | null
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          kind?: string
+          status?: string
+          target?: string | null
+        }
+        Relationships: []
+      }
+      notification_settings: {
+        Row: {
+          alert_on_failure: boolean
+          alert_on_lead: boolean
+          daily_report: boolean
+          email_enabled: boolean
+          id: boolean
+          lead_recipients: string[]
+          report_recipients: string[]
+          resend_api_key: string
+          resend_from: string
+          telegram_bot_token: string
+          telegram_chat_id: string
+          telegram_enabled: boolean
+          updated_at: string
+        }
+        Insert: {
+          alert_on_failure?: boolean
+          alert_on_lead?: boolean
+          daily_report?: boolean
+          email_enabled?: boolean
+          id?: boolean
+          lead_recipients?: string[]
+          report_recipients?: string[]
+          resend_api_key?: string
+          resend_from?: string
+          telegram_bot_token?: string
+          telegram_chat_id?: string
+          telegram_enabled?: boolean
+          updated_at?: string
+        }
+        Update: {
+          alert_on_failure?: boolean
+          alert_on_lead?: boolean
+          daily_report?: boolean
+          email_enabled?: boolean
+          id?: boolean
+          lead_recipients?: string[]
+          report_recipients?: string[]
+          resend_api_key?: string
+          resend_from?: string
+          telegram_bot_token?: string
+          telegram_chat_id?: string
+          telegram_enabled?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       page_sections: {
         Row: {
           body: string

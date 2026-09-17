@@ -25,6 +25,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@/components/common/Analytics";
 import { fontThemeClass } from "@/lib/fonts";
 import { PublicMotion } from "@/components/common/PublicMotion";
+import { CrashReporter } from "@/components/common/CrashReporter";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -186,6 +187,7 @@ function RootComponent() {
       <CompareProvider>
         <PublicMotion />
         <Analytics />
+        <CrashReporter />
         {bare ? (
           <div className={fontThemeClass(content?.settings.fontTheme)}>
             <Outlet />

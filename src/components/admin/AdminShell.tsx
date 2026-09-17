@@ -62,6 +62,7 @@ export const adminNav: { group: string; items: { label: string; to: string }[] }
     items: [
       { label: "Navigation", to: "/admin/navigation" },
       { label: "Site Settings", to: "/admin/settings" },
+      { label: "Alerts", to: "/admin/notifications" },
       { label: "Staff & Roles", to: "/admin/staff" },
     ],
   },

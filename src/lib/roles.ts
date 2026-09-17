@@ -49,6 +49,7 @@ export const ROUTE_ACCESS: Record<string, StaffRole[]> = {
   "/admin/activity": BOSSES,
   "/admin/navigation": BOSSES,
   "/admin/settings": BOSSES,
+  "/admin/notifications": ["super_admin"],
   "/admin/staff": ALL,
 };
 

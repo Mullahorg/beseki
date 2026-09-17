@@ -3,6 +3,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { trackConversion } from "@/lib/analytics";
+import { useServerFn } from "@tanstack/react-start";
+import { notifyNewLead } from "@/lib/notifications.functions";
 
 /* ---------------------------------- fields --------------------------------- */
 
@@ -117,6 +119,7 @@ export type SubmitState = "idle" | "loading" | "success" | "error";
  */
 export function useEnquiry(type: string) {
   const [state, setState] = useState<SubmitState>("idle");
+  const alertTeam = useServerFn(notifyNewLead);
 
   async function submit(payload: {
     name: string;
@@ -152,6 +155,18 @@ export function useEnquiry(type: string) {
 
     setState("success");
     trackConversion(type);
+    // Tell the team straight away. Never block the customer on this.
+    void alertTeam({
+      data: {
+        type,
+        name: payload.name.trim(),
+        phone: payload.phone.trim(),
+        email: payload.email?.trim() || null,
+        vehicle: payload.vehicleSlug ?? null,
+        source: typeof window === "undefined" ? null : window.location.pathname,
+        message: payload.message?.trim() || null,
+      },
+    }).catch(() => undefined);
     toast.success("Message sent", { description: "Our team will get back to you shortly." });
     return true;
   }

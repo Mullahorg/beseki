@@ -69,3 +69,5 @@ Keep the existing visual design; extend rather than rebuild.
 
 - [x] Role hierarchy: max 3 super admins, editable permission matrix (admin and below), role-filtered admin navigation.
 - [x] Role tools: sales desk, marketing desk, financing calculator, staff activity & sign-in monitoring.
+
+- [x] Admin-managed alerts: Resend email + Telegram failure alerts, keys configured by Super Admin, alert log, query defaults and error handling.

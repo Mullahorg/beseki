@@ -8,6 +8,7 @@ import { AdminCard, AdminHeader } from "@/components/admin/AdminShell";
 import { AdminEmpty, AdminError, AdminLoading, Saving, StatusPill } from "@/components/admin/AdminBits";
 import { MediaPicker } from "@/components/admin/MediaPicker";
 import { supabase } from "@/integrations/supabase/client";
+import type { MediaCategory } from "@/lib/media";
 
 // Collection specs are data-driven, so queries are built against a loosely typed client.
 const db = supabase as any;
@@ -22,6 +23,7 @@ export interface FieldSpec {
   hint?: string;
   required?: boolean;
   placeholder?: string;
+  mediaCategory?: MediaCategory;
 }
 
 export interface CollectionSpec {
@@ -265,7 +267,7 @@ export function FieldControl({
           onChange={(e) => onChange(e.target.value.split("\n").map((s) => s.trim()).filter(Boolean))}
         />
       ) : spec.type === "media" ? (
-        <MediaPicker value={value ?? null} onChange={onChange} />
+        <MediaPicker value={value ?? null} onChange={onChange} category={spec.mediaCategory} />
       ) : (
         <TextInput id={id} value={value ?? ""} onChange={(e) => onChange(e.target.value)} placeholder={spec.placeholder} />
       )}

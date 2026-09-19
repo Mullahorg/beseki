@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ImagePlus, X } from "lucide-react";
+import { ImageOff, ImagePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
-import { mediaUrl, type MediaRecord } from "@/lib/media";
+import { mediaUrl, type MediaCategory, type MediaRecord } from "@/lib/media";
 import { MediaUploader } from "@/components/admin/MediaUploader";
 
 function useMediaList(search: string) {
@@ -26,7 +26,15 @@ function useMediaList(search: string) {
 }
 
 /** Choose one image from the media library, or upload a new one. */
-export function MediaPicker({ value, onChange }: { value: string | null; onChange: (id: string | null) => void }) {
+export function MediaPicker({
+  value,
+  onChange,
+  category = "Other",
+}: {
+  value: string | null;
+  onChange: (id: string | null) => void;
+  category?: MediaCategory;
+}) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const list = useMediaList(search);
@@ -45,12 +53,7 @@ export function MediaPicker({ value, onChange }: { value: string | null; onChang
     <div className="flex items-center gap-3">
       {selected.data ? (
         <div className="relative">
-          <img
-            src={mediaUrl(selected.data.path, "thumb")}
-            alt={selected.data.alt || selected.data.file_name}
-            loading="lazy"
-            className="size-20 rounded-md border object-cover"
-          />
+           <PickerImage record={selected.data} className="size-20 rounded-md border object-cover" />
           <button
             type="button"
             aria-label="Remove image"
@@ -72,7 +75,15 @@ export function MediaPicker({ value, onChange }: { value: string | null; onChang
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl">
           <DialogTitle>Media library</DialogTitle>
-          <MediaUploader category="Homepage" onUploaded={() => list.refetch()} compact />
+           <MediaUploader
+             category={category}
+             onUploaded={(records) => {
+               const first = records[0];
+               if (first) onChange(first.id);
+               list.refetch();
+             }}
+             compact
+           />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -99,17 +110,32 @@ export function MediaPicker({ value, onChange }: { value: string | null; onChang
                 }}
                 className="overflow-hidden rounded-md border hover:ring-2 hover:ring-ring"
               >
-                <img
-                  src={mediaUrl(m.path, "thumb")}
-                  alt={m.alt || m.file_name}
-                  loading="lazy"
-                  className="aspect-square w-full object-cover"
-                />
+                 <PickerImage record={m} className="aspect-square w-full object-cover" />
               </button>
             ))}
           </div>
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+function PickerImage({ record, className }: { record: MediaRecord; className: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <span className={`${className} flex items-center justify-center bg-muted text-muted-foreground`}>
+        <ImageOff className="size-5" aria-hidden="true" />
+      </span>
+    );
+  }
+  return (
+    <img
+      src={mediaUrl(record.path, "thumb")}
+      alt={record.alt || record.file_name}
+      loading="lazy"
+      onError={(_event: SyntheticEvent<HTMLImageElement>) => setFailed(true)}
+      className={className}
+    />
   );
 }

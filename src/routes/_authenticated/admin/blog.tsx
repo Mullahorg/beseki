@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_authenticated/admin/blog")({
             type: "select",
             options: ["News", "Buying guide", "Ownership", "Imports", "Financing", "Reviews"],
           },
-          { name: "featured_media_id", label: "Cover image", type: "media" },
+          { name: "featured_media_id", label: "Cover image", type: "media", mediaCategory: "Blog" },
           { name: "published_at", label: "Publish date", type: "date" },
           { name: "seo_title", label: "SEO title" },
           { name: "seo_description", label: "SEO description", type: "textarea" },

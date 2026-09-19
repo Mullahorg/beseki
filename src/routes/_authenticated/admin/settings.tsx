@@ -107,13 +107,13 @@ function Settings() {
           <h2 className="mb-4 text-base font-bold">Branding</h2>
           <div className="grid gap-5">
             <Field label="Logo" htmlFor="logo">
-              <MediaPicker value={form["logo_media_id"] ?? null} onChange={(v) => set("logo_media_id", v)} />
+              <MediaPicker value={form["logo_media_id"] ?? null} onChange={(v) => set("logo_media_id", v)} category="Branding" />
             </Field>
             <Field label="Favicon" htmlFor="favicon">
-              <MediaPicker value={form["favicon_media_id"] ?? null} onChange={(v) => set("favicon_media_id", v)} />
+              <MediaPicker value={form["favicon_media_id"] ?? null} onChange={(v) => set("favicon_media_id", v)} category="Branding" />
             </Field>
             <Field label="Social share image" htmlFor="og">
-              <MediaPicker value={form["og_media_id"] ?? null} onChange={(v) => set("og_media_id", v)} />
+              <MediaPicker value={form["og_media_id"] ?? null} onChange={(v) => set("og_media_id", v)} category="Branding" />
             </Field>
           </div>
         </AdminCard>

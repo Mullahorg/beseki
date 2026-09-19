@@ -108,7 +108,7 @@ function Homepage() {
                   />
                 </Field>
                 <Field label="Image" htmlFor={`m-${raw.id}`} className="md:col-span-2">
-                  <MediaPicker value={section["media_id"] ?? null} onChange={(v) => update("media_id", v)} />
+                  <MediaPicker value={section["media_id"] ?? null} onChange={(v) => update("media_id", v)} category="Homepage" />
                 </Field>
               </div>
               <div className="mt-4">

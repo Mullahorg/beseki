@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/admin/team")({
           { name: "bio", label: "Short bio", type: "textarea" },
           { name: "phone", label: "Phone" },
           { name: "email", label: "Email" },
-          { name: "media_id", label: "Photo", type: "media" },
+          { name: "media_id", label: "Photo", type: "media", mediaCategory: "Team" },
           { name: "position", label: "Sort order", type: "number" },
           { name: "status", label: "Status", type: "status", options: ["draft", "published", "archived"] },
         ],

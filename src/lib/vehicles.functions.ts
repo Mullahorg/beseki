@@ -2,7 +2,14 @@ import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { resolveImages } from "@/data/vehicle-images";
-import type { Availability, BodyType, Condition, Fuel, Transmission, Vehicle } from "@/data/vehicles";
+import type {
+  Availability,
+  BodyType,
+  Condition,
+  Fuel,
+  Transmission,
+  Vehicle,
+} from "@/data/vehicles";
 
 const SELECT =
   "id,slug,make,model,year,price,mileage,transmission,fuel,engine,body_type,drive_type,condition,color,description,features,image_keys,image_urls,featured,availability,created_at";
@@ -41,7 +48,8 @@ function publicClient() {
     global: {
       fetch: (input, init) => {
         const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`)
+          h.delete("Authorization");
         h.set("apikey", key);
         return fetch(input, { ...init, headers: h, cache: "no-store" });
       },
@@ -50,16 +58,18 @@ function publicClient() {
 }
 
 /** Every published vehicle in stock. Public — safe columns only. */
-export const listVehicles = createServerFn({ method: "GET" }).handler(async (): Promise<Vehicle[]> => {
-  const { data, error } = await publicClient()
-    .from("vehicles")
-    .select(SELECT)
-    .eq("published", true)
-    .order("featured", { ascending: false })
-    .order("created_at", { ascending: false });
-  if (error) throw new Error(error.message);
-  return (data ?? []).map((r) => mapRow(r as Row));
-});
+export const listVehicles = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Vehicle[]> => {
+    const { data, error } = await publicClient()
+      .from("vehicles")
+      .select(SELECT)
+      .eq("published", true)
+      .order("featured", { ascending: false })
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((r) => mapRow(r as Row));
+  },
+);
 
 /** A single published vehicle by slug. */
 export const getVehicle = createServerFn({ method: "GET" })

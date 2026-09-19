@@ -43,7 +43,8 @@ export const conditions: Condition[] = ["Brand New", "Locally Used", "Foreign Us
 export const makesOf = (list: Vehicle[]) => [...new Set(list.map((v) => v.make))].sort();
 export const modelsOf = (list: Vehicle[], make?: string) =>
   [...new Set(list.filter((v) => !make || v.make === make).map((v) => v.model))].sort();
-export const yearsOf = (list: Vehicle[]) => [...new Set(list.map((v) => v.year))].sort((a, b) => b - a);
+export const yearsOf = (list: Vehicle[]) =>
+  [...new Set(list.map((v) => v.year))].sort((a, b) => b - a);
 
 export const priceBands = [
   { label: "Under KES 2M", min: 0, max: 2_000_000 },

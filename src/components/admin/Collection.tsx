@@ -5,7 +5,13 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Field, TextInput, TextArea, SelectInput } from "@/components/forms/FormKit";
 import { AdminCard, AdminHeader } from "@/components/admin/AdminShell";
-import { AdminEmpty, AdminError, AdminLoading, Saving, StatusPill } from "@/components/admin/AdminBits";
+import {
+  AdminEmpty,
+  AdminError,
+  AdminLoading,
+  Saving,
+  StatusPill,
+} from "@/components/admin/AdminBits";
 import { MediaPicker } from "@/components/admin/MediaPicker";
 import { supabase } from "@/integrations/supabase/client";
 import type { MediaCategory } from "@/lib/media";
@@ -13,7 +19,8 @@ import type { MediaCategory } from "@/lib/media";
 // Collection specs are data-driven, so queries are built against a loosely typed client.
 const db = supabase as any;
 
-export type FieldType = "text" | "textarea" | "number" | "select" | "status" | "media" | "list" | "date";
+export type FieldType =
+  "text" | "textarea" | "number" | "select" | "status" | "media" | "list" | "date";
 
 export interface FieldSpec {
   name: string;
@@ -120,7 +127,12 @@ export function CollectionAdmin({ spec }: { spec: CollectionSpec }) {
             <h2 className="text-base font-bold">
               {editing["id"] ? `Edit ${spec.singular}` : `New ${spec.singular}`}
             </h2>
-            <button type="button" onClick={() => setEditing(null)} aria-label="Close" className="rounded p-1.5 hover:bg-accent">
+            <button
+              type="button"
+              onClick={() => setEditing(null)}
+              aria-label="Close"
+              className="rounded p-1.5 hover:bg-accent"
+            >
               <X className="size-4" />
             </button>
           </div>
@@ -201,7 +213,8 @@ export function CollectionAdmin({ spec }: { spec: CollectionSpec }) {
                       <button
                         type="button"
                         onClick={() => {
-                          if (confirm("Delete this item? This cannot be undone.")) remove.mutate(row["id"]);
+                          if (confirm("Delete this item? This cannot be undone."))
+                            remove.mutate(row["id"]);
                         }}
                         className="rounded p-2 text-destructive hover:bg-destructive/10"
                         aria-label="Delete"
@@ -241,7 +254,12 @@ export function FieldControl({
       className={wide ? "md:col-span-2" : undefined}
     >
       {spec.type === "textarea" ? (
-        <TextArea id={id} value={value ?? ""} onChange={(e) => onChange(e.target.value)} placeholder={spec.placeholder} />
+        <TextArea
+          id={id}
+          value={value ?? ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={spec.placeholder}
+        />
       ) : spec.type === "select" || spec.type === "status" ? (
         <SelectInput id={id} value={value ?? ""} onChange={(e) => onChange(e.target.value)}>
           {(spec.options ?? ["draft", "published", "archived"]).map((o) => (
@@ -258,18 +276,35 @@ export function FieldControl({
           onChange={(e) => onChange(Number(e.target.value.replace(/[^0-9-]/g, "")) || 0)}
         />
       ) : spec.type === "date" ? (
-        <TextInput id={id} type="date" value={value ?? ""} onChange={(e) => onChange(e.target.value || null)} />
+        <TextInput
+          id={id}
+          type="date"
+          value={value ?? ""}
+          onChange={(e) => onChange(e.target.value || null)}
+        />
       ) : spec.type === "list" ? (
         <TextArea
           id={id}
           value={Array.isArray(value) ? value.join("\n") : (value ?? "")}
           placeholder="One per line"
-          onChange={(e) => onChange(e.target.value.split("\n").map((s) => s.trim()).filter(Boolean))}
+          onChange={(e) =>
+            onChange(
+              e.target.value
+                .split("\n")
+                .map((s) => s.trim())
+                .filter(Boolean),
+            )
+          }
         />
       ) : spec.type === "media" ? (
         <MediaPicker value={value ?? null} onChange={onChange} category={spec.mediaCategory} />
       ) : (
-        <TextInput id={id} value={value ?? ""} onChange={(e) => onChange(e.target.value)} placeholder={spec.placeholder} />
+        <TextInput
+          id={id}
+          value={value ?? ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={spec.placeholder}
+        />
       )}
     </Field>
   );

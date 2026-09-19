@@ -45,9 +45,8 @@ function TradeInPage() {
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Put the value of your current vehicle towards your next one.
-              Tell us what you drive, share a few details, and our team will
-              come back with an indicative figure.
+              Put the value of your current vehicle towards your next one. Tell us what you drive,
+              share a few details, and our team will come back with an indicative figure.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -56,11 +55,7 @@ function TradeInPage() {
               </Button>
 
               <Button size="lg" variant="outline" asChild>
-                <a
-                  href={whatsappLink(waMessages.general)}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={whatsappLink(waMessages.general)} target="_blank" rel="noreferrer">
                   <WhatsAppIcon className="size-4 text-whatsapp" />
                   Talk to Us
                 </a>
@@ -85,8 +80,8 @@ function TradeInPage() {
                 Your current car can help fund the next one.
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Start with an online estimate, then bring your vehicle to our
-                Mombasa yard for an inspection and final valuation.
+                Start with an online estimate, then bring your vehicle to our Mombasa yard for an
+                inspection and final valuation.
               </p>
             </div>
           </div>
@@ -100,9 +95,7 @@ function TradeInPage() {
             <p className="eyebrow">How it works</p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
               Three steps.
-              <span className="block text-muted-foreground">
-                No unnecessary complexity.
-              </span>
+              <span className="block text-muted-foreground">No unnecessary complexity.</span>
             </h2>
           </div>
 
@@ -124,13 +117,8 @@ function TradeInPage() {
                 text: "Bring the vehicle to our yard so our team can inspect it and confirm the final trade-in figure.",
               },
             ].map((step) => (
-              <div
-                key={step.n}
-                className="grid gap-4 py-7 sm:grid-cols-[80px_1fr] sm:gap-6"
-              >
-                <span className="text-sm font-bold text-brand-red">
-                  {step.n}
-                </span>
+              <div key={step.n} className="grid gap-4 py-7 sm:grid-cols-[80px_1fr] sm:gap-6">
+                <span className="text-sm font-bold text-brand-red">{step.n}</span>
 
                 <div>
                   <h3 className="text-lg font-bold">{step.title}</h3>
@@ -154,8 +142,8 @@ function TradeInPage() {
                 Tell us about your vehicle
               </h2>
               <p className="mt-3 text-[15.5px] leading-relaxed text-muted-foreground">
-                The more information you provide, the better we can understand
-                your vehicle and prepare an indicative estimate.
+                The more information you provide, the better we can understand your vehicle and
+                prepare an indicative estimate.
               </p>
             </div>
 
@@ -217,22 +205,13 @@ function TradeInPage() {
               Bring your car to the BESEKI team in Mombasa.
             </h2>
             <p className="mt-3 text-[15px] leading-relaxed text-white/75">
-              If you would rather discuss your vehicle first, send us a
-              WhatsApp message and our team will guide you through the process.
+              If you would rather discuss your vehicle first, send us a WhatsApp message and our
+              team will guide you through the process.
             </p>
           </div>
 
-          <Button
-            size="lg"
-            variant="secondary"
-            asChild
-            className="w-full md:w-auto"
-          >
-            <a
-              href={whatsappLink(waMessages.general)}
-              target="_blank"
-              rel="noreferrer"
-            >
+          <Button size="lg" variant="secondary" asChild className="w-full md:w-auto">
+            <a href={whatsappLink(waMessages.general)} target="_blank" rel="noreferrer">
               <WhatsAppIcon className="size-4 text-whatsapp" />
               WhatsApp BESEKI
             </a>
@@ -247,20 +226,13 @@ function TradeInPage() {
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">
               Ready for the next step?
             </p>
-            <h2 className="mt-2 text-2xl font-bold md:text-3xl">
-              Find your next vehicle.
-            </h2>
+            <h2 className="mt-2 text-2xl font-bold md:text-3xl">Find your next vehicle.</h2>
             <p className="mt-2 text-sm text-white/80">
               Explore the vehicles currently listed by BESEKI.
             </p>
           </div>
 
-          <Button
-            size="lg"
-            variant="secondary"
-            asChild
-            className="w-full md:w-auto"
-          >
+          <Button size="lg" variant="secondary" asChild className="w-full md:w-auto">
             <Link to="/inventory">Browse Inventory</Link>
           </Button>
         </div>

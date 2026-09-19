@@ -90,7 +90,11 @@ function VehicleEditor() {
     queryKey: ["admin", "vehicle", id],
     enabled: !isNew,
     queryFn: async () => {
-      const { data, error } = await supabase.from("vehicles").select("*").eq("id", id).maybeSingle();
+      const { data, error } = await supabase
+        .from("vehicles")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -101,7 +105,9 @@ function VehicleEditor() {
       const d = vehicle.data as Record<string, any>;
       setForm({
         ...blank,
-        ...Object.fromEntries(Object.keys(blank).map((k) => [k, d[k] ?? blank[k as keyof VehicleForm]])),
+        ...Object.fromEntries(
+          Object.keys(blank).map((k) => [k, d[k] ?? blank[k as keyof VehicleForm]]),
+        ),
       } as VehicleForm);
       setTouchedSlug(true);
     }
@@ -121,7 +127,11 @@ function VehicleEditor() {
         seo_description: form.seo_description || null,
       };
       if (isNew) {
-        const { data, error } = await supabase.from("vehicles").insert(payload).select("id").single();
+        const { data, error } = await supabase
+          .from("vehicles")
+          .insert(payload)
+          .select("id")
+          .single();
         if (error) throw error;
         return data.id as string;
       }
@@ -142,13 +152,20 @@ function VehicleEditor() {
 
   return (
     <>
-      <Link to="/admin/vehicles" className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+      <Link
+        to="/admin/vehicles"
+        className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+      >
         <ArrowLeft className="size-4" aria-hidden="true" /> Back to vehicles
       </Link>
 
       <AdminHeader
         title={isNew ? "Add vehicle" : `${form.year} ${form.make} ${form.model}`}
-        description={isNew ? "Fill in the details, then add photos once saved." : `Web address: /inventory/${form.slug}`}
+        description={
+          isNew
+            ? "Fill in the details, then add photos once saved."
+            : `Web address: /inventory/${form.slug}`
+        }
         action={
           <Button onClick={() => save.mutate()} disabled={save.isPending}>
             <Saving show={save.isPending} /> Save vehicle
@@ -167,7 +184,8 @@ function VehicleEditor() {
                   value={form.make}
                   onChange={(e) => {
                     set("make", e.target.value);
-                    if (!touchedSlug) set("slug", slugify(`${form.year}-${e.target.value}-${form.model}`));
+                    if (!touchedSlug)
+                      set("slug", slugify(`${form.year}-${e.target.value}-${form.model}`));
                   }}
                 />
               </Field>
@@ -177,12 +195,17 @@ function VehicleEditor() {
                   value={form.model}
                   onChange={(e) => {
                     set("model", e.target.value);
-                    if (!touchedSlug) set("slug", slugify(`${form.year}-${form.make}-${e.target.value}`));
+                    if (!touchedSlug)
+                      set("slug", slugify(`${form.year}-${form.make}-${e.target.value}`));
                   }}
                 />
               </Field>
               <Field label="Variant / trim" htmlFor="variant">
-                <TextInput id="variant" value={form.variant} onChange={(e) => set("variant", e.target.value)} />
+                <TextInput
+                  id="variant"
+                  value={form.variant}
+                  onChange={(e) => set("variant", e.target.value)}
+                />
               </Field>
               <Field label="Year" htmlFor="year" required>
                 <TextInput
@@ -209,7 +232,11 @@ function VehicleEditor() {
                 />
               </Field>
               <Field label="Stock number" htmlFor="stock">
-                <TextInput id="stock" value={form.stock_number} onChange={(e) => set("stock_number", e.target.value)} />
+                <TextInput
+                  id="stock"
+                  value={form.stock_number}
+                  onChange={(e) => set("stock_number", e.target.value)}
+                />
               </Field>
               <Field label="Web address" htmlFor="slug" hint="Appears as /inventory/your-slug">
                 <TextInput
@@ -228,61 +255,121 @@ function VehicleEditor() {
             <h2 className="mb-4 text-base font-bold">Specification</h2>
             <div className="grid gap-5 md:grid-cols-2">
               <Field label="Transmission" htmlFor="transmission">
-                <SelectInput id="transmission" value={form.transmission} onChange={(e) => set("transmission", e.target.value)}>
+                <SelectInput
+                  id="transmission"
+                  value={form.transmission}
+                  onChange={(e) => set("transmission", e.target.value)}
+                >
                   {["Automatic", "Manual", "CVT", "DCT"].map((o) => (
                     <option key={o}>{o}</option>
                   ))}
                 </SelectInput>
               </Field>
               <Field label="Fuel" htmlFor="fuel">
-                <SelectInput id="fuel" value={form.fuel} onChange={(e) => set("fuel", e.target.value)}>
+                <SelectInput
+                  id="fuel"
+                  value={form.fuel}
+                  onChange={(e) => set("fuel", e.target.value)}
+                >
                   {["Petrol", "Diesel", "Hybrid", "Electric"].map((o) => (
                     <option key={o}>{o}</option>
                   ))}
                 </SelectInput>
               </Field>
               <Field label="Engine" htmlFor="engine" hint="e.g. 2.5L 4-cylinder">
-                <TextInput id="engine" value={form.engine} onChange={(e) => set("engine", e.target.value)} />
+                <TextInput
+                  id="engine"
+                  value={form.engine}
+                  onChange={(e) => set("engine", e.target.value)}
+                />
               </Field>
               <Field label="Body type" htmlFor="body">
-                <SelectInput id="body" value={form.body_type} onChange={(e) => set("body_type", e.target.value)}>
-                  {["SUV", "Sedan", "Hatchback", "Van", "Pickup", "Bus", "Coupe", "Wagon"].map((o) => (
-                    <option key={o}>{o}</option>
-                  ))}
+                <SelectInput
+                  id="body"
+                  value={form.body_type}
+                  onChange={(e) => set("body_type", e.target.value)}
+                >
+                  {["SUV", "Sedan", "Hatchback", "Van", "Pickup", "Bus", "Coupe", "Wagon"].map(
+                    (o) => (
+                      <option key={o}>{o}</option>
+                    ),
+                  )}
                 </SelectInput>
               </Field>
               <Field label="Drive" htmlFor="drive">
-                <SelectInput id="drive" value={form.drive_type} onChange={(e) => set("drive_type", e.target.value)}>
+                <SelectInput
+                  id="drive"
+                  value={form.drive_type}
+                  onChange={(e) => set("drive_type", e.target.value)}
+                >
                   {["2WD", "4WD", "AWD"].map((o) => (
                     <option key={o}>{o}</option>
                   ))}
                 </SelectInput>
               </Field>
               <Field label="Condition" htmlFor="condition">
-                <SelectInput id="condition" value={form.condition} onChange={(e) => set("condition", e.target.value)}>
+                <SelectInput
+                  id="condition"
+                  value={form.condition}
+                  onChange={(e) => set("condition", e.target.value)}
+                >
                   {["Brand New", "Foreign Used", "Locally Used"].map((o) => (
                     <option key={o}>{o}</option>
                   ))}
                 </SelectInput>
               </Field>
               <Field label="Exterior colour" htmlFor="color">
-                <TextInput id="color" value={form.color} onChange={(e) => set("color", e.target.value)} />
+                <TextInput
+                  id="color"
+                  value={form.color}
+                  onChange={(e) => set("color", e.target.value)}
+                />
               </Field>
               <Field label="Interior colour" htmlFor="interior">
-                <TextInput id="interior" value={form.interior_color} onChange={(e) => set("interior_color", e.target.value)} />
+                <TextInput
+                  id="interior"
+                  value={form.interior_color}
+                  onChange={(e) => set("interior_color", e.target.value)}
+                />
               </Field>
               <Field label="Description" htmlFor="description" className="md:col-span-2">
-                <TextArea id="description" value={form.description} onChange={(e) => set("description", e.target.value)} />
+                <TextArea
+                  id="description"
+                  value={form.description}
+                  onChange={(e) => set("description", e.target.value)}
+                />
               </Field>
-              <Field label="Features" htmlFor="features" hint="One feature per line" className="md:col-span-2">
+              <Field
+                label="Features"
+                htmlFor="features"
+                hint="One feature per line"
+                className="md:col-span-2"
+              >
                 <TextArea
                   id="features"
                   value={form.features.join("\n")}
-                  onChange={(e) => set("features", e.target.value.split("\n").map((s) => s.trim()).filter(Boolean))}
+                  onChange={(e) =>
+                    set(
+                      "features",
+                      e.target.value
+                        .split("\n")
+                        .map((s) => s.trim())
+                        .filter(Boolean),
+                    )
+                  }
                 />
               </Field>
-              <Field label="Video link" htmlFor="video" hint="YouTube or similar" className="md:col-span-2">
-                <TextInput id="video" value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
+              <Field
+                label="Video link"
+                htmlFor="video"
+                hint="YouTube or similar"
+                className="md:col-span-2"
+              >
+                <TextInput
+                  id="video"
+                  value={form.video_url}
+                  onChange={(e) => set("video_url", e.target.value)}
+                />
               </Field>
             </div>
           </AdminCard>
@@ -290,7 +377,9 @@ function VehicleEditor() {
           {isNew ? (
             <AdminCard>
               <h2 className="text-base font-bold">Photos</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Save the vehicle first, then add its photos here.</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Save the vehicle first, then add its photos here.
+              </p>
             </AdminCard>
           ) : (
             <VehicleGallery vehicleId={id} />
@@ -302,7 +391,11 @@ function VehicleEditor() {
             <h2 className="mb-4 text-base font-bold">Publishing</h2>
             <div className="space-y-4">
               <Field label="Availability" htmlFor="availability">
-                <SelectInput id="availability" value={form.availability} onChange={(e) => set("availability", e.target.value)}>
+                <SelectInput
+                  id="availability"
+                  value={form.availability}
+                  onChange={(e) => set("availability", e.target.value)}
+                >
                   {["Available", "Reserved", "Sold", "Incoming"].map((o) => (
                     <option key={o}>{o}</option>
                   ))}
@@ -331,11 +424,23 @@ function VehicleEditor() {
           <AdminCard>
             <h2 className="mb-4 text-base font-bold">Search listing</h2>
             <div className="space-y-4">
-              <Field label="SEO title" htmlFor="seotitle" hint="Leave blank to use the vehicle name">
-                <TextInput id="seotitle" value={form.seo_title} onChange={(e) => set("seo_title", e.target.value)} />
+              <Field
+                label="SEO title"
+                htmlFor="seotitle"
+                hint="Leave blank to use the vehicle name"
+              >
+                <TextInput
+                  id="seotitle"
+                  value={form.seo_title}
+                  onChange={(e) => set("seo_title", e.target.value)}
+                />
               </Field>
               <Field label="SEO description" htmlFor="seodesc">
-                <TextArea id="seodesc" value={form.seo_description} onChange={(e) => set("seo_description", e.target.value)} />
+                <TextArea
+                  id="seodesc"
+                  value={form.seo_description}
+                  onChange={(e) => set("seo_description", e.target.value)}
+                />
               </Field>
             </div>
           </AdminCard>
@@ -407,7 +512,10 @@ function VehicleGallery({ vehicleId }: { vehicleId: string }) {
   const setCover = useMutation({
     mutationFn: async (rowId: string) => {
       await supabase.from("vehicle_media").update({ is_cover: false }).eq("vehicle_id", vehicleId);
-      const { error } = await supabase.from("vehicle_media").update({ is_cover: true }).eq("id", rowId);
+      const { error } = await supabase
+        .from("vehicle_media")
+        .update({ is_cover: true })
+        .eq("id", rowId);
       if (error) throw error;
       await syncVehicleImages();
     },
@@ -451,7 +559,13 @@ function VehicleGallery({ vehicleId }: { vehicleId: string }) {
       {items.data && items.data.length > 0 ? (
         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {items.data.map((row, index) => (
-            <div key={row.id} className={cn("overflow-hidden rounded-lg border", row.is_cover && "ring-2 ring-primary")}>
+            <div
+              key={row.id}
+              className={cn(
+                "overflow-hidden rounded-lg border",
+                row.is_cover && "ring-2 ring-primary",
+              )}
+            >
               <img
                 src={mediaUrl(row.media?.path ?? "", "card")}
                 alt={row.media?.alt || "Vehicle photo"}

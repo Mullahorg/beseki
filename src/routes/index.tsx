@@ -16,21 +16,10 @@ import { Button } from "@/components/ui/button";
 import { VehicleCard } from "@/components/vehicles/VehicleCard";
 import { TestimonialCard, BlogCard } from "@/components/content/Cards";
 import { WhatsAppIcon } from "@/components/layout/Header";
-import {
-  bodyTypes,
-  fuels,
-  makesOf,
-  priceBands,
-  transmissions,
-  yearsOf,
-} from "@/data/vehicles";
+import { bodyTypes, fuels, makesOf, priceBands, transmissions, yearsOf } from "@/data/vehicles";
 import { useVehicles } from "@/lib/vehicles-context";
 import { useSections, useSettings, sectionText } from "@/lib/site-context";
-import {
-  listBlogPosts,
-  listServices,
-  listTestimonials,
-} from "@/lib/content.functions";
+import { listBlogPosts, listServices, listTestimonials } from "@/lib/content.functions";
 import { mediaUrl } from "@/lib/media";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import heroImage from "@/assets/hero-alphard.jpg";
@@ -167,9 +156,7 @@ function QuickSearch() {
 
         navigate({
           to: "/inventory",
-          search: Object.fromEntries(
-            Object.entries(form).filter(([, value]) => Boolean(value)),
-          ),
+          search: Object.fromEntries(Object.entries(form).filter(([, value]) => Boolean(value))),
         });
       }}
       className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
@@ -186,9 +173,7 @@ function QuickSearch() {
           <select
             id={fieldConfig.id}
             value={form[fieldConfig.key]}
-            onChange={(event) =>
-              updateField(fieldConfig.key, event.target.value)
-            }
+            onChange={(event) => updateField(fieldConfig.key, event.target.value)}
             className={selectClass}
           >
             <option value="">Any</option>
@@ -203,11 +188,7 @@ function QuickSearch() {
       ))}
 
       <div className="md:col-span-2 lg:col-span-3 xl:col-span-6">
-        <Button
-          type="submit"
-          size="lg"
-          className="h-11 w-full bg-primary px-7"
-        >
+        <Button type="submit" size="lg" className="h-11 w-full bg-primary px-7">
           <Search className="size-4" aria-hidden="true" />
           Search Inventory
         </Button>
@@ -220,19 +201,11 @@ function HomePage() {
   const vehicles = useVehicles();
   const company = useSettings();
   const sections = useSections();
-  const {
-    services,
-    testimonials,
-    posts: allPosts,
-  } = Route.useLoaderData();
+  const { services, testimonials, posts: allPosts } = Route.useLoaderData();
 
-  const featured = vehicles
-    .filter((vehicle) => vehicle.featured)
-    .slice(0, 6);
+  const featured = vehicles.filter((vehicle) => vehicle.featured).slice(0, 6);
 
-  const latest = [...vehicles]
-    .sort((a, b) => b.year - a.year)
-    .slice(0, 3);
+  const latest = [...vehicles].sort((a, b) => b.year - a.year).slice(0, 3);
 
   const posts = allPosts.slice(0, 3);
 
@@ -364,26 +337,22 @@ function HomePage() {
               </h2>
 
               <p className="mt-4 max-w-xl text-[15px] leading-7 text-muted-foreground">
-                Browse our latest vehicles online, then come to the yard,
-                inspect the car properly and ask every question you need to.
+                Browse our latest vehicles online, then come to the yard, inspect the car properly
+                and ask every question you need to.
               </p>
             </div>
 
             <div className="flex items-center gap-6 border-t pt-4 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
               <div>
                 <p className="text-3xl font-bold">{totalVehicles}</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  vehicles listed
-                </p>
+                <p className="mt-1 text-xs text-muted-foreground">vehicles listed</p>
               </div>
 
               <div className="h-10 w-px bg-border" />
 
               <div>
                 <p className="text-3xl font-bold">Mombasa</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Lumumba Road
-                </p>
+                <p className="mt-1 text-xs text-muted-foreground">Lumumba Road</p>
               </div>
             </div>
           </div>
@@ -391,18 +360,13 @@ function HomePage() {
           {featured.length > 0 ? (
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {featured.map((vehicle, index) => (
-                <VehicleCard
-                  key={vehicle.id}
-                  vehicle={vehicle}
-                  priority={index < 3}
-                />
+                <VehicleCard key={vehicle.id} vehicle={vehicle} priority={index < 3} />
               ))}
             </div>
           ) : (
             <div className="mt-10 border-y py-12">
               <p className="text-sm text-muted-foreground">
-                New vehicles are being added. Browse the full inventory to see
-                the latest stock.
+                New vehicles are being added. Browse the full inventory to see the latest stock.
               </p>
             </div>
           )}
@@ -446,14 +410,8 @@ function HomePage() {
                 copy: "Our team remains reachable after handover.",
               },
             ].map((item) => (
-              <div
-                key={item.title}
-                className="flex gap-4 px-0 py-6 sm:px-6 lg:px-7"
-              >
-                <item.icon
-                  className="mt-0.5 size-5 shrink-0 text-primary"
-                  aria-hidden="true"
-                />
+              <div key={item.title} className="flex gap-4 px-0 py-6 sm:px-6 lg:px-7">
+                <item.icon className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
 
                 <div>
                   <h3 className="text-[15px] font-bold">{item.title}</h3>
@@ -482,9 +440,8 @@ function HomePage() {
               </h2>
 
               <p className="mt-5 text-[15px] leading-7 text-muted-foreground">
-                We are a Mombasa dealership, not a call centre. You deal with
-                real people, see the actual vehicle and get space to make a
-                decision properly.
+                We are a Mombasa dealership, not a call centre. You deal with real people, see the
+                actual vehicle and get space to make a decision properly.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -506,41 +463,33 @@ function HomePage() {
                 {
                   number: "01",
                   title: "See the car properly",
-                  copy:
-                    "Photos help you shortlist. Seeing the vehicle in person helps you decide.",
+                  copy: "Photos help you shortlist. Seeing the vehicle in person helps you decide.",
                 },
                 {
                   number: "02",
                   title: "Ask uncomfortable questions",
-                  copy:
-                    "Condition, mileage, history, paperwork or previous repairs — ask before you buy.",
+                  copy: "Condition, mileage, history, paperwork or previous repairs — ask before you buy.",
                 },
                 {
                   number: "03",
                   title: "Take your time",
-                  copy:
-                    "We would rather help you choose the right car than push you into the wrong one.",
+                  copy: "We would rather help you choose the right car than push you into the wrong one.",
                 },
                 {
                   number: "04",
                   title: "Stay connected",
-                  copy:
-                    "The same BESEKI team remains available for questions after the sale.",
+                  copy: "The same BESEKI team remains available for questions after the sale.",
                 },
               ].map((item) => (
                 <div
                   key={item.number}
                   className="grid gap-4 border-b py-6 sm:grid-cols-[56px_0.7fr_1fr] sm:items-start"
                 >
-                  <span className="text-sm font-bold text-primary">
-                    {item.number}
-                  </span>
+                  <span className="text-sm font-bold text-primary">{item.number}</span>
 
                   <h3 className="text-[16px] font-bold">{item.title}</h3>
 
-                  <p className="text-[14px] leading-6 text-muted-foreground">
-                    {item.copy}
-                  </p>
+                  <p className="text-[14px] leading-6 text-muted-foreground">{item.copy}</p>
                 </div>
               ))}
             </div>
@@ -569,9 +518,7 @@ function HomePage() {
 
           <div className="mt-9 grid grid-cols-2 gap-px overflow-hidden border bg-border md:grid-cols-3 lg:grid-cols-6">
             {bodyTypes.map((type) => {
-              const count = vehicles.filter(
-                (vehicle) => vehicle.bodyType === type,
-              ).length;
+              const count = vehicles.filter((vehicle) => vehicle.bodyType === type).length;
 
               return (
                 <Link
@@ -580,15 +527,10 @@ function HomePage() {
                   search={{ bodyType: type }}
                   className="group bg-background p-5 transition-colors hover:bg-card"
                 >
-                  <Car
-                    className="size-5 text-brand-blue"
-                    aria-hidden="true"
-                  />
+                  <Car className="size-5 text-brand-blue" aria-hidden="true" />
 
                   <div className="mt-8">
-                    <h3 className="text-[15px] font-bold group-hover:text-primary">
-                      {type}
-                    </h3>
+                    <h3 className="text-[15px] font-bold group-hover:text-primary">{type}</h3>
 
                     <p className="mt-1 text-[12px] text-muted-foreground">
                       {count} {count === 1 ? "vehicle" : "vehicles"}
@@ -622,8 +564,8 @@ function HomePage() {
               </h2>
 
               <p className="mt-4 max-w-md text-[15px] leading-7 text-white/70">
-                Start with an indicative calculation, then talk to our team
-                about available financing options.
+                Start with an indicative calculation, then talk to our team about available
+                financing options.
               </p>
 
               <Button className="mt-7" variant="secondary" asChild>
@@ -644,8 +586,8 @@ function HomePage() {
               </h2>
 
               <p className="mt-4 max-w-md text-[15px] leading-7 text-muted-foreground">
-                Tell us about your current vehicle and we will review the
-                details and come back with an indicative estimate.
+                Tell us about your current vehicle and we will review the details and come back with
+                an indicative estimate.
               </p>
 
               <Button className="mt-7" asChild>
@@ -673,8 +615,8 @@ function HomePage() {
               </h2>
 
               <p className="mt-3 max-w-xl text-[15px] leading-7 text-muted-foreground">
-                New stock changes quickly. These are some of the most recently
-                added vehicles in the current inventory.
+                New stock changes quickly. These are some of the most recently added vehicles in the
+                current inventory.
               </p>
             </div>
 
@@ -706,7 +648,11 @@ function HomePage() {
               <p className="eyebrow">Beyond the sale</p>
 
               <h2 className="mt-2 text-[30px] font-bold leading-tight md:text-[38px]">
-                {sectionText(sections["services"], "heading", "More than simply handing over the keys.")}
+                {sectionText(
+                  sections["services"],
+                  "heading",
+                  "More than simply handing over the keys.",
+                )}
               </h2>
 
               <p className="mt-4 text-[15px] leading-7 text-muted-foreground">
@@ -740,9 +686,7 @@ function HomePage() {
                     {service.title}
                   </h3>
 
-                  <p className="text-[14px] leading-6 text-muted-foreground">
-                    {service.summary}
-                  </p>
+                  <p className="text-[14px] leading-6 text-muted-foreground">{service.summary}</p>
 
                   <ChevronRight
                     className="hidden size-4 text-muted-foreground transition-transform group-hover:translate-x-1 sm:block"
@@ -787,10 +731,7 @@ function HomePage() {
 
           <div className="mt-9 grid gap-6 md:grid-cols-3">
             {testimonials.slice(0, 3).map((testimonial) => (
-              <TestimonialCard
-                key={testimonial.id}
-                testimonial={testimonial}
-              />
+              <TestimonialCard key={testimonial.id} testimonial={testimonial} />
             ))}
           </div>
         </div>
@@ -868,11 +809,7 @@ function HomePage() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" asChild>
-                <a
-                  href={company.mapDirectionsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={company.mapDirectionsUrl} target="_blank" rel="noreferrer">
                   Get Directions
                 </a>
               </Button>
@@ -921,8 +858,7 @@ function HomePage() {
             </h2>
 
             <p className="mt-2 max-w-xl text-sm leading-6 text-primary-foreground/75">
-              Ask a question, book a viewing or speak to the BESEKI team
-              directly.
+              Ask a question, book a viewing or speak to the BESEKI team directly.
             </p>
           </div>
 

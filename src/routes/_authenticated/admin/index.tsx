@@ -1,16 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ArrowRight,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
+import { ArrowRight, ShieldCheck, Users } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  AdminHeader,
-  AdminCard,
-} from "@/components/admin/AdminShell";
+import { AdminHeader, AdminCard } from "@/components/admin/AdminShell";
 import { supabase } from "@/integrations/supabase/client";
 import { formatKes } from "@/lib/whatsapp";
 
@@ -18,20 +11,12 @@ export const Route = createFileRoute("/_authenticated/admin/")({
   component: Dashboard,
 });
 
-async function count(
-  table: string,
-  apply: (q: any) => any = (q) => q,
-) {
-  const {
-    count: c,
-    error,
-  } = await apply(
-    (supabase as any)
-      .from(table)
-      .select("id", {
-        count: "exact",
-        head: true,
-      }),
+async function count(table: string, apply: (q: any) => any = (q) => q) {
+  const { count: c, error } = await apply(
+    (supabase as any).from(table).select("id", {
+      count: "exact",
+      head: true,
+    }),
   );
 
   if (error) {
@@ -45,62 +30,23 @@ function Dashboard() {
   const stats = useQuery({
     queryKey: ["admin", "stats"],
     queryFn: async () => ({
-      vehicles: await count(
-        "vehicles",
-        (q) => q.eq("archived", false),
+      vehicles: await count("vehicles", (q) => q.eq("archived", false)),
+
+      available: await count("vehicles", (q) =>
+        q.eq("archived", false).eq("availability", "Available"),
       ),
 
-      available: await count(
-        "vehicles",
-        (q) =>
-          q
-            .eq("archived", false)
-            .eq("availability", "Available"),
-      ),
+      featured: await count("vehicles", (q) => q.eq("archived", false).eq("featured", true)),
 
-      featured: await count(
-        "vehicles",
-        (q) =>
-          q
-            .eq("archived", false)
-            .eq("featured", true),
-      ),
+      sold: await count("vehicles", (q) => q.eq("availability", "Sold")),
 
-      sold: await count(
-        "vehicles",
-        (q) =>
-          q.eq("availability", "Sold"),
-      ),
+      newLeads: await count("enquiries", (q) => q.eq("status", "new")),
 
-      newLeads: await count(
-        "enquiries",
-        (q) =>
-          q.eq("status", "new"),
-      ),
+      testDrives: await count("enquiries", (q) => q.eq("type", "test-drive").eq("status", "new")),
 
-      testDrives: await count(
-        "enquiries",
-        (q) =>
-          q
-            .eq("type", "test-drive")
-            .eq("status", "new"),
-      ),
+      tradeIns: await count("enquiries", (q) => q.eq("type", "trade-in").eq("status", "new")),
 
-      tradeIns: await count(
-        "enquiries",
-        (q) =>
-          q
-            .eq("type", "trade-in")
-            .eq("status", "new"),
-      ),
-
-      financing: await count(
-        "enquiries",
-        (q) =>
-          q
-            .eq("type", "financing")
-            .eq("status", "new"),
-      ),
+      financing: await count("enquiries", (q) => q.eq("type", "financing").eq("status", "new")),
     }),
   });
 
@@ -108,14 +54,9 @@ function Dashboard() {
     queryKey: ["admin", "recent-leads"],
 
     queryFn: async () => {
-      const {
-        data,
-        error,
-      } = await supabase
+      const { data, error } = await supabase
         .from("enquiries")
-        .select(
-          "id,name,phone,type,status,created_at,vehicle_slug",
-        )
+        .select("id,name,phone,type,status,created_at,vehicle_slug")
         .order("created_at", {
           ascending: false,
         })
@@ -133,14 +74,9 @@ function Dashboard() {
     queryKey: ["admin", "recent-vehicles"],
 
     queryFn: async () => {
-      const {
-        data,
-        error,
-      } = await supabase
+      const { data, error } = await supabase
         .from("vehicles")
-        .select(
-          "id,slug,make,model,year,price,availability,published",
-        )
+        .select("id,slug,make,model,year,price,availability,published")
         .order("created_at", {
           ascending: false,
         })
@@ -212,8 +148,7 @@ function Dashboard() {
       {stats.isError ? (
         <AdminCard className="mb-6 border-destructive/40">
           <p className="text-sm text-destructive">
-            Could not load the figures. Refresh the page to try
-            again.
+            Could not load the figures. Refresh the page to try again.
           </p>
         </AdminCard>
       ) : null}
@@ -250,17 +185,12 @@ function Dashboard() {
           <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div className="flex min-w-0 items-start gap-4">
               <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-brand-blue/10 text-brand-blue transition-transform duration-200 group-hover:scale-105">
-                <Users
-                  className="size-5"
-                  aria-hidden="true"
-                />
+                <Users className="size-5" aria-hidden="true" />
               </div>
 
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="text-sm font-bold text-admin-foreground">
-                    Staff & Permissions
-                  </h2>
+                  <h2 className="text-sm font-bold text-admin-foreground">Staff & Permissions</h2>
 
                   <span className="rounded-full border border-brand-blue/20 bg-brand-blue/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-blue">
                     Admin
@@ -268,8 +198,8 @@ function Dashboard() {
                 </div>
 
                 <p className="mt-1.5 max-w-2xl text-sm leading-6 text-admin-muted">
-                  Manage staff accounts, assign roles, control
-                  administrative access and manage team permissions.
+                  Manage staff accounts, assign roles, control administrative access and manage team
+                  permissions.
                 </p>
               </div>
             </div>
@@ -286,36 +216,21 @@ function Dashboard() {
 
           <div className="grid border-t border-admin-line sm:grid-cols-3">
             <div className="flex items-center gap-3 border-b border-admin-line px-5 py-3.5 sm:border-b-0 sm:border-r">
-              <ShieldCheck
-                className="size-4 shrink-0 text-brand-blue"
-                aria-hidden="true"
-              />
+              <ShieldCheck className="size-4 shrink-0 text-brand-blue" aria-hidden="true" />
 
-              <span className="text-xs text-admin-muted">
-                Role management
-              </span>
+              <span className="text-xs text-admin-muted">Role management</span>
             </div>
 
             <div className="flex items-center gap-3 border-b border-admin-line px-5 py-3.5 sm:border-b-0 sm:border-r">
-              <Users
-                className="size-4 shrink-0 text-brand-blue"
-                aria-hidden="true"
-              />
+              <Users className="size-4 shrink-0 text-brand-blue" aria-hidden="true" />
 
-              <span className="text-xs text-admin-muted">
-                Staff access
-              </span>
+              <span className="text-xs text-admin-muted">Staff access</span>
             </div>
 
             <div className="flex items-center gap-3 px-5 py-3.5">
-              <ShieldCheck
-                className="size-4 shrink-0 text-brand-blue"
-                aria-hidden="true"
-              />
+              <ShieldCheck className="size-4 shrink-0 text-brand-blue" aria-hidden="true" />
 
-              <span className="text-xs text-admin-muted">
-                Permissions
-              </span>
+              <span className="text-xs text-admin-muted">Permissions</span>
             </div>
           </div>
         </Link>
@@ -325,9 +240,7 @@ function Dashboard() {
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <AdminCard>
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold">
-              Recent enquiries
-            </h2>
+            <h2 className="text-base font-bold">Recent enquiries</h2>
 
             <Link
               to="/admin/leads"
@@ -338,14 +251,10 @@ function Dashboard() {
           </div>
 
           <div className="mt-4 space-y-3">
-            {recentLeads.isLoading ? (
-              <Skeleton className="h-24 w-full" />
-            ) : null}
+            {recentLeads.isLoading ? <Skeleton className="h-24 w-full" /> : null}
 
             {recentLeads.data?.length === 0 ? (
-              <p className="py-6 text-center text-sm text-muted-foreground">
-                No enquiries yet.
-              </p>
+              <p className="py-6 text-center text-sm text-muted-foreground">No enquiries yet.</p>
             ) : null}
 
             {recentLeads.data?.map((l) => (
@@ -354,9 +263,7 @@ function Dashboard() {
                 className="flex items-center justify-between gap-3 border-b pb-3 last:border-0"
               >
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold">
-                    {l.name}
-                  </p>
+                  <p className="truncate text-sm font-semibold">{l.name}</p>
 
                   <p className="truncate text-xs text-muted-foreground">
                     {l.type} • {l.phone}
@@ -373,9 +280,7 @@ function Dashboard() {
 
         <AdminCard>
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold">
-              Recently added vehicles
-            </h2>
+            <h2 className="text-base font-bold">Recently added vehicles</h2>
 
             <Link
               to="/admin/vehicles"
@@ -386,14 +291,10 @@ function Dashboard() {
           </div>
 
           <div className="mt-4 space-y-3">
-            {recentVehicles.isLoading ? (
-              <Skeleton className="h-24 w-full" />
-            ) : null}
+            {recentVehicles.isLoading ? <Skeleton className="h-24 w-full" /> : null}
 
             {recentVehicles.data?.length === 0 ? (
-              <p className="py-6 text-center text-sm text-muted-foreground">
-                No vehicles yet.
-              </p>
+              <p className="py-6 text-center text-sm text-muted-foreground">No vehicles yet.</p>
             ) : null}
 
             {recentVehicles.data?.map((v) => (
@@ -407,8 +308,7 @@ function Dashboard() {
                   </p>
 
                   <p className="truncate text-xs text-muted-foreground">
-                    {formatKes(Number(v.price))} •{" "}
-                    {v.availability}
+                    {formatKes(Number(v.price))} • {v.availability}
                     {v.published ? "" : " • draft"}
                   </p>
                 </div>

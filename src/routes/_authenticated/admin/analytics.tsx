@@ -128,10 +128,12 @@ function AnalyticsPage() {
     for (const v of views) byPage.set(v.path, (byPage.get(v.path) ?? 0) + 1);
 
     const byGoal = new Map<string, number>();
-    for (const c of conversions) byGoal.set(c.label ?? "enquiry", (byGoal.get(c.label ?? "enquiry") ?? 0) + 1);
+    for (const c of conversions)
+      byGoal.set(c.label ?? "enquiry", (byGoal.get(c.label ?? "enquiry") ?? 0) + 1);
 
     const byDevice = new Map<string, number>();
-    for (const v of views) byDevice.set(v.device ?? "unknown", (byDevice.get(v.device ?? "unknown") ?? 0) + 1);
+    for (const v of views)
+      byDevice.set(v.device ?? "unknown", (byDevice.get(v.device ?? "unknown") ?? 0) + 1);
 
     return {
       sessions,
@@ -261,59 +263,67 @@ function AnalyticsPage() {
       )}
 
       {isBoss ? (
-      <AdminCard className="mt-6">
-        <h2 className="text-base font-semibold text-admin-foreground">Staff activity</h2>
-        <p className="mt-1 text-sm text-admin-muted">
-          A record of changes made in the workspace.
-        </p>
+        <AdminCard className="mt-6">
+          <h2 className="text-base font-semibold text-admin-foreground">Staff activity</h2>
+          <p className="mt-1 text-sm text-admin-muted">
+            A record of changes made in the workspace.
+          </p>
 
-        {activityQuery.isLoading ? (
-          <div className="mt-5">
-            <AdminLoading rows={3} />
-          </div>
-        ) : activityQuery.isError ? (
-          <div className="mt-5">
-            <AdminError message="We could not load staff activity." />
-          </div>
-        ) : (activityQuery.data?.length ?? 0) === 0 ? (
-          <div className="mt-5">
-            <AdminEmpty
-              title="No activity yet"
-              message="Changes made by the team will be listed here."
-            />
-          </div>
-        ) : (
-          <div className="mt-5 overflow-x-auto">
-            <table className="w-full min-w-[640px] border-collapse text-sm">
-              <thead>
-                <tr className="border-b border-admin-line text-left text-xs uppercase tracking-wide text-admin-muted">
-                  <th scope="col" className="py-3 pr-4 font-semibold">When</th>
-                  <th scope="col" className="py-3 pr-4 font-semibold">Who</th>
-                  <th scope="col" className="py-3 pr-4 font-semibold">Action</th>
-                  <th scope="col" className="py-3 pr-4 font-semibold">Details</th>
-                </tr>
-              </thead>
-              <tbody>
-                {activityQuery.data?.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="border-b border-admin-line/70 transition-colors last:border-0 hover:bg-admin-surface"
-                  >
-                    <td className="py-3 pr-4 text-admin-muted">{when(row.created_at)}</td>
-                    <td className="py-3 pr-4 text-admin-foreground">{row.email ?? "—"}</td>
-                    <td className="py-3 pr-4 capitalize text-admin-foreground">
-                      {row.action.replace(/[._]/g, " ")}
-                    </td>
-                    <td className="py-3 pr-4 text-admin-muted">
-                      {[row.entity_id, row.detail].filter(Boolean).join(" · ") || "—"}
-                    </td>
+          {activityQuery.isLoading ? (
+            <div className="mt-5">
+              <AdminLoading rows={3} />
+            </div>
+          ) : activityQuery.isError ? (
+            <div className="mt-5">
+              <AdminError message="We could not load staff activity." />
+            </div>
+          ) : (activityQuery.data?.length ?? 0) === 0 ? (
+            <div className="mt-5">
+              <AdminEmpty
+                title="No activity yet"
+                message="Changes made by the team will be listed here."
+              />
+            </div>
+          ) : (
+            <div className="mt-5 overflow-x-auto">
+              <table className="w-full min-w-[640px] border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-admin-line text-left text-xs uppercase tracking-wide text-admin-muted">
+                    <th scope="col" className="py-3 pr-4 font-semibold">
+                      When
+                    </th>
+                    <th scope="col" className="py-3 pr-4 font-semibold">
+                      Who
+                    </th>
+                    <th scope="col" className="py-3 pr-4 font-semibold">
+                      Action
+                    </th>
+                    <th scope="col" className="py-3 pr-4 font-semibold">
+                      Details
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </AdminCard>
+                </thead>
+                <tbody>
+                  {activityQuery.data?.map((row) => (
+                    <tr
+                      key={row.id}
+                      className="border-b border-admin-line/70 transition-colors last:border-0 hover:bg-admin-surface"
+                    >
+                      <td className="py-3 pr-4 text-admin-muted">{when(row.created_at)}</td>
+                      <td className="py-3 pr-4 text-admin-foreground">{row.email ?? "—"}</td>
+                      <td className="py-3 pr-4 capitalize text-admin-foreground">
+                        {row.action.replace(/[._]/g, " ")}
+                      </td>
+                      <td className="py-3 pr-4 text-admin-muted">
+                        {[row.entity_id, row.detail].filter(Boolean).join(" · ") || "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </AdminCard>
       ) : null}
     </>
   );

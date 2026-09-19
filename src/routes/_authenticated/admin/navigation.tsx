@@ -20,7 +20,12 @@ export const Route = createFileRoute("/_authenticated/admin/navigation")({
         fields: [
           { name: "label", label: "Label", required: true },
           { name: "href", label: "Link", required: true, placeholder: "/inventory" },
-          { name: "menu", label: "Menu", type: "select", options: ["header", "footer", "footer-legal", "mobile"] },
+          {
+            name: "menu",
+            label: "Menu",
+            type: "select",
+            options: ["header", "footer", "footer-legal", "mobile"],
+          },
           { name: "position", label: "Sort order", type: "number" },
         ],
       }}

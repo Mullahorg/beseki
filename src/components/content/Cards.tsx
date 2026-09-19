@@ -35,7 +35,9 @@ export function TestimonialCard({ testimonial }: { testimonial: TestimonialRecor
       </blockquote>
       <figcaption className="mt-5 border-t pt-4 text-[13px]">
         <span className="font-semibold">{testimonial.customerName}</span>
-        {testimonial.vehicle ? <span className="block text-muted-foreground">{testimonial.vehicle}</span> : null}
+        {testimonial.vehicle ? (
+          <span className="block text-muted-foreground">{testimonial.vehicle}</span>
+        ) : null}
       </figcaption>
     </figure>
   );
@@ -59,11 +61,17 @@ export function BlogCard({ post }: { post: BlogRecord }) {
       ) : null}
       <p className="eyebrow">{post.category}</p>
       <h3 className="mt-3 text-[18px] font-semibold leading-snug">
-        <Link to="/blog/$slug" params={{ slug: post.slug }} className="transition-colors hover:text-primary">
+        <Link
+          to="/blog/$slug"
+          params={{ slug: post.slug }}
+          className="transition-colors hover:text-primary"
+        >
           {post.title}
         </Link>
       </h3>
-      <p className="mt-3 flex-1 text-[14px] leading-relaxed text-muted-foreground">{post.excerpt}</p>
+      <p className="mt-3 flex-1 text-[14px] leading-relaxed text-muted-foreground">
+        {post.excerpt}
+      </p>
       <p className="mt-5 text-[12.5px] text-muted-foreground">
         {post.publishedAt
           ? new Date(post.publishedAt).toLocaleDateString("en-KE", {
@@ -116,7 +124,10 @@ export function TeamMember({ member }: { member: TeamRecord }) {
           <WhatsAppIcon className="size-3.5 text-whatsapp" />
           WhatsApp
         </a>
-        <a href={`mailto:${email}`} className="flex items-center gap-2 break-all hover:text-primary">
+        <a
+          href={`mailto:${email}`}
+          className="flex items-center gap-2 break-all hover:text-primary"
+        >
           <Mail className="size-3.5" aria-hidden="true" />
           {email}
         </a>
@@ -130,7 +141,9 @@ export function FAQAccordion({ items, idPrefix }: { items: FaqRecord[]; idPrefix
     <Accordion type="single" collapsible className="w-full">
       {items.map((item, i) => (
         <AccordionItem key={item.id} value={`${idPrefix}-${i}`}>
-          <AccordionTrigger className="text-left text-[15px] font-semibold">{item.question}</AccordionTrigger>
+          <AccordionTrigger className="text-left text-[15px] font-semibold">
+            {item.question}
+          </AccordionTrigger>
           <AccordionContent className="text-[14.5px] leading-relaxed text-muted-foreground">
             {item.answer}
           </AccordionContent>

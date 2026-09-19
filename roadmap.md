@@ -58,6 +58,8 @@ Keep the existing visual design; extend rather than rebuild.
 - Leads: enquiries now store the vehicle and the page they came from.
 
 ## Remaining
+- [ ] Repair the missing Lovable Cloud server credential and verify Resend/email alerts can run.
+- [ ] Complete the approved public-image-to-admin editing connections and QA.
 - [x] Add restrained motion and richer hover/focus feedback to existing sections only; do not rebuild or rearrange them.
 - [x] Add a discreet staff sign-in entry and visually unify the admin workspace.
 - [x] Ensure hosted pages refresh database content without requiring a new Lovable publish.

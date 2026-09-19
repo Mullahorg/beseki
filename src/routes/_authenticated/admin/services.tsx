@@ -18,13 +18,23 @@ export const Route = createFileRoute("/_authenticated/admin/services")({
         ],
         fields: [
           { name: "title", label: "Title", required: true },
-          { name: "slug", label: "Slug", required: true, hint: "Used in the web address, e.g. vehicle-import" },
+          {
+            name: "slug",
+            label: "Slug",
+            required: true,
+            hint: "Used in the web address, e.g. vehicle-import",
+          },
           { name: "summary", label: "Short summary", type: "textarea" },
           { name: "detail", label: "Full description", type: "textarea" },
           { name: "points", label: "Key points", type: "list", hint: "One point per line" },
           { name: "media_id", label: "Image", type: "media", mediaCategory: "Services" },
           { name: "position", label: "Sort order", type: "number" },
-          { name: "status", label: "Status", type: "status", options: ["draft", "published", "archived"] },
+          {
+            name: "status",
+            label: "Status",
+            type: "status",
+            options: ["draft", "published", "archived"],
+          },
         ],
       }}
     />

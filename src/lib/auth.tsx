@@ -37,7 +37,10 @@ export function useRoles(user: User | null) {
     enabled: Boolean(user),
     staleTime: 60_000,
     queryFn: async (): Promise<AppRole[]> => {
-      const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", user!.id);
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user!.id);
       if (error) throw error;
       return (data ?? []).map((r) => r.role as AppRole);
     },

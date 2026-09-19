@@ -18,8 +18,7 @@ export const Route = createFileRoute("/refund-policy")({
       },
       {
         property: "og:description",
-        content:
-          "How deposits, payments and refunds are handled for each sale.",
+        content: "How deposits, payments and refunds are handled for each sale.",
       },
       {
         property: "og:url",
@@ -60,8 +59,8 @@ function RefundPolicyPage() {
             </h1>
 
             <p className="mt-5 max-w-2xl text-[16px] leading-7 text-muted-foreground md:text-[17px]">
-              How deposits, payments and refunds are handled when purchasing a
-              vehicle from BESEKI COMPANY LIMITED.
+              How deposits, payments and refunds are handled when purchasing a vehicle from BESEKI
+              COMPANY LIMITED.
             </p>
 
             <p className="mt-5 text-sm text-muted-foreground">
@@ -98,9 +97,7 @@ function RefundPolicyPage() {
                     >
                       <span>{page.label}</span>
 
-                      {active && (
-                        <span className="size-1.5 rounded-full bg-primary" />
-                      )}
+                      {active && <span className="size-1.5 rounded-full bg-primary" />}
                     </Link>
                   );
                 })}
@@ -111,11 +108,10 @@ function RefundPolicyPage() {
             <article className="min-w-0">
               <div className="border-b pb-8">
                 <p className="text-sm leading-6 text-muted-foreground">
-                  This policy explains the general approach BESEKI COMPANY
-                  LIMITED takes when handling deposits, cancellations, completed
-                  sales and requests concerning payments. The specific terms of
-                  an individual vehicle transaction are confirmed in the
-                  relevant written agreement.
+                  This policy explains the general approach BESEKI COMPANY LIMITED takes when
+                  handling deposits, cancellations, completed sales and requests concerning
+                  payments. The specific terms of an individual vehicle transaction are confirmed in
+                  the relevant written agreement.
                 </p>
               </div>
 
@@ -131,19 +127,17 @@ function RefundPolicyPage() {
 
                     <div className="mt-4 space-y-4 text-[15px] leading-7 text-muted-foreground">
                       <p>
-                        A deposit may be taken to reserve a vehicle while the
-                        purchase process is being completed.
+                        A deposit may be taken to reserve a vehicle while the purchase process is
+                        being completed.
                       </p>
 
                       <p>
-                        Whether a deposit is refundable, and the conditions
-                        that apply to it, will be agreed and confirmed in
-                        writing at the time the deposit is paid.
+                        Whether a deposit is refundable, and the conditions that apply to it, will
+                        be agreed and confirmed in writing at the time the deposit is paid.
                       </p>
 
                       <p>
-                        Customers should review those terms carefully before
-                        making any payment.
+                        Customers should review those terms carefully before making any payment.
                       </p>
                     </div>
                   </div>
@@ -162,16 +156,14 @@ function RefundPolicyPage() {
 
                     <div className="mt-4 space-y-4 text-[15px] leading-7 text-muted-foreground">
                       <p>
-                        Once a vehicle sale has been completed and the vehicle
-                        has been handed over, the transaction is generally
-                        treated as final unless the applicable written sale
-                        agreement provides otherwise.
+                        Once a vehicle sale has been completed and the vehicle has been handed over,
+                        the transaction is generally treated as final unless the applicable written
+                        sale agreement provides otherwise.
                       </p>
 
                       <p>
-                        This policy does not remove or limit any rights or
-                        remedies available to a customer under applicable
-                        Kenyan law.
+                        This policy does not remove or limit any rights or remedies available to a
+                        customer under applicable Kenyan law.
                       </p>
                     </div>
                   </div>
@@ -190,20 +182,19 @@ function RefundPolicyPage() {
 
                     <div className="mt-4 space-y-4 text-[15px] leading-7 text-muted-foreground">
                       <p>
-                        If you decide not to proceed with a vehicle purchase
-                        before completion, please contact BESEKI as soon as
-                        possible.
+                        If you decide not to proceed with a vehicle purchase before completion,
+                        please contact BESEKI as soon as possible.
                       </p>
 
                       <p>
-                        We will explain the applicable cancellation terms and
-                        what happens to any amount already paid based on the
-                        agreement made for that particular transaction.
+                        We will explain the applicable cancellation terms and what happens to any
+                        amount already paid based on the agreement made for that particular
+                        transaction.
                       </p>
 
                       <p>
-                        Customers are encouraged to request clarification
-                        before making a deposit or other payment.
+                        Customers are encouraged to request clarification before making a deposit or
+                        other payment.
                       </p>
                     </div>
                   </div>
@@ -222,19 +213,18 @@ function RefundPolicyPage() {
 
                     <div className="mt-4 space-y-4 text-[15px] leading-7 text-muted-foreground">
                       <p>
-                        Warranty coverage varies depending on the vehicle and
-                        the terms agreed at the time of purchase.
+                        Warranty coverage varies depending on the vehicle and the terms agreed at
+                        the time of purchase.
                       </p>
 
                       <p>
-                        If a fault appears after purchase, customers should
-                        contact the BESEKI team promptly and provide details of
-                        the issue.
+                        If a fault appears after purchase, customers should contact the BESEKI team
+                        promptly and provide details of the issue.
                       </p>
 
                       <p>
-                        The applicable warranty or after-sales terms will then
-                        be reviewed for the particular vehicle.
+                        The applicable warranty or after-sales terms will then be reviewed for the
+                        particular vehicle.
                       </p>
                     </div>
                   </div>
@@ -253,15 +243,13 @@ function RefundPolicyPage() {
 
                     <div className="mt-4 space-y-4 text-[15px] leading-7 text-muted-foreground">
                       <p>
-                        Customers should keep receipts, payment confirmations,
-                        written agreements and other transaction records
-                        relating to their vehicle purchase.
+                        Customers should keep receipts, payment confirmations, written agreements
+                        and other transaction records relating to their vehicle purchase.
                       </p>
 
                       <p>
-                        If you have a question about a payment or transaction
-                        record, contact BESEKI and provide the relevant details
-                        so our team can assist.
+                        If you have a question about a payment or transaction record, contact BESEKI
+                        and provide the relevant details so our team can assist.
                       </p>
                     </div>
                   </div>
@@ -280,14 +268,13 @@ function RefundPolicyPage() {
 
                     <div className="mt-4 space-y-4 text-[15px] leading-7 text-muted-foreground">
                       <p>
-                        If you believe you may be entitled to a refund or need
-                        clarification about a deposit or payment, please speak
-                        to our team directly.
+                        If you believe you may be entitled to a refund or need clarification about a
+                        deposit or payment, please speak to our team directly.
                       </p>
 
                       <p>
-                        We will review the relevant transaction documents and
-                        explain the applicable terms.
+                        We will review the relevant transaction documents and explain the applicable
+                        terms.
                       </p>
                     </div>
                   </div>
@@ -297,21 +284,15 @@ function RefundPolicyPage() {
               {/* IMPORTANT NOTE */}
               <div className="border bg-sand p-6 md:p-7">
                 <div className="flex gap-4">
-                  <Check
-                    className="mt-0.5 size-5 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
+                  <Check className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
 
                   <div>
-                    <h2 className="text-base font-bold">
-                      Before making a payment
-                    </h2>
+                    <h2 className="text-base font-bold">Before making a payment</h2>
 
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                      Make sure you understand the vehicle details, payment
-                      amount, deposit terms, cancellation conditions and any
-                      applicable warranty terms before completing your
-                      transaction.
+                      Make sure you understand the vehicle details, payment amount, deposit terms,
+                      cancellation conditions and any applicable warranty terms before completing
+                      your transaction.
                     </p>
                   </div>
                 </div>
@@ -342,9 +323,7 @@ function RefundPolicyPage() {
       <section className="bg-background">
         <div className="container-page py-8">
           <div className="flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <p>
-              BESEKI COMPANY LIMITED · Mombasa, Kenya
-            </p>
+            <p>BESEKI COMPANY LIMITED · Mombasa, Kenya</p>
 
             <Link
               to="/"

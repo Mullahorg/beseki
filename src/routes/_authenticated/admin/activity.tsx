@@ -15,10 +15,12 @@ export const Route = createFileRoute("/_authenticated/admin/activity")({
 });
 
 const rpc = (name: string, args?: Record<string, unknown>) =>
-  (supabase.rpc as unknown as (
-    n: string,
-    a?: Record<string, unknown>,
-  ) => Promise<{ data: unknown; error: { message: string } | null }>)(name, args);
+  (
+    supabase.rpc as unknown as (
+      n: string,
+      a?: Record<string, unknown>,
+    ) => Promise<{ data: unknown; error: { message: string } | null }>
+  )(name, args);
 
 type Summary = {
   email: string;
@@ -70,15 +72,25 @@ function StaffActivityPage() {
     queryKey: ["admin", "activity-log", days],
     queryFn: async (): Promise<ActivityRow[]> => {
       const since = new Date(Date.now() - days * 86_400_000).toISOString();
-      const { data, error } = await (supabase.from("staff_activity") as never as {
-        select: (c: string) => {
-          gte: (c: string, v: string) => {
-            order: (c: string, o: { ascending: boolean }) => {
-              limit: (n: number) => Promise<{ data: ActivityRow[] | null; error: { message: string } | null }>;
+      const { data, error } = await (
+        supabase.from("staff_activity") as never as {
+          select: (c: string) => {
+            gte: (
+              c: string,
+              v: string,
+            ) => {
+              order: (
+                c: string,
+                o: { ascending: boolean },
+              ) => {
+                limit: (
+                  n: number,
+                ) => Promise<{ data: ActivityRow[] | null; error: { message: string } | null }>;
+              };
             };
           };
-        };
-      })
+        }
+      )
         .select("id,email,action,entity_id,detail,created_at")
         .gte("created_at", since)
         .order("created_at", { ascending: false })
@@ -117,9 +129,13 @@ function StaffActivityPage() {
         </div>
 
         {summaryQuery.isLoading ? (
-          <div className="mt-5"><AdminLoading rows={3} /></div>
+          <div className="mt-5">
+            <AdminLoading rows={3} />
+          </div>
         ) : summaryQuery.isError ? (
-          <div className="mt-5"><AdminError message="We could not load the team summary." /></div>
+          <div className="mt-5">
+            <AdminError message="We could not load the team summary." />
+          </div>
         ) : (summaryQuery.data?.length ?? 0) === 0 ? (
           <div className="mt-5">
             <AdminEmpty title="No activity yet" message="Sign-ins and changes will show up here." />
@@ -129,17 +145,32 @@ function StaffActivityPage() {
             <table className="w-full min-w-[720px] border-collapse text-sm">
               <thead>
                 <tr className="border-b border-admin-line text-left text-xs uppercase tracking-wide text-admin-muted">
-                  <th scope="col" className="py-3 pr-4 font-semibold">Person</th>
-                  <th scope="col" className="py-3 pr-4 font-semibold">Role</th>
-                  <th scope="col" className="py-3 pr-4 font-semibold">Sign-ins</th>
-                  <th scope="col" className="py-3 pr-4 font-semibold">Changes made</th>
-                  <th scope="col" className="py-3 pr-4 font-semibold">Active days</th>
-                  <th scope="col" className="py-3 pr-4 font-semibold">Last seen</th>
+                  <th scope="col" className="py-3 pr-4 font-semibold">
+                    Person
+                  </th>
+                  <th scope="col" className="py-3 pr-4 font-semibold">
+                    Role
+                  </th>
+                  <th scope="col" className="py-3 pr-4 font-semibold">
+                    Sign-ins
+                  </th>
+                  <th scope="col" className="py-3 pr-4 font-semibold">
+                    Changes made
+                  </th>
+                  <th scope="col" className="py-3 pr-4 font-semibold">
+                    Active days
+                  </th>
+                  <th scope="col" className="py-3 pr-4 font-semibold">
+                    Last seen
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {summaryQuery.data?.map((row) => (
-                  <tr key={row.email} className="border-b border-admin-line/70 last:border-0 hover:bg-admin-surface">
+                  <tr
+                    key={row.email}
+                    className="border-b border-admin-line/70 last:border-0 hover:bg-admin-surface"
+                  >
                     <td className="py-3 pr-4 text-admin-foreground">{row.email}</td>
                     <td className="py-3 pr-4 text-admin-muted">
                       {row.role ? ROLE_LABELS[row.role] : "No access"}
@@ -163,12 +194,19 @@ function StaffActivityPage() {
         </div>
 
         {logQuery.isLoading ? (
-          <div className="mt-5"><AdminLoading rows={4} /></div>
+          <div className="mt-5">
+            <AdminLoading rows={4} />
+          </div>
         ) : logQuery.isError ? (
-          <div className="mt-5"><AdminError message="We could not load the activity log." /></div>
+          <div className="mt-5">
+            <AdminError message="We could not load the activity log." />
+          </div>
         ) : (logQuery.data?.length ?? 0) === 0 ? (
           <div className="mt-5">
-            <AdminEmpty title="Nothing logged yet" message="Changes made by the team will be listed here." />
+            <AdminEmpty
+              title="Nothing logged yet"
+              message="Changes made by the team will be listed here."
+            />
           </div>
         ) : (
           <ul className="mt-5 space-y-2">
@@ -179,8 +217,12 @@ function StaffActivityPage() {
               >
                 <span className="text-admin-foreground">
                   <span className="font-medium">{row.email ?? "Unknown"}</span>{" "}
-                  <span className="capitalize text-admin-muted">{row.action.replace(/[._]/g, " ")}</span>
-                  {row.entity_id ? <span className="text-admin-muted"> · {row.entity_id}</span> : null}
+                  <span className="capitalize text-admin-muted">
+                    {row.action.replace(/[._]/g, " ")}
+                  </span>
+                  {row.entity_id ? (
+                    <span className="text-admin-muted"> · {row.entity_id}</span>
+                  ) : null}
                   {row.detail ? <span className="text-admin-muted"> · {row.detail}</span> : null}
                 </span>
                 <span className="shrink-0 text-xs text-admin-muted">{when(row.created_at)}</span>

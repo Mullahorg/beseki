@@ -45,9 +45,7 @@ function extractStoragePath(value: string): string {
 
   // Legacy site image route
   if (input.startsWith("/api/public/media/")) {
-    return (input
-      .replace("/api/public/media/", "")
-      .split("?")[0]) ?? "";
+    return input.replace("/api/public/media/", "").split("?")[0] ?? "";
   }
 
   // Supabase public Storage URL
@@ -80,9 +78,7 @@ function extractStoragePath(value: string): string {
 /**
  * Resolve one vehicle image value into a usable browser URL.
  */
-export function resolveVehicleImage(
-  value: string | null | undefined,
-): string {
+export function resolveVehicleImage(value: string | null | undefined): string {
   if (!value) return "";
 
   const input = value.trim();
@@ -103,10 +99,7 @@ export function resolveVehicleImage(
   }
 
   // Leave unrelated external URLs unchanged.
-  if (
-    input.startsWith("https://") ||
-    input.startsWith("http://")
-  ) {
+  if (input.startsWith("https://") || input.startsWith("http://")) {
     return input;
   }
 
@@ -119,10 +112,7 @@ export function resolveVehicleImage(
  *
  * Do not remove or rename this export.
  */
-export function resolveImages(
-  keys: string[] = [],
-  urls: string[] = [],
-): string[] {
+export function resolveImages(keys: string[] = [], urls: string[] = []): string[] {
   const images: string[] = [];
 
   // Prefer DB / Storage URLs first.

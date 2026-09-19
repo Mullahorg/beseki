@@ -24,7 +24,9 @@ export const Route = createFileRoute("/inventory/$slug")({
 
   head: ({ loaderData, params }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Vehicle unavailable | BESEKI" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [{ title: "Vehicle unavailable | BESEKI" }, { name: "robots", content: "noindex" }],
+      };
     }
 
     const v = loaderData.vehicle;
@@ -52,7 +54,11 @@ export const Route = createFileRoute("/inventory/$slug")({
             brand: { "@type": "Brand", name: v.make },
             model: v.model,
             vehicleModelDate: String(v.year),
-            mileageFromOdometer: { "@type": "QuantitativeValue", value: v.mileage, unitCode: "KMT" },
+            mileageFromOdometer: {
+              "@type": "QuantitativeValue",
+              value: v.mileage,
+              unitCode: "KMT",
+            },
             fuelType: v.fuel,
             vehicleTransmission: v.transmission,
             bodyType: v.bodyType,
@@ -82,7 +88,10 @@ function VehicleDetailPage() {
 
   const name = vehicleName(vehicle);
   const similar = all
-    .filter((v) => v.slug !== vehicle.slug && (v.bodyType === vehicle.bodyType || v.make === vehicle.make))
+    .filter(
+      (v) =>
+        v.slug !== vehicle.slug && (v.bodyType === vehicle.bodyType || v.make === vehicle.make),
+    )
     .slice(0, 3);
 
   const sold = vehicle.availability === "Sold";
@@ -251,10 +260,15 @@ function VehicleDetailPage() {
           <div className="flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">Also on the yard</p>
-              <h2 className="mt-2 text-2xl font-bold tracking-tight md:text-3xl">Similar vehicles</h2>
+              <h2 className="mt-2 text-2xl font-bold tracking-tight md:text-3xl">
+                Similar vehicles
+              </h2>
             </div>
 
-            <Link to="/inventory" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary">
+            <Link
+              to="/inventory"
+              className="inline-flex items-center gap-2 text-sm font-semibold hover:text-primary"
+            >
               View all inventory
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>

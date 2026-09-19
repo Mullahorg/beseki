@@ -54,7 +54,9 @@ export function SectionHeading({
         {eyebrow ? (
           <p className={cn("eyebrow", onDark && "text-ink-foreground/70")}>{eyebrow}</p>
         ) : null}
-        <h2 className={cn("mt-3 text-[27px] font-semibold leading-[1.2] md:text-[36px]")}>{title}</h2>
+        <h2 className={cn("mt-3 text-[27px] font-semibold leading-[1.2] md:text-[36px]")}>
+          {title}
+        </h2>
         {subtitle ? (
           <p
             className={cn(

@@ -68,7 +68,6 @@ export const adminNav: { group: string; items: { label: string; to: string }[] }
   },
 ];
 
-
 export function AdminShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -91,12 +90,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <nav className="space-y-6 p-4">
       {visibleNav.map((group) => (
         <div key={group.group}>
-          <p className="px-3 text-[11px] font-semibold uppercase text-admin-muted">
-            {group.group}
-          </p>
+          <p className="px-3 text-[11px] font-semibold uppercase text-admin-muted">{group.group}</p>
           <ul className="mt-2 space-y-0.5">
             {group.items.map((item) => {
-              const active = item.to === "/admin" ? pathname === "/admin" : pathname.startsWith(item.to);
+              const active =
+                item.to === "/admin" ? pathname === "/admin" : pathname.startsWith(item.to);
               return (
                 <li key={item.to}>
                   <Link
@@ -132,7 +130,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
         <Link to="/admin" className="flex items-center gap-2 font-bold">
-          <span className="grid size-8 place-items-center rounded-md bg-primary text-primary-foreground"><Gauge className="size-4" /></span>
+          <span className="grid size-8 place-items-center rounded-md bg-primary text-primary-foreground">
+            <Gauge className="size-4" />
+          </span>
           {company.shortName} <span className="font-medium text-admin-muted">workspace</span>
         </Link>
         <div className="ml-auto flex items-center gap-2">
@@ -164,7 +164,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
         >
           {nav}
         </aside>
-        <main className="min-w-0 flex-1 bg-admin-canvas p-4 text-admin-foreground md:p-8 lg:p-10">{children}</main>
+        <main className="min-w-0 flex-1 bg-admin-canvas p-4 text-admin-foreground md:p-8 lg:p-10">
+          {children}
+        </main>
       </div>
     </div>
   );
@@ -191,5 +193,14 @@ export function AdminHeader({
 }
 
 export function AdminCard({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("rounded-lg border border-admin-line bg-admin-panel p-5 text-admin-foreground shadow-card transition-[border-color,box-shadow,transform] duration-200 hover:border-admin-muted/25 hover:shadow-lift", className)}>{children}</div>;
+  return (
+    <div
+      className={cn(
+        "rounded-lg border border-admin-line bg-admin-panel p-5 text-admin-foreground shadow-card transition-[border-color,box-shadow,transform] duration-200 hover:border-admin-muted/25 hover:shadow-lift",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
 }

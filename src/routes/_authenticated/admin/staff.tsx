@@ -1,15 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Check,
-  Loader2,
-  Shield,
-  ShieldCheck,
-  UserPlus,
-  Users,
-  UserX,
-} from "lucide-react";
+import { Check, Loader2, Shield, ShieldCheck, UserPlus, Users, UserX } from "lucide-react";
 import { toast } from "sonner";
 
 import { AdminHeader, AdminCard } from "@/components/admin/AdminShell";
@@ -52,10 +44,12 @@ function RoleIcon({ role }: { role: StaffRole }) {
 
 // The staff RPCs are newer than the generated types, so call them untyped.
 const rpc = (name: string, args?: Record<string, unknown>) =>
-  (supabase.rpc as unknown as (
-    n: string,
-    a?: Record<string, unknown>,
-  ) => Promise<{ data: unknown; error: { message: string } | null }>)(name, args);
+  (
+    supabase.rpc as unknown as (
+      n: string,
+      a?: Record<string, unknown>,
+    ) => Promise<{ data: unknown; error: { message: string } | null }>
+  )(name, args);
 
 export const Route = createFileRoute("/_authenticated/admin/staff")({
   component: StaffManagement,
@@ -90,14 +84,19 @@ function StaffManagement() {
   const permissionsQuery = useQuery({
     queryKey: ["admin", "role-permissions"],
     queryFn: async (): Promise<PermissionRow[]> => {
-      const { data, error } = await (supabase.from("role_permissions") as never as {
-        select: (c: string) => {
-          order: (c: string, o: { ascending: boolean }) => Promise<{
-            data: PermissionRow[] | null;
-            error: { message: string } | null;
-          }>;
-        };
-      })
+      const { data, error } = await (
+        supabase.from("role_permissions") as never as {
+          select: (c: string) => {
+            order: (
+              c: string,
+              o: { ascending: boolean },
+            ) => Promise<{
+              data: PermissionRow[] | null;
+              error: { message: string } | null;
+            }>;
+          };
+        }
+      )
         .select("role,area,level,position")
         .order("position", { ascending: true });
       if (error) throw new Error(error.message);
@@ -213,12 +212,14 @@ function StaffManagement() {
 
   const areas = useMemo(() => {
     const seen: string[] = [];
-    for (const row of permissionsQuery.data ?? []) if (!seen.includes(row.area)) seen.push(row.area);
+    for (const row of permissionsQuery.data ?? [])
+      if (!seen.includes(row.area)) seen.push(row.area);
     return seen;
   }, [permissionsQuery.data]);
 
   const levelFor = (role: StaffRole, area: string) =>
-    (permissionsQuery.data ?? []).find((r) => r.role === role && r.area === area)?.level ?? "No access";
+    (permissionsQuery.data ?? []).find((r) => r.role === role && r.area === area)?.level ??
+    "No access";
 
   const superAdminCount = (staffQuery.data ?? []).filter((m) => m.role === "super_admin").length;
 
@@ -230,7 +231,9 @@ function StaffManagement() {
         new_level: level,
       });
       if (error) throw new Error(error.message);
-      toast.success("Permission updated", { description: `${ROLE_LABELS[role]} · ${area}: ${level}` });
+      toast.success("Permission updated", {
+        description: `${ROLE_LABELS[role]} · ${area}: ${level}`,
+      });
       await qc.invalidateQueries({ queryKey: ["admin", "role-permissions"] });
     } catch (err) {
       toast.error("Could not update permission", {
@@ -252,15 +255,16 @@ function StaffManagement() {
             Super Admins: {superAdminCount} of {MAX_SUPER_ADMINS}
           </span>{" "}
           — the business can have at most {MAX_SUPER_ADMINS}. Super Admins have full access and can
-          set what every role below them may do, but no one can change or remove another Super Admin.
+          set what every role below them may do, but no one can change or remove another Super
+          Admin.
         </p>
       </AdminCard>
 
       {!canManageStaff ? (
         <AdminCard>
           <p className="text-sm text-admin-muted">
-            Only administrators can approve staff or change roles. You can still review who
-            has access and what each role allows.
+            Only administrators can approve staff or change roles. You can still review who has
+            access and what each role allows.
           </p>
         </AdminCard>
       ) : null}
@@ -272,8 +276,8 @@ function StaffManagement() {
           <h2 className="text-base font-semibold text-admin-foreground">Waiting for approval</h2>
         </div>
         <p className="mt-1 text-sm text-admin-muted">
-          People who created an account but have no role yet. They cannot open the workspace
-          until you approve them.
+          People who created an account but have no role yet. They cannot open the workspace until
+          you approve them.
         </p>
 
         {pendingQuery.isLoading ? (
@@ -416,7 +420,8 @@ function StaffManagement() {
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-admin-foreground">
-                        {member.email} {isSelf ? <span className="text-admin-muted">(you)</span> : null}
+                        {member.email}{" "}
+                        {isSelf ? <span className="text-admin-muted">(you)</span> : null}
                       </p>
                       <p className="text-xs text-admin-muted">{ROLE_LABELS[member.role]}</p>
                     </div>
@@ -482,7 +487,9 @@ function StaffManagement() {
             <table className="w-full min-w-[760px] border-collapse text-sm">
               <thead>
                 <tr className="border-b border-admin-line text-left text-xs uppercase tracking-wide text-admin-muted">
-                  <th scope="col" className="py-3 pr-4 font-semibold">Area</th>
+                  <th scope="col" className="py-3 pr-4 font-semibold">
+                    Area
+                  </th>
                   {ROLE_OPTIONS.map((role) => (
                     <th key={role} scope="col" className="py-3 pr-4 font-semibold">
                       {ROLE_LABELS[role]}
@@ -493,7 +500,10 @@ function StaffManagement() {
               <tbody>
                 {areas.map((area) => (
                   <tr key={area} className="border-b border-admin-line/70 last:border-0">
-                    <th scope="row" className="py-3 pr-4 text-left font-medium text-admin-foreground">
+                    <th
+                      scope="row"
+                      className="py-3 pr-4 text-left font-medium text-admin-foreground"
+                    >
                       {area}
                     </th>
                     {ROLE_OPTIONS.map((role) => (
@@ -511,11 +521,13 @@ function StaffManagement() {
                               value={levelFor(role, area)}
                               onChange={(e) => void savePermission(role, area, e.target.value)}
                             >
-                              {[...new Set([levelFor(role, area), ...PERMISSION_LEVELS])].map((lvl) => (
-                                <option key={lvl} value={lvl}>
-                                  {lvl}
-                                </option>
-                              ))}
+                              {[...new Set([levelFor(role, area), ...PERMISSION_LEVELS])].map(
+                                (lvl) => (
+                                  <option key={lvl} value={lvl}>
+                                    {lvl}
+                                  </option>
+                                ),
+                              )}
                             </SelectInput>
                           </>
                         ) : (
@@ -530,7 +542,6 @@ function StaffManagement() {
           </div>
         )}
       </AdminCard>
-
     </>
   );
 }

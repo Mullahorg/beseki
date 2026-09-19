@@ -19,8 +19,7 @@ export const Route = createFileRoute("/about")({
       },
       {
         property: "og:description",
-        content:
-          "Who we are, what we stand for, and why buyers in Mombasa work with BESEKI.",
+        content: "Who we are, what we stand for, and why buyers in Mombasa work with BESEKI.",
       },
       { property: "og:url", content: "/about" },
     ],
@@ -33,8 +32,7 @@ const values = [
   {
     number: "01",
     title: "Honesty first",
-    description:
-      "If a vehicle has a fault or a history worth knowing, we tell you before you ask.",
+    description: "If a vehicle has a fault or a history worth knowing, we tell you before you ask.",
   },
   {
     number: "02",
@@ -81,9 +79,9 @@ function AboutPage() {
               </h1>
 
               <p className="mt-6 max-w-[590px] text-[17px] leading-relaxed text-muted-foreground md:text-[18px]">
-                {company.companyName} sells new and locally used motor vehicles from
-                our yard at {company.addressOneLine}. We believe buying a car
-                should feel clear, personal and well informed.
+                {company.companyName} sells new and locally used motor vehicles from our yard at{" "}
+                {company.addressOneLine}. We believe buying a car should feel clear, personal and
+                well informed.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -132,23 +130,21 @@ function AboutPage() {
 
           <div className="max-w-[720px] space-y-5 text-[16px] leading-relaxed">
             <p>
-              BESEKI COMPANY LIMITED is a motor vehicle dealership based in
-              Mombasa. We sell new and locally used vehicles and help buyers
-              source something specific when it is not currently available on
-              our yard.
+              BESEKI COMPANY LIMITED is a motor vehicle dealership based in Mombasa. We sell new and
+              locally used vehicles and help buyers source something specific when it is not
+              currently available on our yard.
             </p>
 
             <p>
-              Our customers are making a significant purchase. That means the
-              way we work matters just as much as the vehicle itself. We show
-              you the car properly, answer questions directly and give you
-              room to make a decision.
+              Our customers are making a significant purchase. That means the way we work matters
+              just as much as the vehicle itself. We show you the car properly, answer questions
+              directly and give you room to make a decision.
             </p>
 
             <p>
-              You can find us at the Railway Station, along Lumumba Road. If
-              there is a vehicle you want to see, message us before you visit
-              and we can help make sure it is ready for you.
+              You can find us at the Railway Station, along Lumumba Road. If there is a vehicle you
+              want to see, message us before you visit and we can help make sure it is ready for
+              you.
             </p>
           </div>
         </div>
@@ -167,17 +163,16 @@ function AboutPage() {
 
             <div>
               <p className="max-w-[760px] text-[22px] font-medium leading-relaxed tracking-[-0.015em] md:text-[30px]">
-                Clear information. Fair prices. A team that remains reachable
-                long after you have driven away.
+                Clear information. Fair prices. A team that remains reachable long after you have
+                driven away.
               </p>
 
               <div className="mt-8 h-px w-full bg-border" />
 
               <p className="mt-6 max-w-[650px] text-[15px] leading-relaxed text-muted-foreground">
-                From choosing the right vehicle to arranging a viewing,
-                discussing financing, handling a trade-in or getting support
-                after purchase, our goal is to make each step easier to
-                understand.
+                From choosing the right vehicle to arranging a viewing, discussing financing,
+                handling a trade-in or getting support after purchase, our goal is to make each step
+                easier to understand.
               </p>
             </div>
           </div>
@@ -188,9 +183,7 @@ function AboutPage() {
       <Section>
         <div className="mb-10 max-w-[620px]">
           <p className="eyebrow">Our values</p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-[40px]">
-            How we work.
-          </h2>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-[40px]">How we work.</h2>
         </div>
 
         <div className="grid border-t sm:grid-cols-2">
@@ -224,18 +217,15 @@ function AboutPage() {
             </h2>
 
             <p className="mt-5 max-w-[400px] text-[15px] leading-relaxed text-muted-foreground">
-              We want you to leave knowing exactly what you bought, what comes
-              next and who to contact if you need help.
+              We want you to leave knowing exactly what you bought, what comes next and who to
+              contact if you need help.
             </p>
           </div>
 
           <div>
             <div className="border-t">
               {reasons.map((reason) => (
-                <div
-                  key={reason}
-                  className="flex gap-4 border-b py-5 text-[15px] leading-relaxed"
-                >
+                <div key={reason} className="flex gap-4 border-b py-5 text-[15px] leading-relaxed">
                   <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     <Check className="size-3" strokeWidth={3} aria-hidden="true" />
                   </span>
@@ -272,20 +262,15 @@ function AboutPage() {
             </h2>
 
             <p className="mt-5 max-w-[570px] text-[16px] leading-relaxed text-muted-foreground">
-              Visit our showroom at Railway Station, along Lumumba Road,
-              Mombasa. Prefer to speak first? Call or WhatsApp us and we will
-              help you plan your visit.
+              Visit our showroom at Railway Station, along Lumumba Road, Mombasa. Prefer to speak
+              first? Call or WhatsApp us and we will help you plan your visit.
             </p>
           </div>
 
           <div className="lg:text-right">
-            <p className="text-sm font-semibold text-muted-foreground">
-              SHOWROOM
-            </p>
+            <p className="text-sm font-semibold text-muted-foreground">SHOWROOM</p>
 
-            <p className="mt-2 text-xl font-bold">
-              {company.addressOneLine}
-            </p>
+            <p className="mt-2 text-xl font-bold">{company.addressOneLine}</p>
 
             <div className="mt-6 flex flex-wrap gap-3 lg:justify-end">
               <Button variant="outline" asChild>
@@ -314,17 +299,13 @@ function AboutPage() {
               </h2>
 
               <p className="mt-4 max-w-[560px] text-[15px] leading-relaxed opacity-85">
-                Browse our current inventory or speak directly with the BESEKI
-                team about what you are looking for.
+                Browse our current inventory or speak directly with the BESEKI team about what you
+                are looking for.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button
-                size="lg"
-                variant="secondary"
-                asChild
-              >
+              <Button size="lg" variant="secondary" asChild>
                 <Link to="/inventory">
                   Browse Inventory
                   <ArrowRight className="ml-2 size-4" aria-hidden="true" />

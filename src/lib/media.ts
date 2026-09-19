@@ -65,9 +65,7 @@ export type ImageSize = keyof typeof imageSizes | "original";
  * environment (for example, Vercel).
  */
 function getSupabaseProjectUrl(): string {
-  const projectUrl = import.meta.env["VITE_SUPABASE_URL"] as
-    | string
-    | undefined;
+  const projectUrl = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
 
   if (!projectUrl) {
     console.error(
@@ -100,22 +98,15 @@ function normalizeMediaPath(path: string): string {
   normalized = normalized.replace(/^\/+/, "");
 
   // Remove the old API media prefix.
-  normalized = normalized.replace(
-    /^api\/public\/media\//i,
-    "",
-  );
+  normalized = normalized.replace(/^api\/public\/media\//i, "");
 
   // Also handle the original form if it somehow survived
   // the leading-slash normalization.
-  normalized = normalized.replace(
-    /^\/api\/public\/media\//i,
-    "",
-  );
+  normalized = normalized.replace(/^\/api\/public\/media\//i, "");
 
   // Remove Supabase Storage public URL if a URL was stored
   // in the path field accidentally.
-  const supabaseStoragePattern =
-    /\/storage\/v1\/object\/public\/media\/(.+)$/i;
+  const supabaseStoragePattern = /\/storage\/v1\/object\/public\/media\/(.+)$/i;
 
   const supabaseMatch = normalized.match(supabaseStoragePattern);
 
@@ -156,10 +147,7 @@ function encodeStoragePath(path: string): string {
  *
  * https://PROJECT.supabase.co/storage/v1/object/public/media/vehicles/toyota-prado.jpg
  */
-export function mediaUrl(
-  path: string,
-  size: ImageSize = "card",
-): string {
+export function mediaUrl(path: string, size: ImageSize = "card"): string {
   if (!path) return "";
 
   const trimmedPath = path.trim();
@@ -182,9 +170,7 @@ export function mediaUrl(
 
   const encodedPath = encodeStoragePath(cleanPath);
 
-  const url =
-    `${projectUrl}/storage/v1/object/public/` +
-    `${MEDIA_BUCKET}/${encodedPath}`;
+  const url = `${projectUrl}/storage/v1/object/public/` + `${MEDIA_BUCKET}/${encodedPath}`;
 
   /**
    * Supabase Storage itself does not support the custom
@@ -247,9 +233,7 @@ export function mediaSrcSet(path: string): string {
  * Reads the dimensions of an uploaded image before it is
  * stored in the media library.
  */
-function readDimensions(
-  file: File,
-): Promise<{
+function readDimensions(file: File): Promise<{
   width: number | null;
   height: number | null;
 }> {
@@ -336,14 +320,11 @@ export async function uploadMedia(
   /**
    * Upload to Supabase Storage.
    */
-  const { error: uploadError } = await supabase.storage
-    .from(MEDIA_BUCKET)
-    .upload(path, file, {
-      cacheControl: "31536000",
-      contentType:
-        file.type || "application/octet-stream",
-      upsert: false,
-    });
+  const { error: uploadError } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
+    cacheControl: "31536000",
+    contentType: file.type || "application/octet-stream",
+    upsert: false,
+  });
 
   if (uploadError) {
     throw uploadError;
@@ -364,9 +345,7 @@ export async function uploadMedia(
     const publicUrl = mediaUrl(path, "original");
 
     if (!publicUrl) {
-      throw new Error(
-        "Unable to generate the public media URL. Check VITE_SUPABASE_URL.",
-      );
+      throw new Error("Unable to generate the public media URL. Check VITE_SUPABASE_URL.");
     }
 
     /**
@@ -379,8 +358,7 @@ export async function uploadMedia(
         path,
         url: publicUrl,
         file_name: file.name,
-        mime_type:
-          file.type || "application/octet-stream",
+        mime_type: file.type || "application/octet-stream",
         size_bytes: file.size,
         width: dims.width,
         height: dims.height,
@@ -402,9 +380,7 @@ export async function uploadMedia(
      * remove the Storage file so we don't leave orphaned
      * files behind.
      */
-    await supabase.storage
-      .from(MEDIA_BUCKET)
-      .remove([path]);
+    await supabase.storage.from(MEDIA_BUCKET).remove([path]);
 
     throw error;
   }
@@ -415,9 +391,7 @@ export async function uploadMedia(
  * 1. the media-library database record
  * 2. the physical Supabase Storage file
  */
-export async function deleteMedia(
-  record: Pick<MediaRecord, "id" | "path">,
-): Promise<void> {
+export async function deleteMedia(record: Pick<MediaRecord, "id" | "path">): Promise<void> {
   if (!record.id) {
     throw new Error("Media record ID is required.");
   }
@@ -429,10 +403,7 @@ export async function deleteMedia(
   /**
    * Delete the database record first.
    */
-  const { error: databaseError } = await supabase
-    .from("media")
-    .delete()
-    .eq("id", record.id);
+  const { error: databaseError } = await supabase.from("media").delete().eq("id", record.id);
 
   if (databaseError) {
     throw databaseError;
@@ -441,9 +412,7 @@ export async function deleteMedia(
   /**
    * Then remove the actual Storage object.
    */
-  const { error: storageError } = await supabase.storage
-    .from(MEDIA_BUCKET)
-    .remove([record.path]);
+  const { error: storageError } = await supabase.storage.from(MEDIA_BUCKET).remove([record.path]);
 
   if (storageError) {
     console.error(
@@ -466,15 +435,10 @@ export function formatBytes(bytes: number): string {
   let value = bytes;
   let index = 0;
 
-  while (
-    value >= 1024 &&
-    index < units.length - 1
-  ) {
+  while (value >= 1024 && index < units.length - 1) {
     value /= 1024;
     index += 1;
   }
 
-  return `${value.toFixed(
-    value >= 10 || index === 0 ? 0 : 1,
-  )} ${units[index]}`;
+  return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
 }

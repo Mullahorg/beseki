@@ -23,10 +23,23 @@ export const Route = createFileRoute("/_authenticated/admin/faqs")({
             name: "category",
             label: "Category",
             type: "select",
-            options: ["General", "Buying", "Financing", "Imports", "Trade-in", "Warranty", "After-sales"],
+            options: [
+              "General",
+              "Buying",
+              "Financing",
+              "Imports",
+              "Trade-in",
+              "Warranty",
+              "After-sales",
+            ],
           },
           { name: "position", label: "Sort order", type: "number" },
-          { name: "status", label: "Status", type: "status", options: ["draft", "published", "archived"] },
+          {
+            name: "status",
+            label: "Status",
+            type: "status",
+            options: ["draft", "published", "archived"],
+          },
         ],
       }}
     />

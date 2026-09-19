@@ -36,8 +36,7 @@ export interface InventorySearch {
   sort?: string | undefined;
 }
 
-const str = (v: unknown) =>
-  typeof v === "string" && v ? v : undefined;
+const str = (v: unknown) => (typeof v === "string" && v ? v : undefined);
 
 export const Route = createFileRoute("/inventory/")({
   validateSearch: (search: Record<string, unknown>): InventorySearch => ({
@@ -142,18 +141,12 @@ function InventoryPage() {
     });
   };
 
-  const activeFilterCount = Object.values(filters).filter(
-    (value) => value,
-  ).length;
+  const activeFilterCount = Object.values(filters).filter((value) => value).length;
 
   const results = useMemo(() => {
-    const priceBand = priceBands.find(
-      (band) => band.label === filters.price,
-    );
+    const priceBand = priceBands.find((band) => band.label === filters.price);
 
-    const mileageBand = mileageBands.find(
-      (band) => band.label === filters.mileage,
-    );
+    const mileageBand = mileageBands.find((band) => band.label === filters.mileage);
 
     const q = filters.q.trim().toLowerCase();
 
@@ -169,68 +162,42 @@ function InventoryPage() {
         return false;
       }
 
-      if (
-        filters.make &&
-        vehicle.make !== filters.make
-      ) {
+      if (filters.make && vehicle.make !== filters.make) {
         return false;
       }
 
-      if (
-        filters.model &&
-        vehicle.model !== filters.model
-      ) {
+      if (filters.model && vehicle.model !== filters.model) {
         return false;
       }
 
-      if (
-        priceBand &&
-        (vehicle.price < priceBand.min ||
-          vehicle.price >= priceBand.max)
-      ) {
+      if (priceBand && (vehicle.price < priceBand.min || vehicle.price >= priceBand.max)) {
         return false;
       }
 
       if (
         mileageBand &&
-        (vehicle.mileage < mileageBand.min ||
-          vehicle.mileage >= mileageBand.max)
+        (vehicle.mileage < mileageBand.min || vehicle.mileage >= mileageBand.max)
       ) {
         return false;
       }
 
-      if (
-        filters.year &&
-        vehicle.year < Number(filters.year)
-      ) {
+      if (filters.year && vehicle.year < Number(filters.year)) {
         return false;
       }
 
-      if (
-        filters.transmission &&
-        vehicle.transmission !== filters.transmission
-      ) {
+      if (filters.transmission && vehicle.transmission !== filters.transmission) {
         return false;
       }
 
-      if (
-        filters.fuel &&
-        vehicle.fuel !== filters.fuel
-      ) {
+      if (filters.fuel && vehicle.fuel !== filters.fuel) {
         return false;
       }
 
-      if (
-        filters.bodyType &&
-        vehicle.bodyType !== filters.bodyType
-      ) {
+      if (filters.bodyType && vehicle.bodyType !== filters.bodyType) {
         return false;
       }
 
-      if (
-        filters.condition &&
-        vehicle.condition !== filters.condition
-      ) {
+      if (filters.condition && vehicle.condition !== filters.condition) {
         return false;
       }
 
@@ -248,11 +215,7 @@ function InventoryPage() {
     } else if (sort === "mileage") {
       sorted.sort((a, b) => a.mileage - b.mileage);
     } else {
-      sorted.sort(
-        (a, b) =>
-          Number(b.featured) - Number(a.featured) ||
-          b.year - a.year,
-      );
+      sorted.sort((a, b) => Number(b.featured) - Number(a.featured) || b.year - a.year);
     }
 
     return sorted;
@@ -279,33 +242,24 @@ function InventoryPage() {
 
               <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
                 Find the right car.
-                <span className="block text-muted-foreground">
-                  Take your time.
-                </span>
+                <span className="block text-muted-foreground">Take your time.</span>
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-                Explore vehicles available at our Mombasa yard along
-                Lumumba Road. Search by what matters to you, compare
-                your options, then come and see the car in person.
+                Explore vehicles available at our Mombasa yard along Lumumba Road. Search by what
+                matters to you, compare your options, then come and see the car in person.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link to="/contact">
                   <Button size="lg">
                     Visit the showroom
-                    <ArrowRight
-                      className="size-4"
-                      aria-hidden="true"
-                    />
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </Button>
                 </Link>
 
                 <a href="#vehicle-results">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                  >
+                  <Button variant="outline" size="lg">
                     Browse vehicles
                   </Button>
                 </a>
@@ -318,24 +272,19 @@ function InventoryPage() {
               </p>
 
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Use the filters to narrow down the selection by
-                price, make, mileage, year and more.
+                Use the filters to narrow down the selection by price, make, mileage, year and more.
               </p>
 
               <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-border pt-5">
                 <div>
-                  <p className="text-2xl font-semibold tracking-tight">
-                    {vehicles.length}
-                  </p>
+                  <p className="text-2xl font-semibold tracking-tight">{vehicles.length}</p>
                   <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">
                     Vehicles listed
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-2xl font-semibold tracking-tight">
-                    Mombasa
-                  </p>
+                  <p className="text-2xl font-semibold tracking-tight">Mombasa</p>
                   <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">
                     Showroom
                   </p>
@@ -375,15 +324,10 @@ function InventoryPage() {
             <Button
               variant="outline"
               className="h-12 lg:min-w-[150px]"
-              onClick={() =>
-                setFiltersOpen((open) => !open)
-              }
+              onClick={() => setFiltersOpen((open) => !open)}
               aria-expanded={filtersOpen}
             >
-              <SlidersHorizontal
-                className="size-4"
-                aria-hidden="true"
-              />
+              <SlidersHorizontal className="size-4" aria-hidden="true" />
               Filters
               {activeFilterCount > 0 ? (
                 <span className="ml-1 inline-flex size-5 items-center justify-center bg-primary text-[10px] font-bold text-primary-foreground">
@@ -399,25 +343,15 @@ function InventoryPage() {
       {/* RESULTS */}
       {/* ------------------------------------------------------------------ */}
 
-      <section
-        id="vehicle-results"
-        className="container-page py-10 md:py-14"
-      >
+      <section id="vehicle-results" className="container-page py-10 md:py-14">
         <div className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]">
           {/* FILTERS */}
 
-          <aside
-            className={cn(
-              "lg:block",
-              filtersOpen ? "block" : "hidden",
-            )}
-          >
+          <aside className={cn("lg:block", filtersOpen ? "block" : "hidden")}>
             <div className="lg:sticky lg:top-28">
               <div className="mb-5 flex items-center justify-between lg:hidden">
                 <div>
-                  <p className="text-sm font-semibold">
-                    Refine your search
-                  </p>
+                  <p className="text-sm font-semibold">Refine your search</p>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {results.length} matching vehicles
                   </p>
@@ -449,10 +383,7 @@ function InventoryPage() {
             <div className="mb-7 flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold">
-                  {results.length}{" "}
-                  {results.length === 1
-                    ? "vehicle"
-                    : "vehicles"}
+                  {results.length} {results.length === 1 ? "vehicle" : "vehicles"}
                 </p>
 
                 {activeFilterCount > 0 ? (
@@ -471,10 +402,7 @@ function InventoryPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <label
-                  htmlFor="sort"
-                  className="text-xs font-medium text-muted-foreground"
-                >
+                <label htmlFor="sort" className="text-xs font-medium text-muted-foreground">
                   Sort
                 </label>
 
@@ -486,9 +414,7 @@ function InventoryPage() {
                       setVisible(PAGE_SIZE);
 
                       navigate({
-                        search: (
-                          prev: InventorySearch,
-                        ) => ({
+                        search: (prev: InventorySearch) => ({
                           ...prev,
                           sort: event.target.value,
                         }),
@@ -496,21 +422,11 @@ function InventoryPage() {
                     }}
                     className="h-10 min-w-[175px] appearance-none border border-input bg-background px-3 pr-9 text-sm outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/20"
                   >
-                    <option value="newest">
-                      Featured & newest
-                    </option>
-                    <option value="price-asc">
-                      Price: low to high
-                    </option>
-                    <option value="price-desc">
-                      Price: high to low
-                    </option>
-                    <option value="year">
-                      Newest year
-                    </option>
-                    <option value="mileage">
-                      Lowest mileage
-                    </option>
+                    <option value="newest">Featured & newest</option>
+                    <option value="price-asc">Price: low to high</option>
+                    <option value="price-desc">Price: high to low</option>
+                    <option value="year">Newest year</option>
+                    <option value="mileage">Lowest mileage</option>
                   </select>
 
                   <ChevronDown
@@ -523,10 +439,7 @@ function InventoryPage() {
 
             {results.length === 0 ? (
               <div className="border border-border bg-muted/20 px-6 py-16 md:px-10">
-                <EmptyState
-                  actionLabel="Clear Filters"
-                  onAction={clearFilters}
-                />
+                <EmptyState actionLabel="Clear Filters" onAction={clearFilters} />
               </div>
             ) : (
               <>
@@ -534,22 +447,14 @@ function InventoryPage() {
 
                 {filters.q ? (
                   <div className="mb-6 flex items-center gap-2 text-sm">
-                    <span className="text-muted-foreground">
-                      Results for
-                    </span>
-                    <span className="font-semibold">
-                      “{filters.q}”
-                    </span>
+                    <span className="text-muted-foreground">Results for</span>
+                    <span className="font-semibold">“{filters.q}”</span>
                   </div>
                 ) : null}
 
                 <div className="grid gap-x-5 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
                   {shown.map((vehicle, index) => (
-                    <VehicleCard
-                      key={vehicle.id}
-                      vehicle={vehicle}
-                      priority={index < 3}
-                    />
+                    <VehicleCard key={vehicle.id} vehicle={vehicle} priority={index < 3} />
                   ))}
                 </div>
 
@@ -558,33 +463,21 @@ function InventoryPage() {
                 {visible < results.length ? (
                   <div className="mt-14 flex flex-col items-center border-t border-border pt-8">
                     <p className="mb-4 text-xs text-muted-foreground">
-                      Showing {shown.length} of{" "}
-                      {results.length} vehicles
+                      Showing {shown.length} of {results.length} vehicles
                     </p>
 
                     <Button
                       variant="outline"
                       size="lg"
-                      onClick={() =>
-                        setVisible(
-                          (current) =>
-                            current + PAGE_SIZE,
-                        )
-                      }
+                      onClick={() => setVisible((current) => current + PAGE_SIZE)}
                     >
                       Load more vehicles
-                      <ArrowDown
-                        className="size-4"
-                        aria-hidden="true"
-                      />
+                      <ArrowDown className="size-4" aria-hidden="true" />
                     </Button>
                   </div>
                 ) : results.length > PAGE_SIZE ? (
                   <div className="mt-14 flex items-center justify-center gap-2 border-t border-border pt-8 text-xs text-muted-foreground">
-                    <Check
-                      className="size-4"
-                      aria-hidden="true"
-                    />
+                    <Check className="size-4" aria-hidden="true" />
                     You've reached the end of the inventory.
                   </div>
                 ) : null}
@@ -614,58 +507,43 @@ function InventoryPage() {
               </h2>
 
               <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground md:text-base">
-                Tell us what you need, your budget and how you
-                intend to use the vehicle. Our team can help you
-                narrow down the options before you visit.
+                Tell us what you need, your budget and how you intend to use the vehicle. Our team
+                can help you narrow down the options before you visit.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/contact">
                   <Button>
                     Talk to our team
-                    <ArrowRight
-                      className="size-4"
-                      aria-hidden="true"
-                    />
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </Button>
                 </Link>
 
                 <Link to="/financing">
-                  <Button variant="outline">
-                    Explore financing
-                  </Button>
+                  <Button variant="outline">Explore financing</Button>
                 </Link>
               </div>
             </div>
 
             <div className="grid border-y border-border sm:grid-cols-3 sm:border-y-0 sm:border-l">
               <div className="border-b border-border p-5 sm:border-b-0 sm:border-r">
-                <p className="text-sm font-semibold">
-                  See it first
-                </p>
+                <p className="text-sm font-semibold">See it first</p>
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                  Arrange a showroom visit and inspect the
-                  vehicle in person.
+                  Arrange a showroom visit and inspect the vehicle in person.
                 </p>
               </div>
 
               <div className="border-b border-border p-5 sm:border-b-0 sm:border-r">
-                <p className="text-sm font-semibold">
-                  Ask questions
-                </p>
+                <p className="text-sm font-semibold">Ask questions</p>
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                  Get clear answers about condition,
-                  specifications and ownership.
+                  Get clear answers about condition, specifications and ownership.
                 </p>
               </div>
 
               <div className="p-5">
-                <p className="text-sm font-semibold">
-                  Make your move
-                </p>
+                <p className="text-sm font-semibold">Make your move</p>
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                  When you're ready, we'll help you take the
-                  next step.
+                  When you're ready, we'll help you take the next step.
                 </p>
               </div>
             </div>
@@ -690,32 +568,20 @@ function InventoryPage() {
               </h2>
 
               <p className="mt-3 max-w-xl text-sm leading-6 text-primary-foreground/80 md:text-base">
-                Come and see it at our showroom along Lumumba
-                Road in Mombasa. We can arrange a viewing or
-                test drive at a convenient time.
+                Come and see it at our showroom along Lumumba Road in Mombasa. We can arrange a
+                viewing or test drive at a convenient time.
               </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
               <Link to="/contact">
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  className="w-full sm:w-auto lg:w-full"
-                >
+                <Button size="lg" variant="secondary" className="w-full sm:w-auto lg:w-full">
                   Schedule a visit
-                  <ArrowRight
-                    className="size-4"
-                    aria-hidden="true"
-                  />
+                  <ArrowRight className="size-4" aria-hidden="true" />
                 </Button>
               </Link>
 
-              <a
-                href="https://wa.me/254721886656"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="https://wa.me/254721886656" target="_blank" rel="noreferrer">
                 <Button
                   size="lg"
                   variant="outline"

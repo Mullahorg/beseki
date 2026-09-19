@@ -23,6 +23,7 @@ import { SiteProvider, fallbackSettings } from "@/lib/site-context";
 import { mediaUrl } from "@/lib/media";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@/components/common/Analytics";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { fontThemeClass } from "@/lib/fonts";
 import { PublicMotion } from "@/components/common/PublicMotion";
 import { CrashReporter } from "@/components/common/CrashReporter";
@@ -103,55 +104,55 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       settings.seoDescription ??
       `${settings.companyName} sells new and locally used motor vehicles in ${settings.address.city}, along ${settings.address.line2.replace(/^Along /, "")}. Browse our stock, book a test drive or talk to us on WhatsApp.`;
     return {
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title },
-      { name: "description", content: description },
-      { property: "og:type", content: "website" },
-      { property: "og:site_name", content: settings.companyName },
-      { name: "twitter:card", content: "summary_large_image" }
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      {
-        rel: "icon",
-        href: settings.faviconPath ? mediaUrl(settings.faviconPath, "thumb") : "/favicon.ico",
-      },
-      {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Instrument+Serif&family=Source+Sans+3:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Barlow:wght@400;500;600;700&family=Bebas+Neue&family=Figtree:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap",
-      },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "AutoDealer",
-          name: settings.companyName,
-          description: settings.tagline,
-          telephone: settings.phoneTel,
-          email: settings.email,
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: `${settings.address.line1}, ${settings.address.line2}`,
-            addressLocality: settings.address.city,
-            addressCountry: "KE",
-            postOfficeBoxNumber: settings.address.postal,
-          },
-          areaServed: `${settings.address.city}, ${settings.address.country}`,
-        }),
-      },
-    ],
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title },
+        { name: "description", content: description },
+        { property: "og:type", content: "website" },
+        { property: "og:site_name", content: settings.companyName },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: [
+        {
+          rel: "stylesheet",
+          href: appCss,
+        },
+        {
+          rel: "icon",
+          href: settings.faviconPath ? mediaUrl(settings.faviconPath, "thumb") : "/favicon.ico",
+        },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Instrument+Serif&family=Source+Sans+3:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Barlow:wght@400;500;600;700&family=Bebas+Neue&family=Figtree:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap",
+        },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "AutoDealer",
+            name: settings.companyName,
+            description: settings.tagline,
+            telephone: settings.phoneTel,
+            email: settings.email,
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: `${settings.address.line1}, ${settings.address.line2}`,
+              addressLocality: settings.address.city,
+              addressCountry: "KE",
+              postOfficeBoxNumber: settings.address.postal,
+            },
+            areaServed: `${settings.address.city}, ${settings.address.country}`,
+          }),
+        },
+      ],
     };
   },
   shellComponent: RootShell,
@@ -168,6 +169,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
+        <VercelAnalytics />
         <Scripts />
       </body>
     </html>
@@ -183,33 +185,32 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <SiteProvider content={content}>
-      <VehiclesProvider vehicles={vehicles}>
-      <CompareProvider>
-        <PublicMotion />
-        <Analytics />
-        <CrashReporter />
-        {bare ? (
-          <div className={fontThemeClass(content?.settings.fontTheme)}>
-            <Outlet />
-          </div>
-        ) : (
-          <div className={fontThemeClass(content?.settings.fontTheme)}>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">
-                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <VehiclesProvider vehicles={vehicles}>
+          <CompareProvider>
+            <PublicMotion />
+            <Analytics />
+            <CrashReporter />
+            {bare ? (
+              <div className={fontThemeClass(content?.settings.fontTheme)}>
                 <Outlet />
-              </main>
-              <Footer />
-            </div>
-            <FloatingActions />
-          </div>
-        )}
-        <Toaster position="top-center" richColors />
-      </CompareProvider>
-      </VehiclesProvider>
+              </div>
+            ) : (
+              <div className={fontThemeClass(content?.settings.fontTheme)}>
+                <div className="flex min-h-screen flex-col">
+                  <Header />
+                  <main className="flex-1">
+                    {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                    <Outlet />
+                  </main>
+                  <Footer />
+                </div>
+                <FloatingActions />
+              </div>
+            )}
+            <Toaster position="top-center" richColors />
+          </CompareProvider>
+        </VehiclesProvider>
       </SiteProvider>
     </QueryClientProvider>
   );
 }
-

@@ -92,7 +92,12 @@ export function SelectInput({
       {...props}
       aria-invalid={invalid || undefined}
       aria-describedby={invalid ? `${props.id}-error` : undefined}
-      className={cn(controlBase, "appearance-none pr-8", invalid && "border-destructive", className)}
+      className={cn(
+        controlBase,
+        "appearance-none pr-8",
+        invalid && "border-destructive",
+        className,
+      )}
     >
       {children}
     </select>
@@ -108,7 +113,11 @@ export const validators = {
   phone: (v: string) =>
     /^[0-9+\s()-]{9,}$/.test(v.trim()) ? "" : "Enter a valid phone number, e.g. 0721 886656.",
   email: (v: string, optional = false) =>
-    !v.trim() && optional ? "" : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? "" : "Enter a valid email address.",
+    !v.trim() && optional
+      ? ""
+      : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+        ? ""
+        : "Enter a valid email address.",
 };
 
 export type SubmitState = "idle" | "loading" | "success" | "error";
@@ -174,7 +183,15 @@ export function useEnquiry(type: string) {
   return { state, submit, reset: () => setState("idle") };
 }
 
-export function FormSuccess({ title, message, onReset }: { title: string; message: string; onReset: () => void }) {
+export function FormSuccess({
+  title,
+  message,
+  onReset,
+}: {
+  title: string;
+  message: string;
+  onReset: () => void;
+}) {
   return (
     <div className="rounded-lg border border-brand-blue/30 bg-brand-blue/5 p-6">
       <h3 className="text-lg font-semibold">{title}</h3>

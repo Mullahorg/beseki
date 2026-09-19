@@ -21,8 +21,7 @@ export const Route = createFileRoute("/warranty")({
       },
       {
         property: "og:description",
-        content:
-          "Ask our Mombasa team about the warranty terms for a specific vehicle.",
+        content: "Ask our Mombasa team about the warranty terms for a specific vehicle.",
       },
       { property: "og:url", content: "/warranty" },
     ],
@@ -43,15 +42,13 @@ function WarrantyPage() {
 
             <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-6xl">
               Buying the car is
-              <span className="block text-brand-red">
-                only part of the relationship.
-              </span>
+              <span className="block text-brand-red">only part of the relationship.</span>
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Warranty coverage differs from one vehicle to the next. We
-              believe you should know exactly what applies to the car you are
-              considering rather than rely on a generic promise.
+              Warranty coverage differs from one vehicle to the next. We believe you should know
+              exactly what applies to the car you are considering rather than rely on a generic
+              promise.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -60,11 +57,7 @@ function WarrantyPage() {
               </Button>
 
               <Button size="lg" variant="outline" asChild>
-                <a
-                  href={whatsappLink(waMessages.general)}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={whatsappLink(waMessages.general)} target="_blank" rel="noreferrer">
                   <WhatsAppIcon className="size-4 text-whatsapp" />
                   WhatsApp Us
                 </a>
@@ -85,12 +78,10 @@ function WarrantyPage() {
 
             <div className="absolute inset-x-6 bottom-6 rounded-xl border bg-background/95 p-6 backdrop-blur-sm md:inset-x-8 md:bottom-8">
               <p className="eyebrow">Our approach</p>
-              <h2 className="mt-2 text-xl font-bold">
-                Clear information. Real support.
-              </h2>
+              <h2 className="mt-2 text-xl font-bold">Clear information. Real support.</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                If you have a question about warranty coverage, servicing,
-                paperwork or an issue after purchase, speak to our team.
+                If you have a question about warranty coverage, servicing, paperwork or an issue
+                after purchase, speak to our team.
               </p>
             </div>
           </div>
@@ -104,18 +95,15 @@ function WarrantyPage() {
             <p className="eyebrow">Warranty coverage</p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
               We explain what
-              <span className="block text-muted-foreground">
-                actually applies.
-              </span>
+              <span className="block text-muted-foreground">actually applies.</span>
             </h2>
           </div>
 
           <div className="space-y-8">
             <p className="max-w-3xl text-[16px] leading-relaxed">
-              Warranty terms can depend on the individual vehicle, its
-              condition, age, mileage and the terms agreed at the time of
-              purchase. That is why we do not publish a blanket coverage
-              period that may not apply to every vehicle.
+              Warranty terms can depend on the individual vehicle, its condition, age, mileage and
+              the terms agreed at the time of purchase. That is why we do not publish a blanket
+              coverage period that may not apply to every vehicle.
             </p>
 
             <div className="grid gap-8 sm:grid-cols-2">
@@ -157,9 +145,7 @@ function WarrantyPage() {
               <p className="eyebrow">After-sales support</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
                 We stay reachable
-                <span className="block text-muted-foreground">
-                  after the handover.
-                </span>
+                <span className="block text-muted-foreground">after the handover.</span>
               </h2>
             </div>
 
@@ -186,13 +172,8 @@ function WarrantyPage() {
                   text: "If you notice a warning light, unusual issue or anything you are unsure about, contact us before assuming what the problem is.",
                 },
               ].map((item) => (
-                <div
-                  key={item.number}
-                  className="grid gap-4 py-7 sm:grid-cols-[70px_1fr] sm:gap-6"
-                >
-                  <span className="text-sm font-bold text-brand-red">
-                    {item.number}
-                  </span>
+                <div key={item.number} className="grid gap-4 py-7 sm:grid-cols-[70px_1fr] sm:gap-6">
+                  <span className="text-sm font-bold text-brand-red">{item.number}</span>
 
                   <div>
                     <h3 className="text-lg font-bold">{item.title}</h3>
@@ -208,10 +189,7 @@ function WarrantyPage() {
       </section>
 
       {/* Enquiry */}
-      <section
-        id="warranty-enquiry"
-        className="scroll-mt-28 border-b bg-background"
-      >
+      <section id="warranty-enquiry" className="scroll-mt-28 border-b bg-background">
         <div className="container-page py-16 md:py-24">
           <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
             <div className="max-w-xl">
@@ -222,9 +200,8 @@ function WarrantyPage() {
               </h2>
 
               <p className="mt-4 text-[15.5px] leading-relaxed text-muted-foreground">
-                Send us the vehicle details and your question. Our team will
-                review the enquiry and come back with the applicable
-                information.
+                Send us the vehicle details and your question. Our team will review the enquiry and
+                come back with the applicable information.
               </p>
 
               <div className="mt-8 border-t pt-6">
@@ -232,17 +209,11 @@ function WarrantyPage() {
 
                 <div className="mt-4 flex flex-wrap gap-3">
                   <Button size="lg" variant="secondary" asChild>
-                    <a href={`tel:${company.phoneTel}`}>
-                      Call {company.phoneDisplay}
-                    </a>
+                    <a href={`tel:${company.phoneTel}`}>Call {company.phoneDisplay}</a>
                   </Button>
 
                   <Button size="lg" variant="outline" asChild>
-                    <a
-                      href={whatsappLink(waMessages.general)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <a href={whatsappLink(waMessages.general)} target="_blank" rel="noreferrer">
                       <WhatsAppIcon className="size-4 text-whatsapp" />
                       WhatsApp Us
                     </a>
@@ -252,13 +223,11 @@ function WarrantyPage() {
             </div>
 
             <div className="rounded-2xl border bg-card p-6 md:p-10">
-              <h3 className="text-xl font-bold">
-                Send a warranty enquiry
-              </h3>
+              <h3 className="text-xl font-bold">Send a warranty enquiry</h3>
 
               <p className="mt-2 text-[14.5px] leading-relaxed text-muted-foreground">
-                Include the make, model, registration or stock reference if
-                available, and your question about the warranty.
+                Include the make, model, registration or stock reference if available, and your
+                question about the warranty.
               </p>
 
               <div className="mt-7">
@@ -277,21 +246,14 @@ function WarrantyPage() {
               Looking for your next vehicle?
             </p>
 
-            <h2 className="mt-2 text-2xl font-bold md:text-3xl">
-              Explore the BESEKI inventory.
-            </h2>
+            <h2 className="mt-2 text-2xl font-bold md:text-3xl">Explore the BESEKI inventory.</h2>
 
             <p className="mt-2 text-sm text-white/80">
               Find a vehicle, compare your options and speak with our team.
             </p>
           </div>
 
-          <Button
-            size="lg"
-            variant="secondary"
-            asChild
-            className="w-full md:w-auto"
-          >
+          <Button size="lg" variant="secondary" asChild className="w-full md:w-auto">
             <Link to="/inventory">Browse Inventory</Link>
           </Button>
         </div>

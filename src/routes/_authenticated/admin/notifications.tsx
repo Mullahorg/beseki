@@ -59,7 +59,10 @@ const COLUMNS =
 const table = () =>
   supabase.from("notification_settings") as never as {
     select: (c: string) => {
-      eq: (c: string, v: boolean) => {
+      eq: (
+        c: string,
+        v: boolean,
+      ) => {
         maybeSingle: () => Promise<{ data: Settings | null; error: { message: string } | null }>;
       };
     };
@@ -126,13 +129,20 @@ function NotificationsPage() {
     queryKey: ["admin", "notification-log"],
     retry: 1,
     queryFn: async (): Promise<LogRow[]> => {
-      const { data, error } = await (supabase.from("notification_log") as never as {
-        select: (c: string) => {
-          order: (c: string, o: { ascending: boolean }) => {
-            limit: (n: number) => Promise<{ data: LogRow[] | null; error: { message: string } | null }>;
+      const { data, error } = await (
+        supabase.from("notification_log") as never as {
+          select: (c: string) => {
+            order: (
+              c: string,
+              o: { ascending: boolean },
+            ) => {
+              limit: (
+                n: number,
+              ) => Promise<{ data: LogRow[] | null; error: { message: string } | null }>;
+            };
           };
-        };
-      })
+        }
+      )
         .select("id,channel,kind,target,status,detail,created_at")
         .order("created_at", { ascending: false })
         .limit(25);
@@ -257,7 +267,11 @@ function NotificationsPage() {
                   onChange={(e) => set("resend_api_key", e.target.value)}
                 />
               </Field>
-              <Field label="Sender address" htmlFor="resend-from" hint="Must use a domain verified in Resend.">
+              <Field
+                label="Sender address"
+                htmlFor="resend-from"
+                hint="Must use a domain verified in Resend."
+              >
                 <TextInput
                   id="resend-from"
                   placeholder="BESEKI Alerts <alerts@yourdomain.com>"
@@ -292,7 +306,11 @@ function NotificationsPage() {
             </div>
 
             <div className="mt-5 flex flex-wrap gap-2">
-              <Button variant="outline" onClick={() => void test("email")} disabled={testing !== null}>
+              <Button
+                variant="outline"
+                onClick={() => void test("email")}
+                disabled={testing !== null}
+              >
                 {testing === "email" ? (
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />
                 ) : (
@@ -300,7 +318,9 @@ function NotificationsPage() {
                 )}
                 Send test email
               </Button>
-              <span className="self-center text-xs text-admin-muted">Save your changes before testing.</span>
+              <span className="self-center text-xs text-admin-muted">
+                Save your changes before testing.
+              </span>
             </div>
           </AdminCard>
 
@@ -310,8 +330,8 @@ function NotificationsPage() {
               <h2 className="text-base font-semibold">Telegram</h2>
             </div>
             <p className="mt-1 text-sm text-admin-muted">
-              Message @BotFather on Telegram to create a bot and copy its token. Then send your bot a
-              message and paste your chat ID below — failures are reported there within seconds.
+              Message @BotFather on Telegram to create a bot and copy its token. Then send your bot
+              a message and paste your chat ID below — failures are reported there within seconds.
             </p>
 
             <div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -325,7 +345,11 @@ function NotificationsPage() {
                   onChange={(e) => set("telegram_bot_token", e.target.value)}
                 />
               </Field>
-              <Field label="Chat ID" htmlFor="tg-chat" hint="Your personal chat, or a group the bot is in.">
+              <Field
+                label="Chat ID"
+                htmlFor="tg-chat"
+                hint="Your personal chat, or a group the bot is in."
+              >
                 <TextInput
                   id="tg-chat"
                   placeholder="-1001234567890"
@@ -336,7 +360,11 @@ function NotificationsPage() {
             </div>
 
             <div className="mt-5 flex flex-wrap gap-2">
-              <Button variant="outline" onClick={() => void test("telegram")} disabled={testing !== null}>
+              <Button
+                variant="outline"
+                onClick={() => void test("telegram")}
+                disabled={testing !== null}
+              >
                 {testing === "telegram" ? (
                   <Loader2 className="size-4 animate-spin" aria-hidden="true" />
                 ) : (
@@ -344,7 +372,9 @@ function NotificationsPage() {
                 )}
                 Send test message
               </Button>
-              <span className="self-center text-xs text-admin-muted">Save your changes before testing.</span>
+              <span className="self-center text-xs text-admin-muted">
+                Save your changes before testing.
+              </span>
             </div>
           </AdminCard>
 
@@ -374,9 +404,13 @@ function NotificationsPage() {
                     <span className="min-w-0 text-admin-foreground">
                       <span className="font-medium capitalize">{row.channel}</span>{" "}
                       <span className="capitalize text-admin-muted">{row.kind}</span>
-                      {row.target ? <span className="text-admin-muted"> · {row.target}</span> : null}
+                      {row.target ? (
+                        <span className="text-admin-muted"> · {row.target}</span>
+                      ) : null}
                       {row.detail ? (
-                        <span className="block truncate text-xs text-admin-muted">{row.detail}</span>
+                        <span className="block truncate text-xs text-admin-muted">
+                          {row.detail}
+                        </span>
                       ) : null}
                     </span>
                     <span className="flex shrink-0 items-center gap-3">

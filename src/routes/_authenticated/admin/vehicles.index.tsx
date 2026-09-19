@@ -26,12 +26,17 @@ function VehiclesAdmin() {
     queryFn: async () => {
       let q = supabase
         .from("vehicles")
-        .select("id,slug,make,model,variant,year,price,mileage,availability,published,featured,archived,image_urls")
+        .select(
+          "id,slug,make,model,variant,year,price,mileage,availability,published,featured,archived,image_urls",
+        )
         .eq("archived", view === "archived")
         .order("created_at", { ascending: false })
         .limit(300);
       if (availability !== "all") q = q.eq("availability", availability);
-      if (search.trim()) q = q.or(`make.ilike.%${search.trim()}%,model.ilike.%${search.trim()}%,slug.ilike.%${search.trim()}%`);
+      if (search.trim())
+        q = q.or(
+          `make.ilike.%${search.trim()}%,model.ilike.%${search.trim()}%,slug.ilike.%${search.trim()}%`,
+        );
       const { data, error } = await q;
       if (error) throw error;
       return data ?? [];
@@ -74,7 +79,11 @@ function VehiclesAdmin() {
           />
         </div>
         <div className="w-44">
-          <SelectInput value={availability} aria-label="Availability" onChange={(e) => setAvailability(e.target.value)}>
+          <SelectInput
+            value={availability}
+            aria-label="Availability"
+            onChange={(e) => setAvailability(e.target.value)}
+          >
             <option value="all">All availability</option>
             {["Available", "Reserved", "Sold", "Incoming"].map((a) => (
               <option key={a} value={a}>
@@ -131,7 +140,10 @@ function VehiclesAdmin() {
             </thead>
             <tbody>
               {list.data.map((v) => (
-                <tr key={v.id} className="border-b border-admin-line transition-colors hover:bg-admin-surface last:border-0">
+                <tr
+                  key={v.id}
+                  className="border-b border-admin-line transition-colors hover:bg-admin-surface last:border-0"
+                >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {v.image_urls?.[0] ? (
@@ -167,7 +179,9 @@ function VehiclesAdmin() {
                       onClick={() => patch.mutate({ id: v.id, values: { featured: !v.featured } })}
                       className="rounded p-2 hover:bg-accent"
                     >
-                      <Star className={cn("size-4", v.featured && "fill-amber-400 text-amber-500")} />
+                      <Star
+                        className={cn("size-4", v.featured && "fill-amber-400 text-amber-500")}
+                      />
                     </button>
                     <Link
                       to="/admin/vehicles/$id"

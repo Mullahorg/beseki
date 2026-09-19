@@ -21,7 +21,12 @@ export const Route = createFileRoute("/_authenticated/admin/blog")({
           { name: "title", label: "Title", required: true },
           { name: "slug", label: "Slug", required: true },
           { name: "excerpt", label: "Excerpt", type: "textarea" },
-          { name: "body", label: "Article", type: "textarea", hint: "Plain paragraphs; blank line starts a new one." },
+          {
+            name: "body",
+            label: "Article",
+            type: "textarea",
+            hint: "Plain paragraphs; blank line starts a new one.",
+          },
           {
             name: "category",
             label: "Category",
@@ -32,7 +37,12 @@ export const Route = createFileRoute("/_authenticated/admin/blog")({
           { name: "published_at", label: "Publish date", type: "date" },
           { name: "seo_title", label: "SEO title" },
           { name: "seo_description", label: "SEO description", type: "textarea" },
-          { name: "status", label: "Status", type: "status", options: ["draft", "published", "archived"] },
+          {
+            name: "status",
+            label: "Status",
+            type: "status",
+            options: ["draft", "published", "archived"],
+          },
         ],
       }}
     />

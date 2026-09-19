@@ -20,7 +20,9 @@ export function RoleGate({ allow, children }: { allow: StaffRole[]; children: Re
     return (
       <div className="flex flex-col items-center rounded-lg border border-dashed border-admin-line bg-admin-panel px-6 py-16 text-center">
         <Lock className="size-6 text-admin-muted" aria-hidden="true" />
-        <h1 className="mt-4 text-lg font-semibold text-admin-foreground">Not available for your role</h1>
+        <h1 className="mt-4 text-lg font-semibold text-admin-foreground">
+          Not available for your role
+        </h1>
         <p className="mt-2 max-w-sm text-sm text-admin-muted">
           This section is reserved for other roles. Ask an administrator if you need access.
         </p>

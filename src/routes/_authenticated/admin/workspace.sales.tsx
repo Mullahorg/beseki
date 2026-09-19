@@ -50,7 +50,9 @@ function SalesDesk() {
     queryFn: async (): Promise<Lead[]> => {
       const { data, error } = await supabase
         .from("enquiries")
-        .select("id,type,name,phone,email,subject,message,vehicle_slug,status,preferred_at,created_at")
+        .select(
+          "id,type,name,phone,email,subject,message,vehicle_slug,status,preferred_at,created_at",
+        )
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -83,15 +85,21 @@ function SalesDesk() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         <AdminCard>
-          <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">Open enquiries</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">
+            Open enquiries
+          </p>
           <p className="mt-3 text-3xl font-bold">{stats.open}</p>
         </AdminCard>
         <AdminCard>
-          <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">Came in today</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">
+            Came in today
+          </p>
           <p className="mt-3 text-3xl font-bold">{stats.today}</p>
         </AdminCard>
         <AdminCard>
-          <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">Test drives & bookings</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">
+            Test drives & bookings
+          </p>
           <p className="mt-3 text-3xl font-bold">{stats.appointments}</p>
         </AdminCard>
       </div>
@@ -112,7 +120,10 @@ function SalesDesk() {
           </div>
         ) : stats.rows.length === 0 ? (
           <div className="mt-5">
-            <AdminEmpty title="Nothing waiting" message="New customer enquiries will appear here." />
+            <AdminEmpty
+              title="Nothing waiting"
+              message="New customer enquiries will appear here."
+            />
           </div>
         ) : (
           <ul className="mt-5 space-y-3">
@@ -123,7 +134,9 @@ function SalesDesk() {
               >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="truncate text-sm font-semibold text-admin-foreground">{lead.name}</p>
+                    <p className="truncate text-sm font-semibold text-admin-foreground">
+                      {lead.name}
+                    </p>
                     <StatusPill status={lead.status} />
                   </div>
                   <p className="mt-1 truncate text-xs text-admin-muted">
@@ -163,11 +176,21 @@ function SalesDesk() {
           <h2 className="text-base font-semibold">Shortcuts</h2>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          <Button asChild variant="outline" size="sm"><Link to="/admin/appointments">Appointments</Link></Button>
-          <Button asChild variant="outline" size="sm"><Link to="/admin/financing">Financing requests</Link></Button>
-          <Button asChild variant="outline" size="sm"><Link to="/admin/trade-ins">Trade-ins</Link></Button>
-          <Button asChild variant="outline" size="sm"><Link to="/admin/tools/financing">Financing calculator</Link></Button>
-          <Button asChild variant="outline" size="sm"><Link to="/admin/vehicles">Vehicle stock</Link></Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/appointments">Appointments</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/financing">Financing requests</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/trade-ins">Trade-ins</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/tools/financing">Financing calculator</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/vehicles">Vehicle stock</Link>
+          </Button>
         </div>
       </AdminCard>
     </RoleGate>

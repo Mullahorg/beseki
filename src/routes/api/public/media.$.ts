@@ -32,7 +32,8 @@ export const Route = createFileRoute("/api/public/media/$")({
         const mime = record.mime_type ?? "";
         // SVG, GIF and non-image files are streamed as-is; the rest can be resized.
         const transformable = /^image\/(jpeg|png|webp|avif)$/.test(mime);
-        const width = transformable && [160, 640, 1024, 1600].includes(requested) ? requested : null;
+        const width =
+          transformable && [160, 640, 1024, 1600].includes(requested) ? requested : null;
 
         const original = `${url}/storage/v1/object/authenticated/media/${path}`;
         const headers = { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` };
@@ -52,11 +53,11 @@ export const Route = createFileRoute("/api/public/media/$")({
         return new Response(upstream.body, {
           status: 200,
           headers: {
-            "Content-Type": upstream.headers.get("content-type") ?? (mime || "application/octet-stream"),
+            "Content-Type":
+              upstream.headers.get("content-type") ?? (mime || "application/octet-stream"),
             "Cache-Control": "public, max-age=31536000, immutable",
           },
         });
-
       },
     },
   },

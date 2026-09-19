@@ -4,7 +4,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
 import { AdminCard, AdminHeader } from "@/components/admin/AdminShell";
-import { AdminEmpty, AdminError, AdminLoading, Saving, StatusPill } from "@/components/admin/AdminBits";
+import {
+  AdminEmpty,
+  AdminError,
+  AdminLoading,
+  Saving,
+  StatusPill,
+} from "@/components/admin/AdminBits";
 import { MediaUploader } from "@/components/admin/MediaUploader";
 import { Field, TextInput, TextArea, SelectInput } from "@/components/forms/FormKit";
 import { Button } from "@/components/ui/button";
@@ -15,17 +21,29 @@ export const Route = createFileRoute("/_authenticated/admin/galleries")({
   component: Galleries,
 });
 
-const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 function Galleries() {
   const qc = useQueryClient();
   const [openId, setOpenId] = useState<string | null>(null);
-  const [draft, setDraft] = useState<{ title: string; slug: string; description: string; status: string } | null>(null);
+  const [draft, setDraft] = useState<{
+    title: string;
+    slug: string;
+    description: string;
+    status: string;
+  } | null>(null);
 
   const list = useQuery({
     queryKey: ["admin", "galleries"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("galleries").select("*").order("position", { ascending: true });
+      const { data, error } = await supabase
+        .from("galleries")
+        .select("*")
+        .order("position", { ascending: true });
       if (error) throw error;
       return data ?? [];
     },
@@ -75,7 +93,9 @@ function Galleries() {
         title="Galleries"
         description="Grouped photo sets such as showroom, deliveries and events."
         action={
-          <Button onClick={() => setDraft({ title: "", slug: "", description: "", status: "draft" })}>
+          <Button
+            onClick={() => setDraft({ title: "", slug: "", description: "", status: "draft" })}
+          >
             <Plus className="size-4" aria-hidden="true" /> New gallery
           </Button>
         }
@@ -91,13 +111,25 @@ function Galleries() {
             }}
           >
             <Field label="Title" htmlFor="g-title" required>
-              <TextInput id="g-title" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
+              <TextInput
+                id="g-title"
+                value={draft.title}
+                onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+              />
             </Field>
             <Field label="Address" htmlFor="g-slug">
-              <TextInput id="g-slug" value={draft.slug} onChange={(e) => setDraft({ ...draft, slug: slugify(e.target.value) })} />
+              <TextInput
+                id="g-slug"
+                value={draft.slug}
+                onChange={(e) => setDraft({ ...draft, slug: slugify(e.target.value) })}
+              />
             </Field>
             <Field label="Description" htmlFor="g-desc" className="md:col-span-2">
-              <TextArea id="g-desc" value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
+              <TextArea
+                id="g-desc"
+                value={draft.description}
+                onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+              />
             </Field>
             <div className="md:col-span-2 flex gap-3">
               <Button type="submit" disabled={create.isPending}>
@@ -126,7 +158,9 @@ function Galleries() {
                   <h2 className="text-base font-bold">{g.title}</h2>
                   <StatusPill status={g.status} />
                 </div>
-                <p className="mt-1 text-sm text-muted-foreground">{g.description || `/${g.slug}`}</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {g.description || `/${g.slug}`}
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-36">
@@ -140,7 +174,11 @@ function Galleries() {
                     ))}
                   </SelectInput>
                 </div>
-                <Button variant="outline" size="sm" onClick={() => setOpenId(openId === g.id ? null : g.id)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setOpenId(openId === g.id ? null : g.id)}
+                >
                   {openId === g.id ? "Close" : "Photos"}
                 </Button>
                 <button
@@ -185,7 +223,9 @@ function GalleryItems({ galleryId }: { galleryId: string }) {
       const start = items.data?.length ?? 0;
       const { error } = await supabase
         .from("gallery_items")
-        .insert(records.map((m, i) => ({ gallery_id: galleryId, media_id: m.id, position: start + i })));
+        .insert(
+          records.map((m, i) => ({ gallery_id: galleryId, media_id: m.id, position: start + i })),
+        );
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: key }),

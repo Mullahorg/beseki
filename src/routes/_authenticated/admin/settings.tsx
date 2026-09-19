@@ -23,7 +23,11 @@ function Settings() {
   const settings = useQuery({
     queryKey: ["admin", "site_settings"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("site_settings").select("*").eq("id", true).maybeSingle();
+      const { data, error } = await supabase
+        .from("site_settings")
+        .select("*")
+        .eq("id", true)
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -76,7 +80,11 @@ function Settings() {
             {text("company_name", "Company name")}
             {text("short_name", "Short name")}
             <Field label="Tagline" htmlFor="tagline">
-              <TextArea id="tagline" value={form["tagline"] ?? ""} onChange={(e) => set("tagline", e.target.value)} />
+              <TextArea
+                id="tagline"
+                value={form["tagline"] ?? ""}
+                onChange={(e) => set("tagline", e.target.value)}
+              />
             </Field>
           </div>
         </AdminCard>
@@ -107,13 +115,25 @@ function Settings() {
           <h2 className="mb-4 text-base font-bold">Branding</h2>
           <div className="grid gap-5">
             <Field label="Logo" htmlFor="logo">
-              <MediaPicker value={form["logo_media_id"] ?? null} onChange={(v) => set("logo_media_id", v)} category="Branding" />
+              <MediaPicker
+                value={form["logo_media_id"] ?? null}
+                onChange={(v) => set("logo_media_id", v)}
+                category="Branding"
+              />
             </Field>
             <Field label="Favicon" htmlFor="favicon">
-              <MediaPicker value={form["favicon_media_id"] ?? null} onChange={(v) => set("favicon_media_id", v)} category="Branding" />
+              <MediaPicker
+                value={form["favicon_media_id"] ?? null}
+                onChange={(v) => set("favicon_media_id", v)}
+                category="Branding"
+              />
             </Field>
             <Field label="Social share image" htmlFor="og">
-              <MediaPicker value={form["og_media_id"] ?? null} onChange={(v) => set("og_media_id", v)} category="Branding" />
+              <MediaPicker
+                value={form["og_media_id"] ?? null}
+                onChange={(v) => set("og_media_id", v)}
+                category="Branding"
+              />
             </Field>
           </div>
         </AdminCard>
@@ -145,14 +165,16 @@ function Settings() {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-sm font-semibold">{theme.label}</span>
-                    {active ? <span className="text-xs font-semibold text-primary">Selected</span> : null}
+                    {active ? (
+                      <span className="text-xs font-semibold text-primary">Selected</span>
+                    ) : null}
                   </div>
                   <p className="mt-1 text-xs text-admin-muted">{theme.description}</p>
-                  <div className={`${fontThemeClass(theme.value)} mt-4 rounded-md bg-admin-panel p-3`}>
+                  <div
+                    className={`${fontThemeClass(theme.value)} mt-4 rounded-md bg-admin-panel p-3`}
+                  >
                     <p className="font-display text-lg leading-tight">BESEKI Motors</p>
-                    <p className="mt-1 text-sm text-admin-muted">
-                      Quality cars, honest advice.
-                    </p>
+                    <p className="mt-1 text-sm text-admin-muted">Quality cars, honest advice.</p>
                   </div>
                 </button>
               );
@@ -199,21 +221,26 @@ function Settings() {
         <AdminCard className="lg:col-span-2">
           <h2 className="mb-1 text-base font-bold">WhatsApp messages</h2>
           <p className="mb-4 text-sm text-muted-foreground">
-            The text pre-filled when a customer taps a WhatsApp button. Placeholders like {"{vehicle}"} are replaced
-            automatically.
+            The text pre-filled when a customer taps a WhatsApp button. Placeholders like{" "}
+            {"{vehicle}"} are replaced automatically.
           </p>
           <div className="grid gap-5 md:grid-cols-2">
-            {Object.entries((form["whatsapp_templates"] ?? {}) as Record<string, string>).map(([key, value]) => (
-              <Field key={key} label={key.replace(/_/g, " ")} htmlFor={`wa-${key}`}>
-                <TextArea
-                  id={`wa-${key}`}
-                  value={value}
-                  onChange={(e) =>
-                    set("whatsapp_templates", { ...(form["whatsapp_templates"] ?? {}), [key]: e.target.value })
-                  }
-                />
-              </Field>
-            ))}
+            {Object.entries((form["whatsapp_templates"] ?? {}) as Record<string, string>).map(
+              ([key, value]) => (
+                <Field key={key} label={key.replace(/_/g, " ")} htmlFor={`wa-${key}`}>
+                  <TextArea
+                    id={`wa-${key}`}
+                    value={value}
+                    onChange={(e) =>
+                      set("whatsapp_templates", {
+                        ...(form["whatsapp_templates"] ?? {}),
+                        [key]: e.target.value,
+                      })
+                    }
+                  />
+                </Field>
+              ),
+            )}
           </div>
         </AdminCard>
       </div>

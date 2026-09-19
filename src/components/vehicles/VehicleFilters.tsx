@@ -13,7 +13,6 @@ import {
   type BodyType,
 } from "@/data/vehicles";
 
-
 export interface FilterState {
   q: string;
   make: string;
@@ -61,7 +60,12 @@ function Select({
       <label htmlFor={id} className="block text-[13px] font-medium">
         {label}
       </label>
-      <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className={selectClass}>
+      <select
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={selectClass}
+      >
         <option value="">Any</option>
         {options.map((o) => (
           <option key={o.value} value={o.value}>
@@ -88,9 +92,10 @@ export function VehicleFilters({
   const makes = makesOf(vehicles);
   const years = yearsOf(vehicles);
   const models = [
-    ...new Set(vehicles.filter((v) => !filters.make || v.make === filters.make).map((v) => v.model)),
+    ...new Set(
+      vehicles.filter((v) => !filters.make || v.make === filters.make).map((v) => v.model),
+    ),
   ].sort();
-
 
   const active = Object.entries(filters).filter(([, v]) => v);
 

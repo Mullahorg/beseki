@@ -13,7 +13,13 @@ export const Route = createFileRoute("/_authenticated/admin/workspace/marketing"
   component: MarketingDesk,
 });
 
-type Ev = { session_id: string; event_type: string; path: string; label: string | null; referrer: string | null };
+type Ev = {
+  session_id: string;
+  event_type: string;
+  path: string;
+  label: string | null;
+  referrer: string | null;
+};
 
 const RANGES = [
   { label: "7 days", days: 7 },
@@ -36,13 +42,20 @@ function MarketingDesk() {
     queryKey: ["admin", "marketing", days],
     queryFn: async (): Promise<Ev[]> => {
       const since = new Date(Date.now() - days * 86_400_000).toISOString();
-      const { data, error } = await (supabase.from("analytics_events") as never as {
-        select: (c: string) => {
-          gte: (c: string, v: string) => {
-            limit: (n: number) => Promise<{ data: Ev[] | null; error: { message: string } | null }>;
+      const { data, error } = await (
+        supabase.from("analytics_events") as never as {
+          select: (c: string) => {
+            gte: (
+              c: string,
+              v: string,
+            ) => {
+              limit: (
+                n: number,
+              ) => Promise<{ data: Ev[] | null; error: { message: string } | null }>;
+            };
           };
-        };
-      })
+        }
+      )
         .select("session_id,event_type,path,label,referrer")
         .gte("created_at", since)
         .limit(5000);
@@ -104,15 +117,21 @@ function MarketingDesk() {
         <>
           <div className="grid gap-4 sm:grid-cols-3">
             <AdminCard>
-              <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">Visits</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">
+                Visits
+              </p>
               <p className="mt-3 text-3xl font-bold">{stats.sessions}</p>
             </AdminCard>
             <AdminCard>
-              <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">Enquiries</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">
+                Enquiries
+              </p>
               <p className="mt-3 text-3xl font-bold">{stats.conversions}</p>
             </AdminCard>
             <AdminCard>
-              <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">Conversion rate</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-admin-muted">
+                Conversion rate
+              </p>
               <p className="mt-3 text-3xl font-bold">{stats.rate}%</p>
             </AdminCard>
           </div>
@@ -171,11 +190,21 @@ function MarketingDesk() {
           <h2 className="text-base font-semibold">Publish something</h2>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          <Button asChild variant="outline" size="sm"><Link to="/admin/blog">Write an article</Link></Button>
-          <Button asChild variant="outline" size="sm"><Link to="/admin/homepage">Homepage sections</Link></Button>
-          <Button asChild variant="outline" size="sm"><Link to="/admin/testimonials">Customer reviews</Link></Button>
-          <Button asChild variant="outline" size="sm"><Link to="/admin/galleries">Photo galleries</Link></Button>
-          <Button asChild variant="outline" size="sm"><Link to="/admin/media">Media library</Link></Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/blog">Write an article</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/homepage">Homepage sections</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/testimonials">Customer reviews</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/galleries">Photo galleries</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/admin/media">Media library</Link>
+          </Button>
         </div>
       </AdminCard>
     </RoleGate>

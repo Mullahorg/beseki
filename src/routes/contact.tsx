@@ -1,12 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  CalendarDays,
-  Clock3,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, Clock3, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
 import { ContactForm, AppointmentForm } from "@/components/forms/Forms";
@@ -31,8 +24,7 @@ export const Route = createFileRoute("/contact")({
       },
       {
         property: "og:description",
-        content:
-          "Find us on Lumumba Road, Mombasa. Send an enquiry or book a showroom visit.",
+        content: "Find us on Lumumba Road, Mombasa. Send an enquiry or book a showroom visit.",
       },
       { property: "og:url", content: "/contact" },
     ],
@@ -57,9 +49,9 @@ function ContactPage() {
               </h1>
 
               <p className="mt-6 max-w-[600px] text-[17px] leading-relaxed text-muted-foreground md:text-[18px]">
-                Visit our showroom in Mombasa, send us an enquiry, or arrange
-                a time that works for you. If you already know which vehicle
-                you want to see, tell us and we will have it ready.
+                Visit our showroom in Mombasa, send us an enquiry, or arrange a time that works for
+                you. If you already know which vehicle you want to see, tell us and we will have it
+                ready.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -71,15 +63,8 @@ function ContactPage() {
                 </Button>
 
                 <Button size="lg" variant="outline" asChild>
-                  <a
-                    href={whatsappLink(waMessages.general)}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <WhatsAppIcon
-                      className="mr-2 size-4 text-whatsapp"
-                      aria-hidden="true"
-                    />
+                  <a href={whatsappLink(waMessages.general)} target="_blank" rel="noreferrer">
+                    <WhatsAppIcon className="mr-2 size-4 text-whatsapp" aria-hidden="true" />
                     WhatsApp Us
                   </a>
                 </Button>
@@ -103,9 +88,7 @@ function ContactPage() {
 
               <div className="mt-7 h-px w-16 bg-primary" />
 
-              <p className="mt-6 text-sm font-medium">
-                Prefer to speak first?
-              </p>
+              <p className="mt-6 text-sm font-medium">Prefer to speak first?</p>
 
               <a
                 href={`tel:${company.phoneTel}`}
@@ -131,10 +114,7 @@ function ContactPage() {
 
             <div className="mt-10 border-t">
               <div className="flex gap-4 border-b py-6">
-                <MapPin
-                  className="mt-0.5 size-5 shrink-0 text-primary"
-                  aria-hidden="true"
-                />
+                <MapPin className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
 
                 <div>
                   <p className="font-semibold">Showroom</p>
@@ -152,10 +132,7 @@ function ContactPage() {
               </div>
 
               <div className="flex gap-4 border-b py-6">
-                <Phone
-                  className="mt-0.5 size-5 shrink-0 text-primary"
-                  aria-hidden="true"
-                />
+                <Phone className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
 
                 <div>
                   <p className="font-semibold">Phone & WhatsApp</p>
@@ -179,10 +156,7 @@ function ContactPage() {
               </div>
 
               <div className="flex gap-4 border-b py-6">
-                <Mail
-                  className="mt-0.5 size-5 shrink-0 text-primary"
-                  aria-hidden="true"
-                />
+                <Mail className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
 
                 <div className="min-w-0">
                   <p className="font-semibold">Email</p>
@@ -200,10 +174,7 @@ function ContactPage() {
             {/* HOURS */}
             <div className="mt-10">
               <div className="flex items-center gap-2">
-                <Clock3
-                  className="size-4 text-primary"
-                  aria-hidden="true"
-                />
+                <Clock3 className="size-4 text-primary" aria-hidden="true" />
                 <p className="eyebrow">Opening hours</p>
               </div>
 
@@ -220,27 +191,20 @@ function ContactPage() {
               </dl>
 
               <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                Please confirm hours by phone before travelling a long
-                distance.
+                Please confirm hours by phone before travelling a long distance.
               </p>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" variant="secondary" asChild>
-                <a
-                  href={company.mapDirectionsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={company.mapDirectionsUrl} target="_blank" rel="noreferrer">
                   <MapPin className="mr-2 size-4" aria-hidden="true" />
                   Get Directions
                 </a>
               </Button>
 
               <Button size="lg" variant="outline" asChild>
-                <a
-                  href={`tel:${company.phoneTel}`}
-                >
+                <a href={`tel:${company.phoneTel}`}>
                   <Phone className="mr-2 size-4" aria-hidden="true" />
                   Call Us
                 </a>
@@ -253,14 +217,11 @@ function ContactPage() {
             <div className="border-t border-foreground pt-6">
               <p className="eyebrow">Send an enquiry</p>
 
-              <h2 className="mt-3 text-2xl font-bold md:text-[32px]">
-                Tell us what you need.
-              </h2>
+              <h2 className="mt-3 text-2xl font-bold md:text-[32px]">Tell us what you need.</h2>
 
               <p className="mt-3 max-w-[580px] text-[15px] leading-relaxed text-muted-foreground">
-                Looking for a particular vehicle, arranging a viewing or just
-                have a question? Send the details and the BESEKI team will get
-                back to you.
+                Looking for a particular vehicle, arranging a viewing or just have a question? Send
+                the details and the BESEKI team will get back to you.
               </p>
 
               <div className="mt-8">
@@ -272,17 +233,12 @@ function ContactPage() {
       </Section>
 
       {/* MAP */}
-      <section
-        aria-label="Showroom location map"
-        className="border-y bg-muted"
-      >
+      <section aria-label="Showroom location map" className="border-y bg-muted">
         <div className="container-page py-6 md:py-8">
           <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
             <div>
               <p className="eyebrow">Our location</p>
-              <h2 className="mt-2 text-2xl font-bold">
-                Find BESEKI on Lumumba Road.
-              </h2>
+              <h2 className="mt-2 text-2xl font-bold">Find BESEKI on Lumumba Road.</h2>
             </div>
 
             <a
@@ -309,17 +265,11 @@ function ContactPage() {
 
       {/* APPOINTMENT */}
       <Section tone="muted">
-        <div
-          id="book"
-          className="scroll-mt-28"
-        >
+        <div id="book" className="scroll-mt-28">
           <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
             <div>
               <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <CalendarDays
-                  className="size-5"
-                  aria-hidden="true"
-                />
+                <CalendarDays className="size-5" aria-hidden="true" />
               </div>
 
               <p className="eyebrow mt-7">Appointments</p>
@@ -329,19 +279,16 @@ function ContactPage() {
               </h2>
 
               <p className="mt-5 max-w-[430px] text-[15px] leading-relaxed text-muted-foreground">
-                Schedule a showroom visit, test drive or video call. If you
-                are coming to view a specific vehicle, include it in your
-                request so our team can prepare.
+                Schedule a showroom visit, test drive or video call. If you are coming to view a
+                specific vehicle, include it in your request so our team can prepare.
               </p>
 
               <div className="mt-7 border-t pt-5">
-                <p className="text-sm font-semibold">
-                  Not sure what you want yet?
-                </p>
+                <p className="text-sm font-semibold">Not sure what you want yet?</p>
 
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  That is fine. Tell us what you are looking for and we can
-                  help you narrow down your options.
+                  That is fine. Tell us what you are looking for and we can help you narrow down
+                  your options.
                 </p>
               </div>
             </div>
@@ -381,15 +328,8 @@ function ContactPage() {
                 className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
-                <a
-                  href={whatsappLink(waMessages.general)}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <WhatsAppIcon
-                    className="mr-2 size-4"
-                    aria-hidden="true"
-                  />
+                <a href={whatsappLink(waMessages.general)} target="_blank" rel="noreferrer">
+                  <WhatsAppIcon className="mr-2 size-4" aria-hidden="true" />
                   WhatsApp Us
                 </a>
               </Button>

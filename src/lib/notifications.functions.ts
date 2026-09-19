@@ -43,7 +43,13 @@ async function loadSettings(db: Admin): Promise<Settings | null> {
 
 async function log(
   db: Admin,
-  row: { channel: string; kind: string; target?: string | null; status: string; detail?: string | null },
+  row: {
+    channel: string;
+    kind: string;
+    target?: string | null;
+    status: string;
+    detail?: string | null;
+  },
 ) {
   try {
     await db.from("notification_log").insert({
@@ -59,10 +65,7 @@ async function log(
 }
 
 function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 async function sendEmail(
@@ -74,7 +77,8 @@ async function sendEmail(
   lines: string[],
 ): Promise<boolean> {
   const recipients = to.map((t) => t.trim()).filter((t) => t.includes("@"));
-  if (!s.email_enabled || !s.resend_api_key || !s.resend_from || recipients.length === 0) return false;
+  if (!s.email_enabled || !s.resend_api_key || !s.resend_from || recipients.length === 0)
+    return false;
 
   const html = `<div style="font-family:Helvetica,Arial,sans-serif;font-size:15px;color:#111">
     <h2 style="margin:0 0 12px">${escapeHtml(subject)}</h2>
@@ -163,15 +167,17 @@ async function recentlyAlerted(db: Admin, kind: string, minutes: number): Promis
 
 /** Alert the sales team that a customer enquiry just came in. */
 export const notifyNewLead = createServerFn({ method: "POST" })
-  .inputValidator((input: {
-    type: string;
-    name: string;
-    phone: string;
-    email?: string | null;
-    vehicle?: string | null;
-    source?: string | null;
-    message?: string | null;
-  }) => input)
+  .inputValidator(
+    (input: {
+      type: string;
+      name: string;
+      phone: string;
+      email?: string | null;
+      vehicle?: string | null;
+      source?: string | null;
+      message?: string | null;
+    }) => input,
+  )
   .handler(async ({ data }) => {
     try {
       const db = await admin();
@@ -212,7 +218,9 @@ export const notifyNewLead = createServerFn({ method: "POST" })
 
 /** Alert the Super Admin on Telegram (and email) when the site hits a failure. */
 export const reportFailure = createServerFn({ method: "POST" })
-  .inputValidator((input: { message: string; path?: string | null; detail?: string | null }) => input)
+  .inputValidator(
+    (input: { message: string; path?: string | null; detail?: string | null }) => input,
+  )
   .handler(async ({ data }) => {
     try {
       const db = await admin();
@@ -273,13 +281,21 @@ export const sendTestAlert = createServerFn({ method: "POST" })
         "This is a test alert from your BESEKI workspace.",
         "If you can read this, email alerts are working.",
       ]);
-      if (!ok) throw new Error("Resend did not accept the message. Check the key and sender address.");
+      if (!ok)
+        throw new Error("Resend did not accept the message. Check the key and sender address.");
       return { ok: true };
     }
 
     if (!s.telegram_enabled) throw new Error("Telegram alerts are switched off");
-    if (!s.telegram_bot_token || !s.telegram_chat_id) throw new Error("Add the bot token and chat ID first");
-    const ok = await sendTelegram(db, s, "test", "✅ <b>BESEKI test alert</b>\nTelegram alerts are working.");
-    if (!ok) throw new Error("Telegram did not accept the message. Check the bot token and chat ID.");
+    if (!s.telegram_bot_token || !s.telegram_chat_id)
+      throw new Error("Add the bot token and chat ID first");
+    const ok = await sendTelegram(
+      db,
+      s,
+      "test",
+      "✅ <b>BESEKI test alert</b>\nTelegram alerts are working.",
+    );
+    if (!ok)
+      throw new Error("Telegram did not accept the message. Check the bot token and chat ID.");
     return { ok: true };
   });

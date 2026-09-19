@@ -32,9 +32,11 @@ async function record(event_type: EventType, path: string, label?: string) {
   if (typeof window === "undefined") return;
   if (path.startsWith("/admin") || path.startsWith("/auth")) return;
   try {
-    await (supabase.from("analytics_events") as never as {
-      insert: (row: Record<string, unknown>) => Promise<unknown>;
-    }).insert({
+    await (
+      supabase.from("analytics_events") as never as {
+        insert: (row: Record<string, unknown>) => Promise<unknown>;
+      }
+    ).insert({
       session_id: sessionId(),
       event_type,
       path,
@@ -63,9 +65,5 @@ export function trackConversion(label: string, path?: string) {
 
 /** Record a meaningful interaction such as a WhatsApp or call tap. */
 export function trackClick(label: string) {
-  void record(
-    "click",
-    typeof window !== "undefined" ? window.location.pathname : "/",
-    label,
-  );
+  void record("click", typeof window !== "undefined" ? window.location.pathname : "/", label);
 }

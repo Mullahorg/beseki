@@ -1,10 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  Check,
-  ChevronRight,
-  ShieldCheck,
-} from "lucide-react";
+import { ArrowRight, Check, ChevronRight, ShieldCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useSettings } from "@/lib/site-context";
@@ -99,26 +94,20 @@ function PrivacyPolicyPage() {
               </h1>
 
               <p className="mt-5 max-w-2xl text-[16px] leading-7 text-muted-foreground md:text-[17px]">
-                How we handle the information you share with us through the
-                BESEKI website.
+                How we handle the information you share with us through the BESEKI website.
               </p>
             </div>
 
             <div className="border-t pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
               <div className="flex items-start gap-3">
-                <ShieldCheck
-                  className="mt-0.5 size-5 shrink-0 text-primary"
-                  aria-hidden="true"
-                />
+                <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
 
                 <div>
-                  <p className="text-sm font-bold">
-                    Your information matters.
-                  </p>
+                  <p className="text-sm font-bold">Your information matters.</p>
 
                   <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
-                    We aim to keep the information we collect limited to what
-                    is needed to communicate with you and provide our services.
+                    We aim to keep the information we collect limited to what is needed to
+                    communicate with you and provide our services.
                   </p>
                 </div>
               </div>
@@ -177,16 +166,11 @@ function PrivacyPolicyPage() {
                     className="flex items-center justify-between border bg-background px-4 py-3 text-sm font-medium transition-colors hover:bg-muted"
                   >
                     <span>
-                      <span className="mr-2 text-xs font-bold text-primary">
-                        {section.number}
-                      </span>
+                      <span className="mr-2 text-xs font-bold text-primary">{section.number}</span>
                       {section.heading}
                     </span>
 
-                    <ChevronRight
-                      className="size-4 text-muted-foreground"
-                      aria-hidden="true"
-                    />
+                    <ChevronRight className="size-4 text-muted-foreground" aria-hidden="true" />
                   </a>
                 ))}
               </div>
@@ -196,11 +180,10 @@ function PrivacyPolicyPage() {
             <article className="max-w-3xl">
               <div className="mb-10 border-b pb-8">
                 <p className="text-sm leading-7 text-muted-foreground">
-                  This policy explains how BESEKI COMPANY LIMITED handles
-                  personal information submitted through this website. It
-                  applies to enquiries, appointments, trade-in requests,
-                  financing requests, reviews and other forms submitted through
-                  our online services.
+                  This policy explains how BESEKI COMPANY LIMITED handles personal information
+                  submitted through this website. It applies to enquiries, appointments, trade-in
+                  requests, financing requests, reviews and other forms submitted through our online
+                  services.
                 </p>
               </div>
 
@@ -212,9 +195,7 @@ function PrivacyPolicyPage() {
                     className="scroll-mt-28 border-b py-10 first:pt-0"
                   >
                     <div className="grid gap-5 sm:grid-cols-[52px_1fr]">
-                      <span className="text-sm font-bold text-primary">
-                        {section.number}
-                      </span>
+                      <span className="text-sm font-bold text-primary">{section.number}</span>
 
                       <div>
                         <h2 className="text-[24px] font-bold leading-tight tracking-[-0.015em] md:text-[28px]">
@@ -241,20 +222,15 @@ function PrivacyPolicyPage() {
               <section className="mt-10 border bg-sand p-6 md:p-8">
                 <div className="flex items-start gap-4">
                   <div className="flex size-9 shrink-0 items-center justify-center border bg-background">
-                    <Check
-                      className="size-4 text-primary"
-                      aria-hidden="true"
-                    />
+                    <Check className="size-4 text-primary" aria-hidden="true" />
                   </div>
 
                   <div>
-                    <h2 className="text-[17px] font-bold">
-                      A simple principle
-                    </h2>
+                    <h2 className="text-[17px] font-bold">A simple principle</h2>
 
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                      We aim to collect information that is relevant to the
-                      service you have requested and use it for that purpose.
+                      We aim to collect information that is relevant to the service you have
+                      requested and use it for that purpose.
                     </p>
                   </div>
                 </div>
@@ -269,9 +245,8 @@ function PrivacyPolicyPage() {
                 </h2>
 
                 <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted-foreground">
-                  If you have a question about information you have submitted
-                  to us or want to request a correction or deletion, contact
-                  our team using the details below.
+                  If you have a question about information you have submitted to us or want to
+                  request a correction or deletion, contact our team using the details below.
                 </p>
 
                 <div className="mt-6 border-t">
@@ -280,18 +255,14 @@ function PrivacyPolicyPage() {
                       <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                         Company
                       </p>
-                      <p className="mt-1 text-sm font-semibold">
-                        {company.companyName}
-                      </p>
+                      <p className="mt-1 text-sm font-semibold">{company.companyName}</p>
                     </div>
 
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                         Location
                       </p>
-                      <p className="mt-1 text-sm font-semibold">
-                        {company.addressOneLine}
-                      </p>
+                      <p className="mt-1 text-sm font-semibold">{company.addressOneLine}</p>
                     </div>
                   </div>
 
@@ -339,10 +310,9 @@ function PrivacyPolicyPage() {
               {/* FOOTER NOTE */}
               <div className="mt-12 border-t pt-6">
                 <p className="text-xs leading-5 text-muted-foreground">
-                  This page provides general information about how BESEKI
-                  handles website enquiries. The policy should be reviewed and
-                  updated as your actual data practices, systems and applicable
-                  Kenyan legal requirements evolve.
+                  This page provides general information about how BESEKI handles website enquiries.
+                  The policy should be reviewed and updated as your actual data practices, systems
+                  and applicable Kenyan legal requirements evolve.
                 </p>
               </div>
             </article>

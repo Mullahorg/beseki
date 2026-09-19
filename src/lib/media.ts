@@ -8,6 +8,8 @@ export type MediaCategory =
   | "Team"
   | "Blog"
   | "Homepage"
+  | "Pages"
+  | "Testimonials"
   | "Services"
   | "Branding"
   | "Other";
@@ -18,6 +20,8 @@ export const mediaCategories: MediaCategory[] = [
   "Team",
   "Blog",
   "Homepage",
+  "Pages",
+  "Testimonials",
   "Services",
   "Branding",
   "Other",

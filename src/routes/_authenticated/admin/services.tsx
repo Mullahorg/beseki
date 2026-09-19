@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/admin/services")({
           { name: "summary", label: "Short summary", type: "textarea" },
           { name: "detail", label: "Full description", type: "textarea" },
           { name: "points", label: "Key points", type: "list", hint: "One point per line" },
-          { name: "media_id", label: "Image", type: "media" },
+          { name: "media_id", label: "Image", type: "media", mediaCategory: "Services" },
           { name: "position", label: "Sort order", type: "number" },
           { name: "status", label: "Status", type: "status", options: ["draft", "published", "archived"] },
         ],

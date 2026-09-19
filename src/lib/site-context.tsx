@@ -1,5 +1,11 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
-import type { SiteContent, SiteSettings, NavItem, SectionRecord, CtaRecord } from "@/lib/content.functions";
+import type {
+  SiteContent,
+  SiteSettings,
+  NavItem,
+  SectionRecord,
+  CtaRecord,
+} from "@/lib/content.functions";
 import { company } from "@/data/company";
 import { setActiveSettings } from "@/lib/whatsapp";
 
@@ -38,7 +44,14 @@ const fallbackNav: NavItem[] = [
     { label: "Trade-In", href: "/trade-in" },
     { label: "Services", href: "/services" },
     { label: "About", href: "/about" },
-  ].map((n, i) => ({ id: `p${i}`, menu: "primary", position: i + 1, external: false, isCta: false, ...n })),
+  ].map((n, i) => ({
+    id: `p${i}`,
+    menu: "primary",
+    position: i + 1,
+    external: false,
+    isCta: false,
+    ...n,
+  })),
   ...[
     { label: "Warranty", href: "/warranty" },
     { label: "Team", href: "/team" },
@@ -46,12 +59,26 @@ const fallbackNav: NavItem[] = [
     { label: "Blog", href: "/blog" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
-  ].map((n, i) => ({ id: `m${i}`, menu: "more", position: i + 1, external: false, isCta: false, ...n })),
+  ].map((n, i) => ({
+    id: `m${i}`,
+    menu: "more",
+    position: i + 1,
+    external: false,
+    isCta: false,
+    ...n,
+  })),
   ...[
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Terms & Conditions", href: "/terms" },
     { label: "Refund Policy", href: "/refund-policy" },
-  ].map((n, i) => ({ id: `l${i}`, menu: "legal", position: i + 1, external: false, isCta: false, ...n })),
+  ].map((n, i) => ({
+    id: `l${i}`,
+    menu: "legal",
+    position: i + 1,
+    external: false,
+    isCta: false,
+    ...n,
+  })),
 ];
 
 export const fallbackContent: SiteContent = {
@@ -63,7 +90,13 @@ export const fallbackContent: SiteContent = {
 
 const SiteContext = createContext<SiteContent>(fallbackContent);
 
-export function SiteProvider({ content, children }: { content: SiteContent | null; children: ReactNode }) {
+export function SiteProvider({
+  content,
+  children,
+}: {
+  content: SiteContent | null;
+  children: ReactNode;
+}) {
   const value = content ?? fallbackContent;
   setActiveSettings(value.settings);
   return <SiteContext.Provider value={value}>{children}</SiteContext.Provider>;
@@ -81,7 +114,10 @@ export function useSettings() {
 /** Menu items for one menu, in admin-defined order. */
 export function useNav(menu: "primary" | "more" | "legal"): NavItem[] {
   const { nav } = useContext(SiteContext);
-  return useMemo(() => nav.filter((n) => n.menu === menu).sort((a, b) => a.position - b.position), [nav, menu]);
+  return useMemo(
+    () => nav.filter((n) => n.menu === menu).sort((a, b) => a.position - b.position),
+    [nav, menu],
+  );
 }
 
 /** Homepage sections keyed by section key, enabled ones only. */
@@ -105,7 +141,11 @@ export function sectionValue<T>(section: SectionRecord | undefined, key: string,
   return value === undefined || value === null || value === "" ? fallback : (value as T);
 }
 
-export function sectionText(section: SectionRecord | undefined, field: "heading" | "subheading" | "body", fallback: string) {
+export function sectionText(
+  section: SectionRecord | undefined,
+  field: "heading" | "subheading" | "body",
+  fallback: string,
+) {
   const value = section?.[field];
   return value && value.trim() ? value : fallback;
 }

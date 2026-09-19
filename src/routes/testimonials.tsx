@@ -59,9 +59,8 @@ function TestimonialsPage() {
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-              Every vehicle we sell becomes part of someone's journey. Read
-              what our customers have shared about their experience with
-              BESEKI.
+              Every vehicle we sell becomes part of someone's journey. Read what our customers have
+              shared about their experience with BESEKI.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -91,9 +90,7 @@ function TestimonialsPage() {
                     <span className="text-2xl text-brand-red">★</span>
                   </div>
 
-                  <p className="text-lg font-semibold">
-                    Real experiences.
-                  </p>
+                  <p className="text-lg font-semibold">Real experiences.</p>
 
                   <p className="mt-2 text-sm text-muted-foreground">
                     Genuine customer feedback matters.
@@ -120,24 +117,21 @@ function TestimonialsPage() {
 
           <div className="max-w-2xl">
             <p className="text-base leading-7 text-muted-foreground">
-              At BESEKI, we believe customers deserve clear communication,
-              honest guidance and support throughout their vehicle-buying
-              journey.
+              At BESEKI, we believe customers deserve clear communication, honest guidance and
+              support throughout their vehicle-buying journey.
             </p>
 
             <div className="mt-8 grid gap-0 border-y sm:grid-cols-3">
-              {[
-                "Clear communication",
-                "Vehicle-focused guidance",
-                "Support beyond the sale",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="border-b px-4 py-5 text-sm font-semibold last:border-0 sm:border-b-0 sm:border-r sm:first:pl-0 sm:last:border-r-0"
-                >
-                  {item}
-                </div>
-              ))}
+              {["Clear communication", "Vehicle-focused guidance", "Support beyond the sale"].map(
+                (item) => (
+                  <div
+                    key={item}
+                    className="border-b px-4 py-5 text-sm font-semibold last:border-0 sm:border-b-0 sm:border-r sm:first:pl-0 sm:last:border-r-0"
+                  >
+                    {item}
+                  </div>
+                ),
+              )}
             </div>
           </div>
         </div>
@@ -153,18 +147,14 @@ function TestimonialsPage() {
                   Featured Story
                 </p>
 
-                <div className="mt-5 text-7xl font-serif leading-none text-brand-red/20">
-                  “
-                </div>
+                <div className="mt-5 text-7xl font-serif leading-none text-brand-red/20">“</div>
               </div>
 
               <div className="max-w-4xl">
                 <div className="mb-5 flex items-center gap-1 text-brand-red">
-                  {Array.from({ length: featured.rating ?? 5 }).map(
-                    (_, index) => (
-                      <span key={index}>★</span>
-                    ),
-                  )}
+                  {Array.from({ length: featured.rating ?? 5 }).map((_, index) => (
+                    <span key={index}>★</span>
+                  ))}
                 </div>
 
                 <blockquote className="text-2xl font-medium leading-9 tracking-tight sm:text-3xl sm:leading-10">
@@ -188,9 +178,7 @@ function TestimonialsPage() {
                     <p className="font-semibold">{featured.customerName}</p>
 
                     {featured.vehicle && (
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {featured.vehicle}
-                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">{featured.vehicle}</p>
                     )}
                   </div>
                 </div>
@@ -212,8 +200,7 @@ function TestimonialsPage() {
           </h2>
 
           <p className="mt-4 text-muted-foreground">
-            Genuine feedback from customers who have experienced the BESEKI
-            difference.
+            Genuine feedback from customers who have experienced the BESEKI difference.
           </p>
         </div>
 
@@ -222,11 +209,7 @@ function TestimonialsPage() {
             {remaining.map((testimonial, index) => (
               <div
                 key={testimonial.id}
-                className={
-                  index === 0
-                    ? "md:col-span-2 lg:col-span-2"
-                    : ""
-                }
+                className={index === 0 ? "md:col-span-2 lg:col-span-2" : ""}
               >
                 <TestimonialCard testimonial={testimonial} />
               </div>
@@ -234,12 +217,9 @@ function TestimonialsPage() {
           </div>
         ) : (
           <div className="border-y py-16 text-center">
-            <p className="text-lg font-semibold">
-              Customer stories are coming soon.
-            </p>
+            <p className="text-lg font-semibold">Customer stories are coming soon.</p>
             <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-              Once customers share their experiences with BESEKI, you'll find
-              them here.
+              Once customers share their experiences with BESEKI, you'll find them here.
             </p>
           </div>
         )}
@@ -258,14 +238,12 @@ function TestimonialsPage() {
             </h2>
 
             <p className="mt-5 max-w-md leading-7 text-muted-foreground">
-              We'd love to hear how your experience went. Your feedback helps
-              future customers make a confident decision.
+              We'd love to hear how your experience went. Your feedback helps future customers make
+              a confident decision.
             </p>
 
             <div className="mt-8 border-l-2 border-brand-blue pl-5">
-              <p className="text-sm font-semibold">
-                Reviews are reviewed before publication.
-              </p>
+              <p className="text-sm font-semibold">Reviews are reviewed before publication.</p>
 
               <p className="mt-1 text-sm text-muted-foreground">
                 We value genuine and respectful customer feedback.
@@ -292,8 +270,7 @@ function TestimonialsPage() {
             </h2>
 
             <p className="mt-3 max-w-xl text-sm leading-6 text-white/80">
-              Explore our current inventory or speak directly with our team in
-              Mombasa.
+              Explore our current inventory or speak directly with our team in Mombasa.
             </p>
           </div>
 

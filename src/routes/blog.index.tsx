@@ -63,8 +63,8 @@ function BlogIndexPage() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-                Practical guidance on choosing, financing, importing and looking after a
-                vehicle on the Kenyan coast.
+                Practical guidance on choosing, financing, importing and looking after a vehicle on
+                the Kenyan coast.
               </p>
             </div>
 
@@ -89,7 +89,10 @@ function BlogIndexPage() {
         ) : (
           <>
             {categories.length > 2 && (
-              <nav aria-label="Article categories" className="mb-10 flex flex-wrap gap-2 border-b pb-5">
+              <nav
+                aria-label="Article categories"
+                className="mb-10 flex flex-wrap gap-2 border-b pb-5"
+              >
                 {categories.map((c) => (
                   <button
                     key={c}

@@ -8,7 +8,8 @@ export const Route = createFileRoute("/_authenticated/admin/team")({
         table: "team_members",
         title: "Team",
         singular: "team member",
-        description: "Real people only — publish a member once their details and photo are correct.",
+        description:
+          "Real people only — publish a member once their details and photo are correct.",
         orderBy: { column: "position", ascending: true },
         defaults: { status: "draft", position: 0 },
         columns: [
@@ -25,7 +26,12 @@ export const Route = createFileRoute("/_authenticated/admin/team")({
           { name: "email", label: "Email" },
           { name: "media_id", label: "Photo", type: "media", mediaCategory: "Team" },
           { name: "position", label: "Sort order", type: "number" },
-          { name: "status", label: "Status", type: "status", options: ["draft", "published", "archived"] },
+          {
+            name: "status",
+            label: "Status",
+            type: "status",
+            options: ["draft", "published", "archived"],
+          },
         ],
       }}
     />

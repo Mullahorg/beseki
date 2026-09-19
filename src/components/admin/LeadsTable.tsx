@@ -42,7 +42,11 @@ export function LeadsTable({
   const list = useQuery({
     queryKey: key,
     queryFn: async () => {
-      let q = supabase.from("enquiries").select("*").order("created_at", { ascending: false }).limit(300);
+      let q = supabase
+        .from("enquiries")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(300);
       if (Array.isArray(type)) q = q.in("type", type);
       else if (type) q = q.eq("type", type);
       if (status !== "all") q = q.eq("status", status);
@@ -71,7 +75,11 @@ export function LeadsTable({
         description={description}
         action={
           <div className="w-44">
-            <SelectInput value={status} onChange={(e) => setStatus(e.target.value)} aria-label="Filter by status">
+            <SelectInput
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              aria-label="Filter by status"
+            >
               <option value="all">All statuses</option>
               {leadStatuses.map((s) => (
                 <option key={s} value={s}>
@@ -86,7 +94,10 @@ export function LeadsTable({
       {list.isLoading ? <AdminLoading /> : null}
       {list.isError ? <AdminError /> : null}
       {list.data?.length === 0 ? (
-        <AdminEmpty title="Nothing here yet" message="New enquiries from the website will show up on this page." />
+        <AdminEmpty
+          title="Nothing here yet"
+          message="New enquiries from the website will show up on this page."
+        />
       ) : null}
 
       <div className="space-y-3">
@@ -110,7 +121,11 @@ export function LeadsTable({
                   </p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <a href={`tel:${lead.phone}`} aria-label="Call" className="rounded p-2 hover:bg-accent">
+                  <a
+                    href={`tel:${lead.phone}`}
+                    aria-label="Call"
+                    className="rounded p-2 hover:bg-accent"
+                  >
                     <Phone className="size-4" />
                   </a>
                   <a
@@ -123,11 +138,19 @@ export function LeadsTable({
                     <MessageCircle className="size-4" />
                   </a>
                   {lead.email ? (
-                    <a href={`mailto:${lead.email}`} aria-label="Email" className="rounded p-2 hover:bg-accent">
+                    <a
+                      href={`mailto:${lead.email}`}
+                      aria-label="Email"
+                      className="rounded p-2 hover:bg-accent"
+                    >
                       <Mail className="size-4" />
                     </a>
                   ) : null}
-                  <Button variant="outline" size="sm" onClick={() => setOpenId(open ? null : lead.id)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setOpenId(open ? null : lead.id)}
+                  >
                     {open ? "Close" : "Manage"}
                   </Button>
                 </div>
@@ -154,7 +177,8 @@ export function LeadsTable({
                     ) : null}
                     {Object.entries(details).map(([k, v]) => (
                       <p key={k}>
-                        <span className="text-muted-foreground">{k.replace(/_/g, " ")}:</span> {String(v)}
+                        <span className="text-muted-foreground">{k.replace(/_/g, " ")}:</span>{" "}
+                        {String(v)}
                       </p>
                     ))}
                   </div>
@@ -162,7 +186,9 @@ export function LeadsTable({
                     <SelectInput
                       aria-label="Status"
                       value={lead.status}
-                      onChange={(e) => update.mutate({ id: lead.id, patch: { status: e.target.value } })}
+                      onChange={(e) =>
+                        update.mutate({ id: lead.id, patch: { status: e.target.value } })
+                      }
                     >
                       {leadStatuses.map((s) => (
                         <option key={s} value={s}>

@@ -14,7 +14,9 @@ function useMediaList(search: string) {
     queryFn: async () => {
       let q = supabase
         .from("media")
-        .select("id,path,file_name,alt,category,width,height,size_bytes,url,caption,mime_type,created_at")
+        .select(
+          "id,path,file_name,alt,category,width,height,size_bytes,url,caption,mime_type,created_at",
+        )
         .order("created_at", { ascending: false })
         .limit(60);
       if (search.trim()) q = q.ilike("file_name", `%${search.trim()}%`);
@@ -43,7 +45,11 @@ export function MediaPicker({
     queryKey: ["admin", "media-one", value],
     enabled: Boolean(value),
     queryFn: async () => {
-      const { data, error } = await supabase.from("media").select("*").eq("id", value!).maybeSingle();
+      const { data, error } = await supabase
+        .from("media")
+        .select("*")
+        .eq("id", value!)
+        .maybeSingle();
       if (error) throw error;
       return data as MediaRecord | null;
     },
@@ -53,7 +59,7 @@ export function MediaPicker({
     <div className="flex items-center gap-3">
       {selected.data ? (
         <div className="relative">
-           <PickerImage record={selected.data} className="size-20 rounded-md border object-cover" />
+          <PickerImage record={selected.data} className="size-20 rounded-md border object-cover" />
           <button
             type="button"
             aria-label="Remove image"
@@ -75,15 +81,15 @@ export function MediaPicker({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl">
           <DialogTitle>Media library</DialogTitle>
-           <MediaUploader
-             category={category}
-             onUploaded={(records) => {
-               const first = records[0];
-               if (first) onChange(first.id);
-               list.refetch();
-             }}
-             compact
-           />
+          <MediaUploader
+            category={category}
+            onUploaded={(records) => {
+              const first = records[0];
+              if (first) onChange(first.id);
+              list.refetch();
+            }}
+            compact
+          />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -93,7 +99,9 @@ export function MediaPicker({
           />
           <div className="mt-4 grid max-h-[50vh] grid-cols-3 gap-3 overflow-y-auto sm:grid-cols-4">
             {list.isLoading
-              ? Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="aspect-square w-full" />)
+              ? Array.from({ length: 8 }).map((_, i) => (
+                  <Skeleton key={i} className="aspect-square w-full" />
+                ))
               : null}
             {list.data?.length === 0 ? (
               <p className="col-span-full py-8 text-center text-sm text-muted-foreground">
@@ -110,7 +118,7 @@ export function MediaPicker({
                 }}
                 className="overflow-hidden rounded-md border hover:ring-2 hover:ring-ring"
               >
-                 <PickerImage record={m} className="aspect-square w-full object-cover" />
+                <PickerImage record={m} className="aspect-square w-full object-cover" />
               </button>
             ))}
           </div>
@@ -124,7 +132,9 @@ function PickerImage({ record, className }: { record: MediaRecord; className: st
   const [failed, setFailed] = useState(false);
   if (failed) {
     return (
-      <span className={`${className} flex items-center justify-center bg-muted text-muted-foreground`}>
+      <span
+        className={`${className} flex items-center justify-center bg-muted text-muted-foreground`}
+      >
         <ImageOff className="size-5" aria-hidden="true" />
       </span>
     );

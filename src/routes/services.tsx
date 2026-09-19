@@ -57,9 +57,8 @@ function ServicesPage() {
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-              From finding the right vehicle to inspection, sourcing,
-              importation assistance and support after the sale, we're here to
-              make the process easier.
+              From finding the right vehicle to inspection, sourcing, importation assistance and
+              support after the sale, we're here to make the process easier.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -68,11 +67,7 @@ function ServicesPage() {
               </Button>
 
               <Button size="lg" variant="outline" asChild>
-                <a
-                  href={whatsappLink(waMessages.general)}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={whatsappLink(waMessages.general)} target="_blank" rel="noreferrer">
                   <WhatsAppIcon className="size-4 text-whatsapp" />
                   WhatsApp Us
                 </a>
@@ -87,9 +82,7 @@ function ServicesPage() {
                   <span className="text-xs font-bold uppercase tracking-[0.16em] text-brand-blue">
                     BESEKI
                   </span>
-                  <span className="text-xs text-muted-foreground">
-                    Mombasa
-                  </span>
+                  <span className="text-xs text-muted-foreground">Mombasa</span>
                 </div>
 
                 <div>
@@ -118,9 +111,9 @@ function ServicesPage() {
           </div>
 
           <p className="max-w-2xl text-base leading-7 text-muted-foreground">
-            Buying a vehicle is more than choosing a model. Our services are
-            designed to help you make informed decisions, handle important
-            steps with confidence and know where to turn when you need us.
+            Buying a vehicle is more than choosing a model. Our services are designed to help you
+            make informed decisions, handle important steps with confidence and know where to turn
+            when you need us.
           </p>
         </div>
       </Section>
@@ -157,9 +150,7 @@ function ServicesPage() {
 
               {/* DETAIL */}
               <div className="max-w-2xl">
-                <p className="text-[16px] leading-7 text-foreground/90">
-                  {service.detail}
-                </p>
+                <p className="text-[16px] leading-7 text-foreground/90">{service.detail}</p>
 
                 {service.points?.length > 0 && (
                   <div className="mt-8 grid gap-0 border-y sm:grid-cols-2">
@@ -168,10 +159,8 @@ function ServicesPage() {
                         key={point}
                         className={cn(
                           "flex gap-3 border-b py-4 text-[14.5px] text-muted-foreground sm:pr-6",
-                          pointIndex >= service.points.length - 2 &&
-                            "sm:border-b-0",
-                          pointIndex === service.points.length - 1 &&
-                            "border-b-0",
+                          pointIndex >= service.points.length - 2 && "sm:border-b-0",
+                          pointIndex === service.points.length - 1 && "border-b-0",
                         )}
                       >
                         <span
@@ -186,9 +175,7 @@ function ServicesPage() {
 
                 <div className="mt-7">
                   <a
-                    href={whatsappLink(
-                      `${waMessages.general} I'm interested in ${service.title}.`,
-                    )}
+                    href={whatsappLink(`${waMessages.general} I'm interested in ${service.title}.`)}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 text-sm font-semibold text-brand-red transition hover:gap-3"
@@ -258,8 +245,8 @@ function ServicesPage() {
             </h2>
 
             <p className="mt-3 max-w-xl text-sm leading-6 text-white/80">
-              Tell us what you're looking for and our team in Mombasa will
-              guide you on the next step.
+              Tell us what you're looking for and our team in Mombasa will guide you on the next
+              step.
             </p>
           </div>
 
@@ -279,11 +266,7 @@ function ServicesPage() {
               asChild
               className="border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white"
             >
-              <a
-                href={whatsappLink(waMessages.general)}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={whatsappLink(waMessages.general)} target="_blank" rel="noreferrer">
                 <WhatsAppIcon className="size-4 text-whatsapp" />
                 WhatsApp Us
               </a>

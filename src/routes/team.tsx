@@ -64,9 +64,8 @@ function TeamPage() {
               </h1>
 
               <p className="mt-5 max-w-2xl text-[16px] leading-7 text-muted-foreground md:text-[17px]">
-                A small, direct team focused on helping you find the right
-                vehicle, understand the details and move through the buying
-                process with confidence.
+                A small, direct team focused on helping you find the right vehicle, understand the
+                details and move through the buying process with confidence.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -84,20 +83,15 @@ function TeamPage() {
             </div>
 
             <div className="border-t pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-              <p className="text-sm font-semibold">
-                Direct lines. Real people.
-              </p>
+              <p className="text-sm font-semibold">Direct lines. Real people.</p>
 
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                From your first enquiry to collection, we aim to keep the
-                process clear and personal.
+                From your first enquiry to collection, we aim to keep the process clear and
+                personal.
               </p>
 
               <div className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin
-                  className="size-4 shrink-0 text-primary"
-                  aria-hidden="true"
-                />
+                <MapPin className="size-4 shrink-0 text-primary" aria-hidden="true" />
                 <span>{company.addressOneLine}</span>
               </div>
             </div>
@@ -117,40 +111,24 @@ function TeamPage() {
               </h2>
 
               <p className="mt-4 text-[15px] leading-7 text-muted-foreground">
-                Our team covers vehicle sales, sourcing, importation and
-                after-sales support. The goal is simple: give customers useful
-                information and make the process easier.
+                Our team covers vehicle sales, sourcing, importation and after-sales support. The
+                goal is simple: give customers useful information and make the process easier.
               </p>
 
               <div className="mt-7 border-t">
                 <div className="flex gap-3 border-b py-4">
-                  <Check
-                    className="mt-0.5 size-4 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  <span className="text-sm">
-                    Clear vehicle information
-                  </span>
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span className="text-sm">Clear vehicle information</span>
                 </div>
 
                 <div className="flex gap-3 border-b py-4">
-                  <Check
-                    className="mt-0.5 size-4 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  <span className="text-sm">
-                    Straightforward communication
-                  </span>
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span className="text-sm">Straightforward communication</span>
                 </div>
 
                 <div className="flex gap-3 border-b py-4">
-                  <Check
-                    className="mt-0.5 size-4 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  <span className="text-sm">
-                    Support before and after purchase
-                  </span>
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span className="text-sm">Support before and after purchase</span>
                 </div>
               </div>
             </div>
@@ -186,9 +164,8 @@ function TeamPage() {
               </h2>
 
               <p className="mt-4 max-w-md text-[15px] leading-7 text-muted-foreground">
-                Buying a vehicle is a significant decision. We believe the
-                people helping you make that decision should be accessible,
-                knowledgeable and straightforward.
+                Buying a vehicle is a significant decision. We believe the people helping you make
+                that decision should be accessible, knowledgeable and straightforward.
               </p>
             </div>
 
@@ -199,8 +176,8 @@ function TeamPage() {
                 <h3 className="font-bold">Listen first</h3>
 
                 <p className="text-sm leading-6 text-muted-foreground">
-                  We start by understanding what you actually need — budget,
-                  use, family requirements and preferences.
+                  We start by understanding what you actually need — budget, use, family
+                  requirements and preferences.
                 </p>
               </div>
 
@@ -210,8 +187,8 @@ function TeamPage() {
                 <h3 className="font-bold">Give you the details</h3>
 
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Vehicle condition, specifications, pricing and the questions
-                  that matter before you commit.
+                  Vehicle condition, specifications, pricing and the questions that matter before
+                  you commit.
                 </p>
               </div>
 
@@ -221,8 +198,7 @@ function TeamPage() {
                 <h3 className="font-bold">Help you decide</h3>
 
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Our role is to help you make an informed decision, not to
-                  rush you into one.
+                  Our role is to help you make an informed decision, not to rush you into one.
                 </p>
               </div>
             </div>
@@ -244,8 +220,7 @@ function TeamPage() {
               </h2>
 
               <p className="mt-4 text-[15px] leading-7 text-white/70">
-                Send us a message, call the showroom or visit us along Lumumba
-                Road in Mombasa.
+                Send us a message, call the showroom or visit us along Lumumba Road in Mombasa.
               </p>
             </div>
 

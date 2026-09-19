@@ -73,8 +73,16 @@ export function MediaUploader({
       >
         <UploadCloud className="size-6 text-muted-foreground" aria-hidden="true" />
         <p className="mt-2 text-sm font-medium">Drag photos here, or choose files</p>
-        <p className="mt-1 text-xs text-muted-foreground">JPG, PNG or WebP · up to 25 MB each · category: {category}</p>
-        <Button type="button" variant="outline" className="mt-4" onClick={() => inputRef.current?.click()} disabled={busy}>
+        <p className="mt-1 text-xs text-muted-foreground">
+          JPG, PNG or WebP · up to 25 MB each · category: {category}
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          className="mt-4"
+          onClick={() => inputRef.current?.click()}
+          disabled={busy}
+        >
           {busy ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : null}
           {busy ? `Uploading ${done}/${total}` : "Choose files"}
         </Button>

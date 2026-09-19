@@ -6,7 +6,10 @@ import type { SiteSettings } from "@/lib/content.functions";
  * The active settings singleton is published by SiteProvider on render;
  * it is the same for every visitor, so sharing it module-wide is safe.
  */
-let active: Pick<SiteSettings, "whatsappNumber" | "companyName" | "shortName" | "whatsappTemplates"> = {
+let active: Pick<
+  SiteSettings,
+  "whatsappNumber" | "companyName" | "shortName" | "whatsappTemplates"
+> = {
   whatsappNumber: company.whatsappNumber,
   companyName: company.name,
   shortName: company.shortName,
@@ -28,22 +31,38 @@ function template(key: string, fallback: string) {
 
 export const waMessages = {
   get general() {
-    return template("general", `Hello ${active.companyName}, I would like to enquire about your vehicles.`);
+    return template(
+      "general",
+      `Hello ${active.companyName}, I would like to enquire about your vehicles.`,
+    );
   },
   get testDrive() {
-    return template("test_drive", `Hello ${active.companyName}, I would like to book a test drive.`);
+    return template(
+      "test_drive",
+      `Hello ${active.companyName}, I would like to book a test drive.`,
+    );
   },
   get tradeIn() {
-    return template("trade_in", `Hello ${active.companyName}, I would like to enquire about trading in my vehicle.`);
+    return template(
+      "trade_in",
+      `Hello ${active.companyName}, I would like to enquire about trading in my vehicle.`,
+    );
   },
   get financing() {
-    return template("financing", `Hello ${active.companyName}, I would like to enquire about financing options.`);
+    return template(
+      "financing",
+      `Hello ${active.companyName}, I would like to enquire about financing options.`,
+    );
   },
   vehicle: (name: string, price?: string) =>
-    template("vehicle", `Hello ${active.companyName}, I am interested in the {vehicle}. Is it still available?`)
+    template(
+      "vehicle",
+      `Hello ${active.companyName}, I am interested in the {vehicle}. Is it still available?`,
+    )
       .replace("{vehicle}", name)
       .replace("{price}", price ?? ""),
-  offer: (name: string) => `Hello ${active.companyName}, I would like to make an offer on the ${name}.`,
+  offer: (name: string) =>
+    `Hello ${active.companyName}, I would like to make an offer on the ${name}.`,
 };
 
 export function formatKes(value: number) {

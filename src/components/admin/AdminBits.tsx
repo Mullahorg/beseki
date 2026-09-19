@@ -13,7 +13,15 @@ export function AdminLoading({ rows = 5 }: { rows?: number }) {
   );
 }
 
-export function AdminEmpty({ title, message, action }: { title: string; message: string; action?: ReactNode }) {
+export function AdminEmpty({
+  title,
+  message,
+  action,
+}: {
+  title: string;
+  message: string;
+  action?: ReactNode;
+}) {
   return (
     <div className="flex flex-col items-center rounded-lg border border-dashed border-admin-line bg-admin-panel px-6 py-14 text-center text-admin-foreground">
       <h3 className="text-base font-semibold">{title}</h3>
@@ -23,7 +31,11 @@ export function AdminEmpty({ title, message, action }: { title: string; message:
   );
 }
 
-export function AdminError({ message = "Something went wrong loading this data." }: { message?: string }) {
+export function AdminError({
+  message = "Something went wrong loading this data.",
+}: {
+  message?: string;
+}) {
   return (
     <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-5 text-sm text-destructive">
       {message}
@@ -46,6 +58,8 @@ export function StatusPill({ status }: { status: string }) {
           ? "bg-amber-100 text-amber-900"
           : "bg-secondary text-secondary-foreground";
   return (
-    <span className={cn("rounded-full px-2.5 py-1 text-xs font-medium capitalize", tone)}>{status}</span>
+    <span className={cn("rounded-full px-2.5 py-1 text-xs font-medium capitalize", tone)}>
+      {status}
+    </span>
   );
 }

@@ -69,7 +69,10 @@ export const Route = createFileRoute("/blog/$slug")({
 function BlogPostPage() {
   const { post, related } = Route.useLoaderData();
 
-  const paragraphs = post.body.split(/\n{2,}|\r\n\r\n/).map((p) => p.trim()).filter(Boolean);
+  const paragraphs = post.body
+    .split(/\n{2,}|\r\n\r\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
   const words = post.body.split(/\s+/).filter(Boolean).length;
   const readMinutes = Math.max(1, Math.round(words / 200));
 
@@ -234,8 +237,8 @@ function BlogPostPage() {
                 </h2>
 
                 <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-white/80">
-                  Explore our current inventory or speak directly with our team about a vehicle
-                  you are interested in.
+                  Explore our current inventory or speak directly with our team about a vehicle you
+                  are interested in.
                 </p>
               </div>
 

@@ -72,9 +72,11 @@ export function useStaffRole() {
     void (async () => {
       const [{ data: userData }, roleRes] = await Promise.all([
         supabase.auth.getUser(),
-        (supabase.rpc as unknown as (
-          n: string,
-        ) => Promise<{ data: unknown; error: { message: string } | null }>)("get_my_staff_role"),
+        (
+          supabase.rpc as unknown as (
+            n: string,
+          ) => Promise<{ data: unknown; error: { message: string } | null }>
+        )("get_my_staff_role"),
       ]);
       if (!mounted) return;
       setEmail(userData.user?.email?.toLowerCase() ?? "");

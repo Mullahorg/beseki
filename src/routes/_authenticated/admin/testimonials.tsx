@@ -23,9 +23,19 @@ export const Route = createFileRoute("/_authenticated/admin/testimonials")({
           { name: "rating", label: "Rating (1-5)", type: "number" },
           { name: "review", label: "Review", type: "textarea", required: true },
           { name: "happened_on", label: "Date of purchase", type: "date" },
-          { name: "media_id", label: "Customer photo", type: "media", mediaCategory: "Testimonials" },
+          {
+            name: "media_id",
+            label: "Customer photo",
+            type: "media",
+            mediaCategory: "Testimonials",
+          },
           { name: "position", label: "Sort order", type: "number" },
-          { name: "status", label: "Status", type: "status", options: ["draft", "published", "archived"] },
+          {
+            name: "status",
+            label: "Status",
+            type: "status",
+            options: ["draft", "published", "archived"],
+          },
         ],
       }}
     />

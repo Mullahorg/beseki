@@ -193,21 +193,39 @@
 }
 
 @keyframes announcement-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(calc(-50% - 2rem)); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 2rem));
+  }
 }
 
 @keyframes media-shimmer {
-  to { transform: translateX(100%); }
+  to {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes page-arrive {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @utility announcement-track {
-  mask-image: linear-gradient(to right, transparent, black 1rem, black calc(100% - 1rem), transparent);
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 1rem,
+    black calc(100% - 1rem),
+    transparent
+  );
 }
 
 @utility announcement-marquee {
@@ -217,7 +235,9 @@
   white-space: nowrap;
   animation: announcement-scroll 24s linear infinite;
 
-  &:hover { animation-play-state: paused; }
+  &:hover {
+    animation-play-state: paused;
+  }
 }
 
 @utility media-shimmer {
@@ -278,16 +298,24 @@ main {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .announcement-marquee { animation: none; }
-  .announcement-marquee span[aria-hidden="true"] { display: none; }
-  .media-shimmer::after { animation: none; }
+  .announcement-marquee {
+    animation: none;
+  }
+  .announcement-marquee span[aria-hidden="true"] {
+    display: none;
+  }
+  .media-shimmer::after {
+    animation: none;
+  }
   .section-reveal,
   .section-reveal.is-revealed {
     opacity: 1;
     transform: none;
     transition: none;
   }
-  main { animation: none; }
+  main {
+    animation: none;
+  }
 }
 
 /* ---------------------------------------------------------------

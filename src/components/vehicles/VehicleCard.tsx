@@ -7,7 +7,13 @@ import { formatKes, formatKm, waMessages, whatsappLink } from "@/lib/whatsapp";
 import { vehicleName, type Vehicle } from "@/data/vehicles";
 import { cn } from "@/lib/utils";
 
-export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; priority?: boolean }) {
+export function VehicleCard({
+  vehicle,
+  priority = false,
+}: {
+  vehicle: Vehicle;
+  priority?: boolean;
+}) {
   const compare = useCompare();
   const selected = compare.has(vehicle.id);
   const name = vehicleName(vehicle);
@@ -50,7 +56,8 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
           </Link>
         </h3>
         <p className="mt-2 text-[13px] leading-5 text-muted-foreground">
-          {vehicle.year} &middot; {formatKm(vehicle.mileage)} &middot; {vehicle.transmission} &middot; {vehicle.fuel}
+          {vehicle.year} &middot; {formatKm(vehicle.mileage)} &middot; {vehicle.transmission}{" "}
+          &middot; {vehicle.fuel}
         </p>
 
         <p className="price-type mt-5 text-[22px] leading-none">{formatKes(vehicle.price)}</p>

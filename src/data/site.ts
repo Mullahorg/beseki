@@ -60,7 +60,12 @@ export const services: ServiceItem[] = [
     summary: "A careful look at the vehicle before money changes hands.",
     detail:
       "We walk through the vehicle with you — bodywork, engine, underside, interior and documents — so you know exactly what you are buying. You are also welcome to bring your own mechanic.",
-    points: ["Body and paint check", "Engine and drivetrain", "Documents and logbook", "Independent inspection welcome"],
+    points: [
+      "Body and paint check",
+      "Engine and drivetrain",
+      "Documents and logbook",
+      "Independent inspection welcome",
+    ],
   },
   {
     slug: "vehicle-sourcing",
@@ -68,7 +73,11 @@ export const services: ServiceItem[] = [
     summary: "Looking for something we don't have on the yard? Tell us.",
     detail:
       "If the vehicle you want is not in our current stock, share the make, model, year and budget. We will look for a suitable unit and come back to you with what we find.",
-    points: ["Specific make and model requests", "Budget-led search", "Honest feedback on availability"],
+    points: [
+      "Specific make and model requests",
+      "Budget-led search",
+      "Honest feedback on availability",
+    ],
   },
   {
     slug: "importation-assistance",
@@ -76,7 +85,12 @@ export const services: ServiceItem[] = [
     summary: "Guidance through sourcing, shipping, clearance and registration.",
     detail:
       "Importing takes longer than buying from stock but gives you exactly the specification you want. We help you understand the steps, the timelines and the costs involved before you commit.",
-    points: ["Sourcing and confirmation", "Shipping and arrival", "Clearance guidance", "Registration support"],
+    points: [
+      "Sourcing and confirmation",
+      "Shipping and arrival",
+      "Clearance guidance",
+      "Registration support",
+    ],
   },
   {
     slug: "maintenance",

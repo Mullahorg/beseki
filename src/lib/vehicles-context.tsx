@@ -3,7 +3,13 @@ import type { Vehicle } from "@/data/vehicles";
 
 const VehiclesContext = createContext<Vehicle[]>([]);
 
-export function VehiclesProvider({ vehicles, children }: { vehicles: Vehicle[]; children: ReactNode }) {
+export function VehiclesProvider({
+  vehicles,
+  children,
+}: {
+  vehicles: Vehicle[];
+  children: ReactNode;
+}) {
   return <VehiclesContext.Provider value={vehicles}>{children}</VehiclesContext.Provider>;
 }
 

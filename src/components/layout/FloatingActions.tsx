@@ -113,21 +113,12 @@ export function FloatingActions() {
         )}
       </div>
 
-      <ChatWidget
-        open={chatOpen}
-        onClose={() => setChatOpen(false)}
-      />
+      <ChatWidget open={chatOpen} onClose={() => setChatOpen(false)} />
     </>
   );
 }
 
-function ChatWidget({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
+function ChatWidget({ open, onClose }: { open: boolean; onClose: () => void }) {
   const settings = useSettings();
   const navigate = useNavigate();
 
@@ -176,9 +167,7 @@ function ChatWidget({
     }, 700);
   };
 
-  const handleQuick = (
-    action: (typeof quickActions)[number]["label"],
-  ) => {
+  const handleQuick = (action: (typeof quickActions)[number]["label"]) => {
     if (action === "Find a vehicle") {
       onClose();
       navigate({ to: "/inventory" });
@@ -257,9 +246,7 @@ function ChatWidget({
 
               <div className="mt-0.5 flex items-center gap-1.5">
                 <span className="size-1.5 rounded-full bg-emerald-400" />
-                <p className="text-[11px] text-ink-foreground/55">
-                  Here to help with your enquiry
-                </p>
+                <p className="text-[11px] text-ink-foreground/55">Here to help with your enquiry</p>
               </div>
             </div>
           </div>
@@ -294,8 +281,8 @@ function ChatWidget({
               <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
 
               <p className="text-[11px] leading-5 text-muted-foreground">
-                Ask us about vehicles, test drives, trade-ins, financing, or
-                anything else you need help with.
+                Ask us about vehicles, test drives, trade-ins, financing, or anything else you need
+                help with.
               </p>
             </div>
           </div>
@@ -304,10 +291,7 @@ function ChatWidget({
         {messages.map((m, i) => (
           <div
             key={`${m.from}-${i}`}
-            className={cn(
-              "flex",
-              m.from === "you" ? "justify-end" : "justify-start",
-            )}
+            className={cn("flex", m.from === "you" ? "justify-end" : "justify-start")}
           >
             <div
               className={cn(

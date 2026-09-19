@@ -20,18 +20,10 @@ import { company } from "@/data/company";
 
 type StaffRole = "super_admin" | "admin" | "editor" | "sales";
 
-const STAFF_ROLES: readonly StaffRole[] = [
-  "super_admin",
-  "admin",
-  "editor",
-  "sales",
-];
+const STAFF_ROLES: readonly StaffRole[] = ["super_admin", "admin", "editor", "sales"];
 
 function isStaffRole(value: unknown): value is StaffRole {
-  return (
-    typeof value === "string" &&
-    STAFF_ROLES.includes(value as StaffRole)
-  );
+  return typeof value === "string" && STAFF_ROLES.includes(value as StaffRole);
 }
 
 export const Route = createFileRoute("/auth")({
@@ -42,8 +34,7 @@ export const Route = createFileRoute("/auth")({
       },
       {
         name: "description",
-        content:
-          "Secure staff access to the BESEKI COMPANY LIMITED management area.",
+        content: "Secure staff access to the BESEKI COMPANY LIMITED management area.",
       },
       {
         name: "robots",
@@ -55,8 +46,7 @@ export const Route = createFileRoute("/auth")({
       },
       {
         property: "og:description",
-        content:
-          "Secure staff access to the BESEKI management area.",
+        content: "Secure staff access to the BESEKI management area.",
       },
     ],
   }),
@@ -102,15 +92,13 @@ function AuthPage() {
         return false;
       }
 
-      const { data: role, error: roleError } =
-        await supabase.rpc("get_my_staff_role");
+      const { data: role, error: roleError } = await supabase.rpc("get_my_staff_role");
 
       if (!roleError && role) {
         // Record the sign-in so administrators can monitor access patterns.
-        void (supabase.rpc as unknown as (
-          n: string,
-          a?: Record<string, unknown>,
-        ) => Promise<unknown>)("log_staff_activity", {
+        void (
+          supabase.rpc as unknown as (n: string, a?: Record<string, unknown>) => Promise<unknown>
+        )("log_staff_activity", {
           p_action: "auth.signin",
           p_entity: "session",
           p_entity_id: user.email ?? null,
@@ -119,14 +107,9 @@ function AuthPage() {
       }
 
       if (roleError) {
-        console.error(
-          "BESEKI staff role check failed:",
-          roleError,
-        );
+        console.error("BESEKI staff role check failed:", roleError);
 
-        setAccessError(
-          "We could not verify your staff permissions. Please try again.",
-        );
+        setAccessError("We could not verify your staff permissions. Please try again.");
 
         setAccessDenied(false);
 
@@ -149,16 +132,9 @@ function AuthPage() {
 
       return true;
     } catch (error) {
-      console.error(
-        "BESEKI authentication/access check failed:",
-        error,
-      );
+      console.error("BESEKI authentication/access check failed:", error);
 
-      setAccessError(
-        error instanceof Error
-          ? error.message
-          : "Unable to verify staff access.",
-      );
+      setAccessError(error instanceof Error ? error.message : "Unable to verify staff access.");
 
       return false;
     } finally {
@@ -188,10 +164,7 @@ function AuthPage() {
           setCheckingAccess(false);
         }
       } catch (error) {
-        console.error(
-          "Session check failed:",
-          error,
-        );
+        console.error("Session check failed:", error);
 
         if (mounted) {
           setCheckingAccess(false);
@@ -204,10 +177,7 @@ function AuthPage() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
-      if (
-        event === "SIGNED_IN" ||
-        event === "TOKEN_REFRESHED"
-      ) {
+      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
         /*
          * Delay the authorization check until after the
          * Supabase auth event has completed.
@@ -233,23 +203,19 @@ function AuthPage() {
     };
   }, []);
 
-  async function onSubmit(
-    event: React.FormEvent<HTMLFormElement>,
-  ) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!email.trim() || !password) {
       toast.error("Please complete the form", {
-        description:
-          "Enter your email address and password to continue.",
+        description: "Enter your email address and password to continue.",
       });
       return;
     }
 
     if (password.length < 8) {
       toast.error("Password is too short", {
-        description:
-          "Your password must contain at least 8 characters.",
+        description: "Your password must contain at least 8 characters.",
       });
       return;
     }
@@ -260,15 +226,13 @@ function AuthPage() {
 
     try {
       if (mode === "signup") {
-        const { data, error } =
-          await supabase.auth.signUp({
-            email: email.trim().toLowerCase(),
-            password,
-            options: {
-              emailRedirectTo:
-                window.location.origin + "/auth",
-            },
-          });
+        const { data, error } = await supabase.auth.signUp({
+          email: email.trim().toLowerCase(),
+          password,
+          options: {
+            emailRedirectTo: window.location.origin + "/auth",
+          },
+        });
 
         if (error) {
           throw error;
@@ -293,11 +257,10 @@ function AuthPage() {
           setAccessDenied(true);
         }
       } else {
-        const { error } =
-          await supabase.auth.signInWithPassword({
-            email: email.trim().toLowerCase(),
-            password,
-          });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email.trim().toLowerCase(),
+          password,
+        });
 
         if (error) {
           throw error;
@@ -316,17 +279,10 @@ function AuthPage() {
     } catch (err) {
       console.error("Sign in error:", err);
 
-      toast.error(
-        mode === "signin"
-          ? "Sign in failed"
-          : "Account creation failed",
-        {
-          description:
-            err instanceof Error
-              ? err.message
-              : "Please check your details and try again.",
-        },
-      );
+      toast.error(mode === "signin" ? "Sign in failed" : "Account creation failed", {
+        description:
+          err instanceof Error ? err.message : "Please check your details and try again.",
+      });
     } finally {
       setBusy(false);
     }
@@ -342,11 +298,9 @@ function AuthPage() {
     setAccessError("");
 
     try {
-      const result =
-        await lovable.auth.signInWithOAuth("google", {
-          redirect_uri:
-            window.location.origin + "/auth",
-        });
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin + "/auth",
+      });
 
       if (result.error) {
         throw result.error;
@@ -356,9 +310,7 @@ function AuthPage() {
 
       toast.error("Google sign in failed", {
         description:
-          err instanceof Error
-            ? err.message
-            : "Please try again or use your email and password.",
+          err instanceof Error ? err.message : "Please try again or use your email and password.",
       });
     }
   }
@@ -377,9 +329,7 @@ function AuthPage() {
     setAccessDenied(false);
     setAccessError("");
 
-    setMode((current) =>
-      current === "signin" ? "signup" : "signin",
-    );
+    setMode((current) => (current === "signin" ? "signup" : "signin"));
   }
 
   /*
@@ -391,15 +341,10 @@ function AuthPage() {
       <main className="flex min-h-screen items-center justify-center bg-background px-5">
         <div className="flex flex-col items-center text-center">
           <div className="flex size-12 items-center justify-center border border-border bg-muted/30">
-            <Loader2
-              className="size-5 animate-spin text-primary"
-              aria-hidden="true"
-            />
+            <Loader2 className="size-5 animate-spin text-primary" aria-hidden="true" />
           </div>
 
-          <h1 className="mt-5 text-lg font-semibold">
-            Checking staff access
-          </h1>
+          <h1 className="mt-5 text-lg font-semibold">Checking staff access</h1>
 
           <p className="mt-2 text-sm text-muted-foreground">
             Please wait while we verify your BESEKI account.
@@ -419,18 +364,13 @@ function AuthPage() {
         <div className="flex min-h-screen items-center justify-center px-5 py-10">
           <div className="w-full max-w-md">
             <div className="mb-10 flex justify-center">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-3"
-              >
+              <Link to="/" className="inline-flex items-center gap-3">
                 <span className="flex size-11 items-center justify-center bg-primary text-sm font-black tracking-tight text-primary-foreground">
                   B
                 </span>
 
                 <div className="text-left">
-                  <p className="text-sm font-bold tracking-tight">
-                    {company.shortName}
-                  </p>
+                  <p className="text-sm font-bold tracking-tight">{company.shortName}</p>
 
                   <p className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
                     Company Limited
@@ -441,27 +381,19 @@ function AuthPage() {
 
             <div className="border border-border bg-card p-7 shadow-sm sm:p-9">
               <div className="flex size-12 items-center justify-center bg-primary/10 text-primary">
-                <ShieldCheck
-                  className="size-6"
-                  aria-hidden="true"
-                />
+                <ShieldCheck className="size-6" aria-hidden="true" />
               </div>
 
               <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
                 Staff access
               </p>
 
-              <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">
-                No access yet
-              </h1>
+              <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">No access yet</h1>
 
               <p className="mt-4 text-sm leading-6 text-muted-foreground">
                 You are signed in as{" "}
-                <strong className="font-semibold text-foreground">
-                  {email || "your account"}
-                </strong>
-                , but this account has not been given staff
-                access.
+                <strong className="font-semibold text-foreground">{email || "your account"}</strong>
+                , but this account has not been given staff access.
               </p>
 
               <div className="mt-6 flex items-start gap-3 border border-border bg-muted/20 p-4">
@@ -471,28 +403,20 @@ function AuthPage() {
                 />
 
                 <p className="text-xs leading-5 text-muted-foreground">
-                  Ask a BESEKI administrator to add your email
-                  address to the staff access list and assign
-                  you an appropriate role.
+                  Ask a BESEKI administrator to add your email address to the staff access list and
+                  assign you an appropriate role.
                 </p>
               </div>
 
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={signOut}
-                >
+                <Button type="button" variant="outline" onClick={signOut}>
                   Sign out
                 </Button>
 
                 <Button asChild>
                   <Link to="/">
                     Back to website
-                    <ArrowRight
-                      className="size-4"
-                      aria-hidden="true"
-                    />
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </Link>
                 </Button>
               </div>
@@ -516,18 +440,13 @@ function AuthPage() {
         <div className="flex min-h-screen items-center justify-center px-5 py-10">
           <div className="w-full max-w-md">
             <div className="mb-10 flex justify-center">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-3"
-              >
+              <Link to="/" className="inline-flex items-center gap-3">
                 <span className="flex size-11 items-center justify-center bg-primary text-sm font-black text-primary-foreground">
                   B
                 </span>
 
                 <div className="text-left">
-                  <p className="text-sm font-bold">
-                    {company.shortName}
-                  </p>
+                  <p className="text-sm font-bold">{company.shortName}</p>
 
                   <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
                     Company Limited
@@ -538,10 +457,7 @@ function AuthPage() {
 
             <div className="border border-border bg-card p-7 shadow-sm sm:p-9">
               <div className="flex size-12 items-center justify-center bg-destructive/10 text-destructive">
-                <AlertCircle
-                  className="size-6"
-                  aria-hidden="true"
-                />
+                <AlertCircle className="size-6" aria-hidden="true" />
               </div>
 
               <h1 className="mt-6 text-2xl font-semibold tracking-[-0.03em]">
@@ -549,8 +465,7 @@ function AuthPage() {
               </h1>
 
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                Your sign-in was successful, but BESEKI could not
-                verify your staff permissions.
+                Your sign-in was successful, but BESEKI could not verify your staff permissions.
               </p>
 
               <p className="mt-4 rounded-md bg-muted/40 p-3 text-xs leading-5 text-muted-foreground">
@@ -570,9 +485,7 @@ function AuthPage() {
                 </Button>
 
                 <Button asChild>
-                  <Link to="/">
-                    Back to website
-                  </Link>
+                  <Link to="/">Back to website</Link>
                 </Button>
               </div>
             </div>
@@ -597,18 +510,13 @@ function AuthPage() {
 
           <div className="relative flex w-full flex-col justify-between p-10 xl:p-14">
             <div>
-              <Link
-                to="/"
-                className="inline-flex items-center gap-3"
-              >
+              <Link to="/" className="inline-flex items-center gap-3">
                 <span className="flex size-11 items-center justify-center bg-primary text-sm font-black tracking-tight text-primary-foreground">
                   B
                 </span>
 
                 <div>
-                  <p className="text-sm font-bold tracking-tight">
-                    {company.shortName}
-                  </p>
+                  <p className="text-sm font-bold tracking-tight">{company.shortName}</p>
 
                   <p className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-white/45">
                     Company Limited
@@ -619,10 +527,7 @@ function AuthPage() {
 
             <div className="max-w-xl">
               <div className="mb-7 flex items-center gap-3">
-                <span
-                  aria-hidden="true"
-                  className="h-px w-10 bg-primary"
-                />
+                <span aria-hidden="true" className="h-px w-10 bg-primary" />
 
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">
                   Staff portal
@@ -631,14 +536,11 @@ function AuthPage() {
 
               <h2 className="text-4xl font-semibold leading-[1.04] tracking-[-0.045em] xl:text-6xl">
                 Everything behind
-                <span className="block text-white/45">
-                  the showroom.
-                </span>
+                <span className="block text-white/45">the showroom.</span>
               </h2>
 
               <p className="mt-6 max-w-lg text-sm leading-7 text-white/60 xl:text-base">
-                Manage vehicles, enquiries, appointments and
-                website content from one secure BESEKI
+                Manage vehicles, enquiries, appointments and website content from one secure BESEKI
                 management area.
               </p>
 
@@ -659,13 +561,9 @@ function AuthPage() {
                     },
                   ].map((item) => (
                     <div key={item.title}>
-                      <p className="text-sm font-semibold text-white">
-                        {item.title}
-                      </p>
+                      <p className="text-sm font-semibold text-white">{item.title}</p>
 
-                      <p className="mt-1 text-xs leading-5 text-white/45">
-                        {item.text}
-                      </p>
+                      <p className="mt-1 text-xs leading-5 text-white/45">{item.text}</p>
                     </div>
                   ))}
                 </div>
@@ -687,18 +585,13 @@ function AuthPage() {
           <div className="w-full max-w-md">
             {/* Mobile brand */}
             <div className="mb-10 lg:hidden">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-3"
-              >
+              <Link to="/" className="inline-flex items-center gap-3">
                 <span className="flex size-10 items-center justify-center bg-primary text-sm font-black text-primary-foreground">
                   B
                 </span>
 
                 <div>
-                  <p className="text-sm font-bold tracking-tight">
-                    {company.shortName}
-                  </p>
+                  <p className="text-sm font-bold tracking-tight">{company.shortName}</p>
 
                   <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
                     Company Limited
@@ -712,32 +605,22 @@ function AuthPage() {
               to="/"
               className="mb-8 inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
             >
-              <ArrowLeft
-                className="size-3.5"
-                aria-hidden="true"
-              />
+              <ArrowLeft className="size-3.5" aria-hidden="true" />
               Back to website
             </Link>
 
             {/* Header */}
             <div>
               <div className="mb-5 flex size-10 items-center justify-center border border-border bg-muted/30">
-                <ShieldCheck
-                  className="size-5 text-primary"
-                  aria-hidden="true"
-                />
+                <ShieldCheck className="size-5 text-primary" aria-hidden="true" />
               </div>
 
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-                {mode === "signin"
-                  ? "Staff access"
-                  : "Staff registration"}
+                {mode === "signin" ? "Staff access" : "Staff registration"}
               </p>
 
               <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.04em] sm:text-4xl">
-                {mode === "signin"
-                  ? "Welcome back."
-                  : "Create your staff account."}
+                {mode === "signin" ? "Welcome back." : "Create your staff account."}
               </h1>
 
               <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
@@ -752,23 +635,15 @@ function AuthPage() {
               <div className="mt-8">
                 <div className="border border-border bg-muted/20 p-6">
                   <div className="flex size-10 items-center justify-center bg-primary text-primary-foreground">
-                    <Check
-                      className="size-5"
-                      aria-hidden="true"
-                    />
+                    <Check className="size-5" aria-hidden="true" />
                   </div>
 
-                  <h2 className="mt-5 text-lg font-semibold">
-                    Check your email.
-                  </h2>
+                  <h2 className="mt-5 text-lg font-semibold">Check your email.</h2>
 
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">
                     We've sent a confirmation link to{" "}
-                    <strong className="font-semibold text-foreground">
-                      {email}
-                    </strong>
-                    . Confirm your email address, then return
-                    here to sign in.
+                    <strong className="font-semibold text-foreground">{email}</strong>. Confirm your
+                    email address, then return here to sign in.
                   </p>
 
                   <Button
@@ -781,26 +656,15 @@ function AuthPage() {
                     }}
                   >
                     Return to sign in
-                    <ArrowRight
-                      className="size-4"
-                      aria-hidden="true"
-                    />
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </Button>
                 </div>
               </div>
             ) : (
               <>
                 {/* Form */}
-                <form
-                  onSubmit={onSubmit}
-                  className="mt-8 space-y-5"
-                  noValidate
-                >
-                  <Field
-                    label="Email address"
-                    htmlFor="a-email"
-                    required
-                  >
+                <form onSubmit={onSubmit} className="mt-8 space-y-5" noValidate>
+                  <Field label="Email address" htmlFor="a-email" required>
                     <TextInput
                       id="a-email"
                       type="email"
@@ -808,43 +672,27 @@ function AuthPage() {
                       value={email}
                       required
                       placeholder="name@company.com"
-                      onChange={(event) =>
-                        setEmail(event.target.value)
-                      }
+                      onChange={(event) => setEmail(event.target.value)}
                     />
                   </Field>
 
-                  <Field
-                    label="Password"
-                    htmlFor="a-pass"
-                    required
-                  >
+                  <Field label="Password" htmlFor="a-pass" required>
                     <div className="relative">
                       <TextInput
                         id="a-pass"
                         type={showPassword ? "text" : "password"}
-                        autoComplete={
-                          mode === "signup"
-                            ? "new-password"
-                            : "current-password"
-                        }
+                        autoComplete={mode === "signup" ? "new-password" : "current-password"}
                         value={password}
                         required
                         minLength={8}
                         placeholder="At least 8 characters"
                         className="pr-12"
-                        onChange={(event) =>
-                          setPassword(event.target.value)
-                        }
+                        onChange={(event) => setPassword(event.target.value)}
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword((v) => !v)}
-                        aria-label={
-                          showPassword
-                            ? "Hide password"
-                            : "Show password"
-                        }
+                        aria-label={showPassword ? "Hide password" : "Show password"}
                         aria-pressed={showPassword}
                         className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                       >
@@ -859,32 +707,17 @@ function AuthPage() {
 
                   {mode === "signup" && (
                     <div className="flex gap-3 border-t border-border pt-4">
-                      <Check
-                        className="mt-0.5 size-4 shrink-0 text-primary"
-                        aria-hidden="true"
-                      />
+                      <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
 
                       <p className="text-xs leading-5 text-muted-foreground">
-                        You'll need to confirm your email address
-                        before accessing the management area.
-                        Your account must also be approved by a
-                        BESEKI administrator.
+                        You'll need to confirm your email address before accessing the management
+                        area. Your account must also be approved by a BESEKI administrator.
                       </p>
                     </div>
                   )}
 
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={busy}
-                    className="w-full"
-                  >
-                    {busy ? (
-                      <Loader2
-                        className="size-4 animate-spin"
-                        aria-hidden="true"
-                      />
-                    ) : null}
+                  <Button type="submit" size="lg" disabled={busy} className="w-full">
+                    {busy ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : null}
 
                     {busy
                       ? mode === "signin"
@@ -894,12 +727,7 @@ function AuthPage() {
                         ? "Sign in to staff portal"
                         : "Create staff account"}
 
-                    {!busy && (
-                      <ArrowRight
-                        className="size-4"
-                        aria-hidden="true"
-                      />
-                    )}
+                    {!busy && <ArrowRight className="size-4" aria-hidden="true" />}
                   </Button>
                 </form>
 
@@ -941,9 +769,7 @@ function AuthPage() {
                     disabled={busy}
                     className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:text-primary/80 disabled:pointer-events-none disabled:opacity-50"
                   >
-                    {mode === "signin"
-                      ? "Create a staff account"
-                      : "Sign in instead"}
+                    {mode === "signin" ? "Create a staff account" : "Sign in instead"}
 
                     <ChevronRightIcon />
                   </button>
@@ -959,9 +785,8 @@ function AuthPage() {
               />
 
               <p className="text-[11px] leading-5 text-muted-foreground">
-                This is a restricted staff area. Customer
-                accounts are not required to browse vehicles,
-                make enquiries or contact BESEKI.
+                This is a restricted staff area. Customer accounts are not required to browse
+                vehicles, make enquiries or contact BESEKI.
               </p>
             </div>
           </div>
@@ -973,11 +798,7 @@ function AuthPage() {
 
 function GoogleIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className="size-4"
-    >
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
       <path
         fill="currentColor"
         d="M21.35 12.27c0-.77-.07-1.51-.2-2.22H12v4.2h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.37Z"
@@ -1000,12 +821,7 @@ function GoogleIcon() {
 
 function ChevronRightIcon() {
   return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      aria-hidden="true"
-      className="size-4"
-    >
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="size-4">
       <path
         d="m7.5 4.5 5 5-5 5"
         stroke="currentColor"

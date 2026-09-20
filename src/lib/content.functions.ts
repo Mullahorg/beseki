@@ -84,6 +84,17 @@ export interface SiteContent {
   nav: NavItem[];
   sections: SectionRecord[];
   ctas: CtaRecord[];
+  pages: PublicPageRecord[];
+}
+
+export interface PublicPageRecord {
+  slug: string;
+  title: string;
+  intro: string;
+  body: string;
+  imagePath: string | null;
+  imageAlt: string;
+  ogImagePath: string | null;
 }
 
 function oneLine(s: { address_line1: string; address_line2: string; city: string; country: string }) {
@@ -93,7 +104,7 @@ function oneLine(s: { address_line1: string; address_line2: string; city: string
 /** Business details, menus, homepage sections and CTA definitions in one round trip. */
 export const getSiteContent = createServerFn({ method: "GET" }).handler(async (): Promise<SiteContent | null> => {
   const db = publicClient();
-  const [settingsRes, navRes, sectionsRes, ctasRes] = await Promise.all([
+  const [settingsRes, navRes, sectionsRes, ctasRes, pagesRes] = await Promise.all([
     db
       .from("site_settings")
       .select(
@@ -107,6 +118,10 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
       .eq("page_slug", "home")
       .order("position"),
     db.from("ctas").select("key,label,cta_type,destination,enabled"),
+    db
+      .from("pages")
+      .select("slug,title,intro,body,featured:featured_media_id(path,alt),og:og_media_id(path)")
+      .eq("status", "published"),
   ]);
 
   const s = settingsRes.data;
@@ -184,6 +199,25 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(async ()
       destination: c.destination,
       enabled: c.enabled,
     })),
+    pages: (pagesRes.data ?? []).map((row) => {
+      const page = row as unknown as {
+        slug: string;
+        title: string;
+        intro: string;
+        body: string;
+        featured: { path: string; alt: string } | null;
+        og: { path: string } | null;
+      };
+      return {
+        slug: page.slug,
+        title: page.title,
+        intro: page.intro,
+        body: page.body,
+        imagePath: page.featured?.path ?? null,
+        imageAlt: page.featured?.alt ?? page.title,
+        ogImagePath: page.og?.path ?? null,
+      };
+    }),
   };
 });
 

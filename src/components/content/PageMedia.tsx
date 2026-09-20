@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { ImageOff } from "lucide-react";
 import { mediaSrcSet, mediaUrl } from "@/lib/media";
 import { usePublicPage } from "@/lib/site-context";
@@ -13,7 +13,7 @@ export function PageMedia({
   slug: string;
   className?: string;
   imageClassName?: string;
-  fallback?: React.ReactNode;
+  fallback?: ReactNode;
 }) {
   const page = usePublicPage(slug);
   const [failed, setFailed] = useState(false);

@@ -102,6 +102,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     const description =
       settings.seoDescription ??
       `${settings.companyName} sells new and locally used motor vehicles in ${settings.address.city}, along ${settings.address.line2.replace(/^Along /, "")}. Browse our stock, book a test drive or talk to us on WhatsApp.`;
+    const socialImage = settings.ogImagePath ? mediaUrl(settings.ogImagePath, "large") : null;
     return {
     meta: [
       { charSet: "utf-8" },
@@ -110,7 +111,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: settings.companyName },
-      { name: "twitter:card", content: "summary_large_image" }
+      { name: "twitter:card", content: "summary_large_image" },
+      ...(socialImage
+        ? [
+            { property: "og:image", content: socialImage },
+            { name: "twitter:image", content: socialImage },
+          ]
+        : []),
     ],
     links: [
       {

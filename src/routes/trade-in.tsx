@@ -4,6 +4,7 @@ import { Section } from "@/components/common/Section";
 import { WhatsAppIcon } from "@/components/layout/Header";
 import { TradeInForm } from "@/components/forms/TradeInForm";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export const Route = createFileRoute("/trade-in")({
   head: () => ({
@@ -76,7 +77,7 @@ function TradeInPage() {
             </div>
           </div>
 
-          <div className="relative min-h-[360px] overflow-hidden rounded-2xl border bg-muted md:min-h-[440px]">
+          <PageMedia slug="trade-in" className="relative min-h-[360px] rounded-2xl border md:min-h-[440px]" fallback={<div className="relative min-h-[360px] overflow-hidden rounded-2xl border bg-muted md:min-h-[440px]">
             <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/10 via-transparent to-brand-red/10" />
 
             <div className="absolute inset-x-6 bottom-6 rounded-xl border bg-background/95 p-6 backdrop-blur-sm md:inset-x-8 md:bottom-8">
@@ -89,7 +90,7 @@ function TradeInPage() {
                 Mombasa yard for an inspection and final valuation.
               </p>
             </div>
-          </div>
+          </div>} />
         </div>
       </section>
 

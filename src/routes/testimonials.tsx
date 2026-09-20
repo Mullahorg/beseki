@@ -4,6 +4,7 @@ import { TestimonialCard } from "@/components/content/Cards";
 import { ReviewForm } from "@/components/forms/Forms";
 import { listTestimonials } from "@/lib/content.functions";
 import { mediaUrl } from "@/lib/media";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export const Route = createFileRoute("/testimonials")({
   loader: async () => {
@@ -83,7 +84,7 @@ function TestimonialsPage() {
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-2xl border bg-background">
+          <PageMedia slug="testimonials" className="relative aspect-[4/3] rounded-2xl border bg-background" fallback={<div className="relative overflow-hidden rounded-2xl border bg-background">
             <div className="aspect-[4/3] bg-gradient-to-br from-brand-blue/10 via-background to-brand-red/10">
               <div className="flex h-full items-center justify-center p-8 text-center">
                 <div>
@@ -101,7 +102,7 @@ function TestimonialsPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </div>} />
         </div>
       </section>
 

@@ -3,6 +3,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section } from "@/components/common/Section";
 import { useSettings } from "@/lib/site-context";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -101,7 +102,7 @@ function AboutPage() {
             </div>
 
             <div className="hidden lg:block">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[16px] bg-muted">
+              <PageMedia slug="about" className="relative aspect-[4/5] rounded-[16px]" fallback={<div className="relative aspect-[4/5] overflow-hidden rounded-[16px] bg-muted">
                 <div className="absolute inset-0 flex items-end p-8">
                   <div className="max-w-[300px]">
                     <p className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -114,7 +115,7 @@ function AboutPage() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </div>} />
             </div>
           </div>
         </div>

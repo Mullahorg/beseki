@@ -21,6 +21,7 @@ import {
 import { mileageBands, priceBands } from "@/data/vehicles";
 import { useVehicles } from "@/lib/vehicles-context";
 import { cn } from "@/lib/utils";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export interface InventorySearch {
   q?: string | undefined;
@@ -313,6 +314,7 @@ function InventoryPage() {
             </div>
 
             <div className="border-l border-border pl-6 lg:pl-8">
+              <PageMedia slug="inventory" hideWhenEmpty className="mb-6 aspect-[4/3] rounded-lg" />
               <p className="text-sm font-semibold text-foreground">
                 Looking for something specific?
               </p>

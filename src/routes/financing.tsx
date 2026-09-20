@@ -24,6 +24,7 @@ import {
 import { vehicleName } from "@/data/vehicles";
 import { useVehicles } from "@/lib/vehicles-context";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export const Route = createFileRoute("/financing")({
   head: () => ({
@@ -350,6 +351,7 @@ function FinancingPage() {
             </div>
 
             <div className="border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+              <PageMedia slug="financing" hideWhenEmpty className="mb-6 aspect-[4/3] rounded-lg" />
               <p className="text-sm font-semibold">
                 A simple starting point
               </p>

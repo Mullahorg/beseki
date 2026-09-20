@@ -9,16 +9,19 @@ export function PageMedia({
   className,
   imageClassName,
   fallback,
+  hideWhenEmpty = false,
 }: {
   slug: string;
   className?: string;
   imageClassName?: string;
   fallback?: ReactNode;
+  hideWhenEmpty?: boolean;
 }) {
   const page = usePublicPage(slug);
   const [failed, setFailed] = useState(false);
 
   if (!page?.imagePath || failed) {
+    if (hideWhenEmpty) return null;
     return fallback ?? (
       <div className={cn("flex items-center justify-center bg-muted text-muted-foreground", className)}>
         <ImageOff className="size-6" aria-hidden="true" />

@@ -6,6 +6,7 @@ import { FAQAccordion } from "@/components/content/Cards";
 import { listFaqs, type FaqRecord } from "@/lib/content.functions";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "@/components/layout/Header";
+import { PageMedia } from "@/components/content/PageMedia";
 
 /** Questions grouped by their category, in the order the admin set. */
 function groupFaqs(faqs: FaqRecord[]) {
@@ -132,6 +133,7 @@ function FaqPage() {
             </div>
 
             <div className="border-t pt-7 lg:border-l lg:border-t-0 lg:pl-10">
+              <PageMedia slug="faq" hideWhenEmpty className="mb-6 aspect-[4/3] rounded-lg" />
               <div className="flex size-11 items-center justify-center rounded-full bg-muted">
                 <Search
                   className="size-5 text-primary"

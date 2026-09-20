@@ -43,7 +43,8 @@ export function MediaPicker({
     queryKey: ["admin", "media-one", value],
     enabled: Boolean(value),
     queryFn: async () => {
-      const { data, error } = await supabase.from("media").select("*").eq("id", value!).maybeSingle();
+      if (!value) return null;
+      const { data, error } = await supabase.from("media").select("*").eq("id", value).maybeSingle();
       if (error) throw error;
       return data as MediaRecord | null;
     },
@@ -79,7 +80,10 @@ export function MediaPicker({
              category={category}
              onUploaded={(records) => {
                const first = records[0];
-               if (first) onChange(first.id);
+               if (first) {
+                 onChange(first.id);
+                 setOpen(false);
+               }
                list.refetch();
              }}
              compact

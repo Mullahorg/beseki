@@ -7,6 +7,7 @@ import { listTeam } from "@/lib/content.functions";
 import { useSettings } from "@/lib/site-context";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "@/components/layout/Header";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export const Route = createFileRoute("/team")({
   loader: async () => {
@@ -84,6 +85,7 @@ function TeamPage() {
             </div>
 
             <div className="border-t pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+              <PageMedia slug="team" hideWhenEmpty className="mb-5 aspect-[4/3] rounded-lg" />
               <p className="text-sm font-semibold">
                 Direct lines. Real people.
               </p>

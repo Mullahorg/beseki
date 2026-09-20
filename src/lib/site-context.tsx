@@ -59,6 +59,7 @@ export const fallbackContent: SiteContent = {
   nav: fallbackNav,
   sections: [],
   ctas: [],
+  pages: [],
 };
 
 const SiteContext = createContext<SiteContent>(fallbackContent);
@@ -97,6 +98,11 @@ export function useSections(): Record<string, SectionRecord> {
 export function useCta(key: string): CtaRecord | undefined {
   const { ctas } = useContext(SiteContext);
   return ctas.find((c) => c.key === key && c.enabled);
+}
+
+/** Published page content and its admin-selected header image. */
+export function usePublicPage(slug: string) {
+  return useContext(SiteContext).pages.find((page) => page.slug === slug);
 }
 
 /** Reads a value out of a section's settings JSON with a code-side default. */

@@ -30,6 +30,7 @@ export const Route = createFileRoute("/inventory/$slug")({
     const v = loaderData.vehicle;
     const name = vehicleName(v);
     const description = `${name} for sale in Mombasa at BESEKI COMPANY LIMITED. ${formatKes(v.price)}, ${formatKm(v.mileage)}, ${v.transmission}, ${v.fuel}.`;
+    const socialImage = v.images[0];
 
     return {
       meta: [
@@ -40,6 +41,12 @@ export const Route = createFileRoute("/inventory/$slug")({
         { property: "og:type", content: "website" },
         { name: "twitter:card", content: "summary_large_image" },
         { property: "og:url", content: `/inventory/${params.slug}` },
+        ...(socialImage?.startsWith("https://")
+          ? [
+              { property: "og:image", content: socialImage },
+              { name: "twitter:image", content: socialImage },
+            ]
+          : []),
       ],
       links: [{ rel: "canonical", href: `/inventory/${params.slug}` }],
       scripts: [

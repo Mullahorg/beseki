@@ -33,9 +33,23 @@ export function TestimonialCard({ testimonial }: { testimonial: TestimonialRecor
       <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-foreground">
         &ldquo;{testimonial.review}&rdquo;
       </blockquote>
-      <figcaption className="mt-5 border-t pt-4 text-[13px]">
-        <span className="font-semibold">{testimonial.customerName}</span>
-        {testimonial.vehicle ? <span className="block text-muted-foreground">{testimonial.vehicle}</span> : null}
+      <figcaption className="mt-5 flex items-center gap-3 border-t pt-4 text-[13px]">
+        {testimonial.imagePath ? (
+          <img
+            src={mediaUrl(testimonial.imagePath, "thumb")}
+            alt={testimonial.customerName}
+            loading="lazy"
+            className="size-10 rounded-full object-cover"
+          />
+        ) : (
+          <span className="flex size-10 items-center justify-center rounded-full bg-muted font-bold text-muted-foreground">
+            {testimonial.customerName.charAt(0).toUpperCase()}
+          </span>
+        )}
+        <span>
+          <span className="block font-semibold">{testimonial.customerName}</span>
+          {testimonial.vehicle ? <span className="block text-muted-foreground">{testimonial.vehicle}</span> : null}
+        </span>
       </figcaption>
     </figure>
   );

@@ -5,6 +5,8 @@ import { WhatsAppIcon } from "@/components/layout/Header";
 import { listServices } from "@/lib/content.functions";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
+import { mediaSrcSet, mediaUrl } from "@/lib/media";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export const Route = createFileRoute("/services")({
   loader: async () => {
@@ -80,7 +82,10 @@ function ServicesPage() {
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-2xl border bg-background">
+          <PageMedia
+            slug="services"
+            className="relative aspect-[4/3] rounded-2xl border bg-background"
+            fallback={<div className="relative overflow-hidden rounded-2xl border bg-background">
             <div className="aspect-[4/3] bg-gradient-to-br from-brand-blue/10 via-background to-brand-red/10">
               <div className="flex h-full flex-col justify-between p-7 sm:p-9">
                 <div className="flex items-center justify-between">
@@ -100,7 +105,8 @@ function ServicesPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </div>}
+          />
         </div>
       </section>
 
@@ -157,6 +163,16 @@ function ServicesPage() {
 
               {/* DETAIL */}
               <div className="max-w-2xl">
+                {service.imagePath ? (
+                  <img
+                    src={mediaUrl(service.imagePath, "medium")}
+                    srcSet={mediaSrcSet(service.imagePath)}
+                    sizes="(min-width: 768px) 55vw, 100vw"
+                    alt={service.title}
+                    loading="lazy"
+                    className="mb-7 aspect-[16/9] w-full rounded-lg object-cover"
+                  />
+                ) : null}
                 <p className="text-[16px] leading-7 text-foreground/90">
                   {service.detail}
                 </p>

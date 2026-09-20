@@ -30,6 +30,7 @@ export const Route = createFileRoute("/blog/$slug")({
     }
 
     const { post } = loaderData;
+    const socialImage = post.imagePath ? mediaUrl(post.imagePath, "large") : null;
 
     return {
       meta: [
@@ -40,6 +41,12 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
         { property: "og:url", content: `/blog/${params.slug}` },
+        ...(socialImage
+          ? [
+              { property: "og:image", content: socialImage },
+              { name: "twitter:image", content: socialImage },
+            ]
+          : []),
       ],
 
       links: [{ rel: "canonical", href: `/blog/${params.slug}` }],

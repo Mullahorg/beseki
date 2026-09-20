@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/layout/Header";
 import { useSettings } from "@/lib/site-context";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export const Route = createFileRoute("/warranty")({
   head: () => ({
@@ -80,7 +81,7 @@ function WarrantyPage() {
             </div>
           </div>
 
-          <div className="relative min-h-[350px] overflow-hidden rounded-2xl border bg-muted md:min-h-[430px]">
+          <PageMedia slug="warranty" className="relative min-h-[350px] rounded-2xl border md:min-h-[430px]" fallback={<div className="relative min-h-[350px] overflow-hidden rounded-2xl border bg-muted md:min-h-[430px]">
             <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/10 via-transparent to-brand-red/10" />
 
             <div className="absolute inset-x-6 bottom-6 rounded-xl border bg-background/95 p-6 backdrop-blur-sm md:inset-x-8 md:bottom-8">
@@ -93,7 +94,7 @@ function WarrantyPage() {
                 paperwork or an issue after purchase, speak to our team.
               </p>
             </div>
-          </div>
+          </div>} />
         </div>
       </section>
 

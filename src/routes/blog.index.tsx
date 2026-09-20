@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/content/Cards";
 import { listBlogPosts } from "@/lib/content.functions";
 import { cn } from "@/lib/utils";
+import { mediaUrl } from "@/lib/media";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export const Route = createFileRoute("/blog/")({
   loader: async () => {
@@ -54,7 +56,7 @@ function BlogIndexPage() {
       {/* HERO */}
       <section className="border-b bg-background">
         <div className="container-page py-16 md:py-20">
-          <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div className="grid gap-10 lg:grid-cols-[1fr_360px] lg:items-end">
             <div className="max-w-3xl">
               <p className="eyebrow">From BESEKI</p>
 
@@ -68,12 +70,15 @@ function BlogIndexPage() {
               </p>
             </div>
 
-            <Button size="lg" asChild>
-              <Link to="/inventory">
-                Browse Inventory
-                <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
-            </Button>
+            <div>
+              <PageMedia slug="blog" hideWhenEmpty className="mb-5 aspect-[16/10] rounded-lg" />
+              <Button size="lg" asChild>
+                <Link to="/inventory">
+                  Browse Inventory
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -139,6 +144,14 @@ function BlogIndexPage() {
                 </div>
 
                 <div className="lg:justify-self-end">
+                  {lead.imagePath ? (
+                    <img
+                      src={mediaUrl(lead.imagePath, "card")}
+                      alt={lead.imageAlt || lead.title}
+                      loading="eager"
+                      className="mb-4 aspect-[16/10] w-full rounded-lg object-cover lg:w-96"
+                    />
+                  ) : null}
                   <p className="text-sm text-muted-foreground">
                     {lead.publishedAt
                       ? new Date(lead.publishedAt).toLocaleDateString("en-KE", {

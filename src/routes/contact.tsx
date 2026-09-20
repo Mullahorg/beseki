@@ -13,6 +13,7 @@ import { ContactForm, AppointmentForm } from "@/components/forms/Forms";
 import { WhatsAppIcon } from "@/components/layout/Header";
 import { useSettings } from "@/lib/site-context";
 import { waMessages, whatsappLink } from "@/lib/whatsapp";
+import { PageMedia } from "@/components/content/PageMedia";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -87,6 +88,7 @@ function ContactPage() {
             </div>
 
             <div className="border-t pt-6 lg:border-t-0 lg:border-l lg:pl-10">
+              <PageMedia slug="contact" hideWhenEmpty className="mb-6 aspect-[4/3] rounded-lg" />
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Showroom
               </p>

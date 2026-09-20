@@ -267,7 +267,11 @@ export function FieldControl({
           onChange={(e) => onChange(e.target.value.split("\n").map((s) => s.trim()).filter(Boolean))}
         />
       ) : spec.type === "media" ? (
-        <MediaPicker value={value ?? null} onChange={onChange} category={spec.mediaCategory} />
+        <MediaPicker
+          value={value ?? null}
+          onChange={onChange}
+          {...(spec.mediaCategory ? { category: spec.mediaCategory } : {})}
+        />
       ) : (
         <TextInput id={id} value={value ?? ""} onChange={(e) => onChange(e.target.value)} placeholder={spec.placeholder} />
       )}
